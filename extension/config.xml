@@ -1,0 +1,88 @@
+<?xml version="1.0" ?>
+<container xmlns="http://symfony.com/schema/dic/services"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://symfony.com/schema/dic/services http://symfony.com/schema/dic/services/services-1.0.xsd">
+    <parameters>
+        <!-- Bags, collections //-->
+        <parameter key="behat.wiz.parameters" type="collection" />
+        <parameter key="wisembly.bag.class">Wisembly\CoreBundle\Domain\Bag</parameter>
+
+        <!-- Guzzle thingies //-->
+        <parameter key="behat.wiz.guzzle.http.class">Guzzle\Http\Client</parameter>
+        <parameter key="behat.wiz.guzzle.history.class">Guzzle\Plugin\History\HistoryPlugin</parameter>
+        <parameter key="behat.wiz.guzzle.auth.class">features\bootstrap\Extension\Guzzle\AuthenticationPlugin</parameter>
+
+        <!-- Listeners //-->
+        <parameter key="behat.wiz.listener.api.class">features\bootstrap\Extension\EventListener\ApiListener</parameter>
+        <parameter key="behat.wiz.listener.init.class">features\bootstrap\Extension\EventListener\InitListener</parameter>
+        <parameter key="behat.wiz.listener.history.class">features\bootstrap\Extension\EventListener\HistoryListener</parameter>
+
+        <parameter key="wisembly.redis.class">Wisembly\CoreBundle\Services\Redis\RedisClient</parameter>
+        <parameter key="behat.wiz.context.initializer.class">features\bootstrap\Extension\Context\Initializer\WizInitializer</parameter>
+        <parameter key="behat.wiz.context.api.initializer.class">features\bootstrap\Extension\Context\Initializer\ApiInitializer</parameter>
+    </parameters>
+    <services>
+        <!-- bags //-->
+        <service id="behat.wiz.bag" class="%wisembly.bag.class%" />
+
+        <service id="behat.wiz.guzzle.history" class="%behat.wiz.guzzle.history.class%">
+            <call method="setLimit">
+                <argument>1</argument>
+            </call>
+        </service>
+
+        <service id="behat.wiz.guzzle.auth" class="%behat.wiz.guzzle.auth.class%">
+            <tag name="behat.event_subscriber" />
+        </service>
+
+        <service id="behat.wiz.guzzle.http" class="%behat.wiz.guzzle.http.class%">
+            <argument>%behat.wiz.parameter.base_url%</argument>
+            <argument>%behat.wiz.guzzle.parameters%</argument>
+
+            <call method="addSubscriber">
+                <argument type="service" id="behat.wiz.guzzle.history" />
+            </call>
+
+            <call method="addSubscriber">
+                <argument type="service" id="behat.wiz.guzzle.auth" />
+            </call>
+        </service>
+
+        <service id="behat.wiz.redis" class="%wisembly.redis.class%" />
+
+        <service id="behat.wiz.context.initializer" class="%behat.wiz.context.initializer.class%">
+            <argument type="service" id="behat.wiz.bag" />
+            <argument>%behat.wiz.parameters%</argument>
+
+            <tag name="behat.context.initializer" />
+        </service>
+
+        <service id="behat.wiz.context.api.initializer" class="%behat.wiz.context.api.initializer.class%">
+            <argument type="service" id="behat.wiz.guzzle.http" />
+            <argument type="service" id="behat.wiz.guzzle.history" />
+            <argument type="service" id="behat.wiz.guzzle.auth" />
+            <argument type="service" id="behat.wiz.bag" />
+
+            <tag name="behat.context.initializer" />
+        </service>
+
+        <service id="behat.wiz.listener.init" class="%behat.wiz.listener.init.class%">
+            <argument type="service" id="behat.wiz.redis" />
+            <argument type="service" id="behat.wiz.bag" />
+
+            <tag name="behat.event_subscriber" priority="0" />
+        </service>
+
+        <service id="behat.wiz.listener.api" class="%behat.wiz.listener.api.class%">
+            <argument type="service" id="behat.wiz.guzzle.auth" />
+
+            <tag name="behat.event_subscriber" priority="0" />
+        </service>
+
+        <service id="behat.wiz.listener.history" class="%behat.wiz.listener.history.class%">
+            <argument type="service" id="behat.wiz.guzzle.history" />
+
+            <tag name="behat.event_subscriber" priority="0" />
+        </service>
+    </services>
+</container>
