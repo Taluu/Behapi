@@ -2,14 +2,14 @@
 
 namespace features\bootstrap\Extension\Context\Initializer;
 
-use Behat\Behat\Context\ContextInterface,
-    Behat\Behat\Context\Initializer\InitializerInterface;
+use Behat\Behat\Context\ContextInterface;
+use Behat\Behat\Context\Initializer\InitializerInterface;
 
-use Guzzle\Http\Client as GuzzleHttp,
-    Guzzle\Plugin\History\HistoryPlugin as GuzzleHistory;
+use Guzzle\Http\Client as GuzzleHttp;
+use Guzzle\Plugin\History\HistoryPlugin as GuzzleHistory;
 
-use features\bootstrap\Extension\Guzzle\AuthenticationPlugin,
-    features\bootstrap\Extension\Context\ApiContextInterface;
+use features\bootstrap\Extension\Guzzle\AuthenticationPlugin;
+use features\bootstrap\Extension\Context\ApiContextInterface;
 
 /**
  * Initializes all api contexts

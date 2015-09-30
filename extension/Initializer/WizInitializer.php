@@ -2,8 +2,8 @@
 
 namespace features\bootstrap\Extension\Context\Initializer;
 
-use Behat\Behat\Context\ContextInterface,
-    Behat\Behat\Context\Initializer\InitializerInterface;
+use Behat\Behat\Context\ContextInterface;
+use Behat\Behat\Context\Initializer\InitializerInterface;
 
 use Wisembly\CoreBundle\Domain\Bag;
 
