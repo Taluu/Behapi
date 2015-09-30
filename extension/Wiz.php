@@ -4,11 +4,19 @@ namespace Wisembly\Behat\Extension;
 use Symfony\Component\Config\FileLocator;
 use Symfony\Component\Config\Definition\Builder\ArrayNodeDefinition;
 
+use Symfony\Component\DependencyInjection\Reference;
+use Symfony\Component\DependencyInjection\Definition;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\DependencyInjection\Loader\XmlFileLoader;
 
 use Behat\Testwork\ServiceContainer\Extension;
 use Behat\Testwork\ServiceContainer\ExtensionManager;
+
+use GuzzleHttp\Client;
+use GuzzleHttp\Subscriber\History;
+
+use Wisembly\Behat\Extension\Tools\GuzzleFactory;
+use Wisembly\Behat\Extension\EventListener\Authentication;
 
 /**
  * WizContext feeder
@@ -65,31 +73,51 @@ class Wiz implements Extension
         $loader = new XmlFileLoader($container, new FileLocator(__DIR__));
         $loader->load('config.xml');
 
-        $guzzle = $config['guzzle'];
 
-        if (!isset($guzzle['redirect.disable'])) {
-            $guzzle['redirect.disable'] = true;
-        }
-
-        if (!isset($guzzle['request.options'])) {
-            $guzzle['request.options'] = ['exceptions' => false];
-        }
-
-        if (!isset($guzzle['request.options']['exceptions'])) {
-            $guzzle['request.options']['exceptions'] = false;
-        }
-
-        $container->setParameter('behat.wiz.guzzle.parameters', $guzzle);
-        $container->setParameter('behat.wiz.parameter.base_url', rtrim($config['base_url'], '/') . '/');
-
+        $this->loadGuzzle($container, $config['guzzle'], $config['base_url']);
         unset($config['guzzle'], $config['base_url']);
 
-        $container->setParameter('behat.wiz.parameters', $config);
+        $container->setParameter('wiz.parameters', $config);
     }
 
     /** {@inheritDoc} */
     public function process(ContainerBuilder $container)
     {
+    }
+
+    private function loadGuzzle(ContainerBuilder $container, array $config, $baseUrl)
+    {
+        $config = array_replace_recursive(
+            [
+                'base_url' => $baseUrl,
+
+                'defaults' => [
+                    'allow_redirects' => false,
+                    'exceptions' => false
+                ]
+            ],
+            $config
+        );
+
+        $container->register('guzzle.history'. History::class)
+            ->addArgument(1); // note : limit on the last request only ?
+
+        $factory = new Definition(GuzzleFactory::class);
+        $factory
+            ->addMethodCall('addSubscriber', [
+                new Reference('guzzle.history')
+            ])
+
+            ->addMethodCall('addSubscriber', [
+                new Definition(Authentication::class, [
+                    new Reference('wiz.bag')
+                ])
+            ])
+        ;
+
+        $container->register('guzzle.client')
+            ->addArgument($config)
+            ->setFactory([$factory, 'getClient']);
     }
 }
 

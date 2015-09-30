@@ -10,29 +10,6 @@
     <services>
         <service id="wiz.bag" class="Wisembly\CoreBundle\Domain\Bag" />
 
-        <service id="wiz.guzzle.history" class="Guzzle\Plugin\History\HistoryPlugin">
-            <call method="setLimit">
-                <argument>1</argument>
-            </call>
-        </service>
-
-        <service id="wiz.guzzle.auth" class="Wisembly\Behat\Extension\Guzzle\AuthenticationPlugin">
-            <tag name="event_subscriber" />
-        </service>
-
-        <service id="wiz.guzzle.http" class="Guzzle\Http\Client">
-            <argument>%wiz.parameter.base_url%</argument>
-            <argument>%wiz.guzzle.parameters%</argument>
-
-            <call method="addSubscriber">
-                <argument type="service" id="wiz.guzzle.history" />
-            </call>
-
-            <call method="addSubscriber">
-                <argument type="service" id="wiz.guzzle.auth" />
-            </call>
-        </service>
-
         <service id="wiz.redis" class="Wisembly\CoreBundle\Services\Redis\RedisClient" />
 
         <service id="wiz.context.initializer" class="Wisembly\Behat\Extension\Context\Initializer\WizInitializer">
