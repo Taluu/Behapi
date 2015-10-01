@@ -16,6 +16,7 @@ use GuzzleHttp\Client;
 use GuzzleHttp\Subscriber\History;
 
 use Wisembly\Behat\Extension\Tools\GuzzleFactory;
+use Wisembly\Behat\Extension\EventListener\Cleaner;
 use Wisembly\Behat\Extension\EventListener\Authentication;
 
 /**
@@ -73,9 +74,10 @@ class Wiz implements Extension
         $loader = new XmlFileLoader($container, new FileLocator(__DIR__));
         $loader->load('config.xml');
 
-
         $this->loadGuzzle($container, $config['guzzle'], $config['base_url']);
         unset($config['guzzle'], $config['base_url']);
+
+        $this->loadSubscribers($container);
 
         $container->setParameter('wiz.parameters', $config);
     }
@@ -83,6 +85,14 @@ class Wiz implements Extension
     /** {@inheritDoc} */
     public function process(ContainerBuilder $container)
     {
+    }
+
+    private function loadSubscribers(ContainerBuilder $container)
+    {
+        $container->register('wiz.subscriber.cleaner', Cleaner::class)
+            ->addArgument(new Reference('wiz.bag'))
+            ->addArgument(new Reference('guzzle.history'))
+            ->addTag('event_dispatcher.subscriber');
     }
 
     private function loadGuzzle(ContainerBuilder $container, array $config, $baseUrl)

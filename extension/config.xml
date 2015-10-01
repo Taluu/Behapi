@@ -27,24 +27,5 @@
 
             <tag name="context.initializer" />
         </service>
-
-        <service id="wiz.listener.init" class="Wisembly\Behat\Extension\EventListener\InitListener">
-            <argument type="service" id="wiz.redis" />
-            <argument type="service" id="wiz.bag" />
-
-            <tag name="event_subscriber" priority="0" />
-        </service>
-
-        <service id="wiz.listener.api" class="Wisembly\Behat\Extension\EventListener\ApiListener">
-            <argument type="service" id="wiz.guzzle.auth" />
-
-            <tag name="event_subscriber" priority="0" />
-        </service>
-
-        <service id="wiz.listener.history" class="Wisembly\Behat\Extension\EventListener\HistoryListener">
-            <argument type="service" id="wiz.guzzle.history" />
-
-            <tag name="event_subscriber" priority="0" />
-        </service>
     </services>
 </container>
