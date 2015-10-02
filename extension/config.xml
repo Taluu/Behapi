@@ -4,8 +4,6 @@
     xsi:schemaLocation="http://symfony.com/schema/dic/services http://symfony.com/schema/dic/services/services-1.0.xsd">
 
     <services>
-        <service id="wiz.redis" class="Wisembly\CoreBundle\Services\Redis\RedisClient" />
-
         <service id="wiz.context.initializer" class="Wisembly\Behat\Extension\Context\Initializer\WizInitializer">
             <argument type="service" id="wiz.bag" />
             <argument>%wiz.parameters%</argument>
