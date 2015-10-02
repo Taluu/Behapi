@@ -4,7 +4,7 @@ namespace Wisembly\Behat\Extension\EventListener;
 use GuzzleHttp\Event\BeforeEvent;
 use GuzzleHttp\Event\SubscriberInterface;
 
-use Wisembly\CoreBundle\Domain\Bag;
+use Wisembly\Behat\Extension\Tools\Bag;
 
 class Authentication implements SubscriberInterface
 {
@@ -27,12 +27,12 @@ class Authentication implements SubscriberInterface
     {
         $request = $event->getRequest();
 
-        if ($this->bag->has('token')) {
-            $request->addHeader('Wisembly-Token', $this->bag->get('token'));
+        if (null !== $this->bag['token']) {
+            $request->addHeader('Wisembly-Token', $this->bag['token']);
         }
 
-        if ($this->bag->has('api_key')) {
-            $request->addHeader('Wisembly-Api-Key', $this->bag->get('api_key'));
+        if (null !== $this->bag['api_key']) {
+            $request->addHeader('Wisembly-Api-Key', $this->bag['api_key']);
         }
     }
 }

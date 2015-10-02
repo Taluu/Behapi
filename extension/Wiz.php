@@ -15,7 +15,9 @@ use Behat\Testwork\ServiceContainer\ExtensionManager;
 use GuzzleHttp\Client;
 use GuzzleHttp\Subscriber\History;
 
+use Wisembly\Behat\Extension\Tools\Bag;
 use Wisembly\Behat\Extension\Tools\GuzzleFactory;
+
 use Wisembly\Behat\Extension\EventListener\Cleaner;
 use Wisembly\Behat\Extension\EventListener\Authentication;
 
@@ -85,14 +87,25 @@ class Wiz implements Extension
     /** {@inheritDoc} */
     public function process(ContainerBuilder $container)
     {
+        $definition = $container->getDefinition('wiz.subscriber.cleaner');
+
+        foreach ($container->findTaggedServiceIds('wiz.bag') as $id => $tags) {
+            foreach ($tags as $tag) {
+                if (!isset($tag['reset']) || true !== $tag['reset']) {
+                    continue;
+                }
+
+                $definition->addMethodCall('addBag', [new Reference($id)]);
+            }
+        }
     }
 
     private function loadSubscribers(ContainerBuilder $container)
     {
         $container->register('wiz.subscriber.cleaner', Cleaner::class)
-            ->addArgument(new Reference('wiz.bag'))
             ->addArgument(new Reference('guzzle.history'))
-            ->addTag('event_dispatcher.subscriber');
+            ->addTag('event_dispatcher.subscriber')
+        ;
     }
 
     private function loadGuzzle(ContainerBuilder $container, array $config, $baseUrl)
@@ -112,6 +125,13 @@ class Wiz implements Extension
         $container->register('guzzle.history'. History::class)
             ->addArgument(1); // note : limit on the last request only ?
 
+        $container->register('wiz.bag.auth', Bag::class)
+            ->addTag('wiz.bag', ['reset' => true])
+            ->addArgument([
+                'token' => null,
+                'api_key' => null
+            ]);
+
         $factory = new Definition(GuzzleFactory::class);
         $factory
             ->addMethodCall('addSubscriber', [
@@ -120,7 +140,7 @@ class Wiz implements Extension
 
             ->addMethodCall('addSubscriber', [
                 new Definition(Authentication::class, [
-                    new Reference('wiz.bag')
+                    new Reference('wiz.bag.auth')
                 ])
             ])
         ;

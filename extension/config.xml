@@ -2,14 +2,8 @@
 <container xmlns="http://symfony.com/schema/dic/services"
     xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
     xsi:schemaLocation="http://symfony.com/schema/dic/services http://symfony.com/schema/dic/services/services-1.0.xsd">
-    <parameters>
-        <!-- Bags, collections //-->
-        <parameter key="wiz.parameters" type="collection" />
-    </parameters>
 
     <services>
-        <service id="wiz.bag" class="Wisembly\CoreBundle\Domain\Bag" />
-
         <service id="wiz.redis" class="Wisembly\CoreBundle\Services\Redis\RedisClient" />
 
         <service id="wiz.context.initializer" class="Wisembly\Behat\Extension\Context\Initializer\WizInitializer">
