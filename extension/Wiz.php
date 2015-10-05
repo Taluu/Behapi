@@ -1,13 +1,10 @@
 <?php
 namespace Wisembly\Behat\Extension;
 
-use Symfony\Component\Config\FileLocator;
-use Symfony\Component\Config\Definition\Builder\ArrayNodeDefinition;
-
 use Symfony\Component\DependencyInjection\Reference;
 use Symfony\Component\DependencyInjection\Definition;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
-use Symfony\Component\DependencyInjection\Loader\XmlFileLoader;
+use Symfony\Component\Config\Definition\Builder\ArrayNodeDefinition;
 
 use Behat\Testwork\ServiceContainer\Extension;
 use Behat\Testwork\ServiceContainer\ExtensionManager;
@@ -20,6 +17,9 @@ use Wisembly\Behat\Extension\Tools\GuzzleFactory;
 
 use Wisembly\Behat\Extension\EventListener\Cleaner;
 use Wisembly\Behat\Extension\EventListener\Authentication;
+
+use Wisembly\Behat\Extension\Initializer\Api;
+use Wisembly\Behat\Extension\Initializer\Wiz as WizInitializer;
 
 /**
  * WizContext feeder
@@ -73,15 +73,12 @@ class Wiz implements Extension
     /** {@inheritDoc} */
     public function load(ContainerBuilder $container, array $config)
     {
-        $loader = new XmlFileLoader($container, new FileLocator(__DIR__));
-        $loader->load('config.xml');
-
         $this->loadGuzzle($container, $config['guzzle'], $config['base_url']);
         unset($config['guzzle'], $config['base_url']);
 
         $this->loadSubscribers($container);
 
-        $container->setParameter('wiz.parameters', $config);
+        $this->loadInitializers($container, $config);
     }
 
     /** {@inheritDoc} */
@@ -148,6 +145,22 @@ class Wiz implements Extension
         $container->register('guzzle.client')
             ->addArgument($config)
             ->setFactory([$factory, 'getClient']);
+    }
+
+    private function loadInitializers(ContainerBuilder $container, array $config)
+    {
+        $container->register('wiz.initializer.wiz', WizInitializer::class)
+            ->addArgument($config['environment'])
+            ->addArgument(true === $config['debug'])
+            ->addTag('context.initializer')
+        ;
+
+        $container->register('wiz.initializer.api', Api::class)
+            ->addArgument(new Reference('guzzle.client'))
+            ->addArgument(new Reference('guzzle.history'))
+            ->addArgument(new Reference('wiz.bag.auth'))
+            ->addTag('context.initializer')
+        ;
     }
 }
 
