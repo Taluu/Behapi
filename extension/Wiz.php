@@ -40,7 +40,7 @@ class Wiz implements Extension
     /** {@inheritDoc} */
     public function configure(ArrayNodeDefinition $builder)
     {
-        $node
+        $builder
             ->children()
                 ->scalarNode('base_url')
                     ->isRequired()
@@ -119,7 +119,7 @@ class Wiz implements Extension
             $config
         );
 
-        $container->register('guzzle.history'. History::class)
+        $container->register('guzzle.history', History::class)
             ->addArgument(1); // note : limit on the last request only ?
 
         $container->register('wiz.bag.auth', Bag::class)
@@ -142,7 +142,7 @@ class Wiz implements Extension
             ])
         ;
 
-        $container->register('guzzle.client')
+        $container->register('guzzle.client', Client::class)
             ->addArgument($config)
             ->setFactory([$factory, 'getClient']);
     }
