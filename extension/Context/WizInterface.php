@@ -1,14 +1,12 @@
 <?php
 namespace Wisembly\Behat\Extension\Context;
 
-use Behat\Behat\Context\Context;
-
 /**
  * Base context interface that all contexts must implement
  *
  * @author Baptiste Clavié <baptiste@wisembly.com>
  */
-interface WizInterface extends Context
+interface WizInterface
 {
     /**
      * Initialize this WizContext

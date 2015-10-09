@@ -3,6 +3,7 @@ namespace Wisembly\Behat\Context;
 
 use RuntimeException;
 
+use Behat\Behat\Context\Context;
 use Behat\Gherkin\Node\TableNode;
 use Behat\Gherkin\Node\PyStringNode;
 
@@ -14,7 +15,7 @@ use GuzzleHttp\Message\RequestInterface as GuzzleRequest;
 use Wisembly\Behat\Extension\Context\ApiTrait;
 use Wisembly\Behat\Extension\Context\ApiInterface;
 
-class Rest implements ApiInterface
+class Rest implements ApiInterface, Context
 {
     use ApiTrait;
 

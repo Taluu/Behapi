@@ -3,6 +3,7 @@ namespace Wisembly\Behat\Context;
 
 use Datetime;
 
+use Behat\Behat\Context\Context;
 use Behat\Gherkin\Node\PyStringNode;
 
 use PHPUnit_Framework_Assert as Assert;
@@ -10,7 +11,7 @@ use PHPUnit_Framework_Assert as Assert;
 use Symfony\Component\PropertyAccess\PropertyAccess;
 use Symfony\Component\PropertyAccess\PropertyAccessor;
 
-abstract class AbstractJson
+abstract class AbstractJson implements Context
 {
     /** @var PropertyAccessor */
     private $accessor;
