@@ -1,13 +1,17 @@
 <?php
 namespace Wisembly\Behat\Extension;
 
+use Behat\Testwork\ServiceContainer\Extension;
+use Behat\Testwork\ServiceContainer\ExtensionManager;
+
+use Symfony\Component\HttpKernel\Profiler\Profiler;
+use Symfony\Component\HttpKernel\Profiler\FileProfilerStorage;
+
+use Symfony\Component\Config\Definition\Builder\ArrayNodeDefinition;
+
 use Symfony\Component\DependencyInjection\Reference;
 use Symfony\Component\DependencyInjection\Definition;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
-use Symfony\Component\Config\Definition\Builder\ArrayNodeDefinition;
-
-use Behat\Testwork\ServiceContainer\Extension;
-use Behat\Testwork\ServiceContainer\ExtensionManager;
 
 use GuzzleHttp\Client;
 use GuzzleHttp\Subscriber\History;
@@ -19,6 +23,7 @@ use Wisembly\Behat\Extension\EventListener\Cleaner;
 use Wisembly\Behat\Extension\EventListener\Authentication;
 
 use Wisembly\Behat\Extension\Initializer\Api;
+use Wisembly\Behat\Extension\Initializer\ProfilerAware;
 use Wisembly\Behat\Extension\Initializer\Wiz as WizInitializer;
 
 /**
@@ -77,6 +82,7 @@ class Wiz implements Extension
         unset($config['guzzle'], $config['base_url']);
 
         $this->loadSubscribers($container);
+        $this->loadProfiler($container, $config['environment']);
 
         $this->loadInitializers($container, $config);
     }
@@ -147,6 +153,15 @@ class Wiz implements Extension
             ->setFactory([$factory, 'getClient']);
     }
 
+    private function loadProfiler(ContainerBuilder $container, $environment)
+    {
+        $storage = new Definition(FileProfilerStorage::class);
+        $storage->addArgument(sprintf('file:%s/../../app/cache/%s/profiler', __DIR__, $environment));
+
+        $container->register('profiler', Profiler::class)
+            ->addArgument($storage);
+    }
+
     private function loadInitializers(ContainerBuilder $container, array $config)
     {
         $container->register('wiz.initializer.wiz', WizInitializer::class)
@@ -159,6 +174,11 @@ class Wiz implements Extension
             ->addArgument(new Reference('guzzle.client'))
             ->addArgument(new Reference('guzzle.history'))
             ->addArgument(new Reference('wiz.bag.auth'))
+            ->addTag('context.initializer')
+        ;
+
+        $container->register('wiz.initializer.profiler', ProfilerAware::class)
+            ->addArgument(new Reference('profiler'))
             ->addTag('context.initializer')
         ;
     }
