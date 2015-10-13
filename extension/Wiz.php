@@ -61,6 +61,22 @@ class Wiz implements Extension
                     ->defaultFalse()
                 ->end()
 
+                ->arrayNode('app')
+                    ->children()
+                        ->scalarNode('id')
+                            ->info('Application ID to use')
+                            ->isRequired()
+                            ->cannotBeEmpty()
+                        ->end()
+
+                        ->scalarNode('secret')
+                            ->info('Application Secret to use')
+                            ->isRequired()
+                            ->cannotBeEmpty()
+                        ->end()
+                    ->end()
+                ->end()
+
                 ->arrayNode('guzzle')
                     ->useAttributeAsKey('key')
                     ->prototype('variable')
