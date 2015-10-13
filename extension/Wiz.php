@@ -24,6 +24,7 @@ use Wisembly\Behat\Extension\EventListener\Authentication;
 
 use Wisembly\Behat\Extension\Initializer\Api;
 use Wisembly\Behat\Extension\Initializer\ProfilerAware;
+use Wisembly\Behat\Extension\Initializer\RestAuthentication;
 use Wisembly\Behat\Extension\Initializer\Wiz as WizInitializer;
 
 /**
@@ -148,7 +149,7 @@ class Wiz implements Extension
             ->addTag('wiz.bag', ['reset' => true])
             ->addArgument([
                 'token' => null,
-                'api_key' => null
+                'api-key' => null
             ]);
 
         $factory = new Definition(GuzzleFactory::class);
@@ -195,6 +196,12 @@ class Wiz implements Extension
 
         $container->register('wiz.initializer.profiler', ProfilerAware::class)
             ->addArgument(new Reference('profiler'))
+            ->addTag('context.initializer')
+        ;
+
+        $container->register('wiz.initializer.authentication', RestAuthentication::class)
+            ->addArgument($config['app']['id'])
+            ->addArgument($config['app']['secret'])
             ->addTag('context.initializer')
         ;
     }

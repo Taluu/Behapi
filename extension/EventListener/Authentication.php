@@ -29,10 +29,8 @@ class Authentication implements SubscriberInterface
 
         if (null !== $this->bag['token']) {
             $request->addHeader('Wisembly-Token', $this->bag['token']);
-        }
-
-        if (null !== $this->bag['api_key']) {
-            $request->addHeader('Wisembly-Api-Key', $this->bag['api_key']);
+        } elseif (null !== $this->bag['api-key']) {
+            $request->addHeader('Wisembly-Api-Key', $this->bag['api-key']);
         }
     }
 }
