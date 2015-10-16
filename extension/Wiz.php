@@ -20,7 +20,6 @@ use Wisembly\Behat\Extension\Tools\Bag;
 use Wisembly\Behat\Extension\Tools\GuzzleFactory;
 
 use Wisembly\Behat\Extension\EventListener\Cleaner;
-use Wisembly\Behat\Extension\EventListener\Authentication;
 
 use Wisembly\Behat\Extension\Initializer\Api;
 use Wisembly\Behat\Extension\Initializer\ProfilerAware;
@@ -145,23 +144,10 @@ class Wiz implements Extension
         $container->register('guzzle.history', History::class)
             ->addArgument(1); // note : limit on the last request only ?
 
-        $container->register('wiz.bag.auth', Bag::class)
-            ->addTag('wiz.bag', ['reset' => true])
-            ->addArgument([
-                'token' => null,
-                'api-key' => null
-            ]);
-
         $factory = new Definition(GuzzleFactory::class);
         $factory
             ->addMethodCall('addSubscriber', [
                 new Reference('guzzle.history')
-            ])
-
-            ->addMethodCall('addSubscriber', [
-                new Definition(Authentication::class, [
-                    new Reference('wiz.bag.auth')
-                ])
             ])
         ;
 
@@ -190,7 +176,6 @@ class Wiz implements Extension
         $container->register('wiz.initializer.api', Api::class)
             ->addArgument(new Reference('guzzle.client'))
             ->addArgument(new Reference('guzzle.history'))
-            ->addArgument(new Reference('wiz.bag.auth'))
             ->addTag('context.initializer')
         ;
 

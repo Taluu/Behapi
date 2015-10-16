@@ -7,8 +7,6 @@ use GuzzleHttp\Client as GuzzleClient;
 use GuzzleHttp\Subscriber\History as GuzzleHistory;
 use GuzzleHttp\Message\ResponseInterface as GuzzleResponse;
 
-use Wisembly\Behat\Extension\Tools\Bag;
-
 /**
  * Base context interface that all api contexts must implement
  *
@@ -25,6 +23,6 @@ interface ApiInterface
     public function getResponse();
 
     /** Setup this context */
-    public function initializeApi(GuzzleClient $client, GuzzleHistory $history, Bag $bag);
+    public function initializeApi(GuzzleClient $client, GuzzleHistory $history);
 }
 

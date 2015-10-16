@@ -7,7 +7,6 @@ use Behat\Behat\Context\Initializer\ContextInitializer;
 use GuzzleHttp\Client as GuzzleHttp;
 use GuzzleHttp\Subscriber\History as GuzzleHistory;
 
-use Wisembly\Behat\Extension\Tools\Bag;
 use Wisembly\Behat\Extension\Context\ApiInterface;
 
 /**
@@ -23,12 +22,8 @@ class Api implements ContextInitializer
     /** @var GuzzleHistory */
     private $history;
 
-    /** @var Bag */
-    private $bag;
-
-    public function __construct(GuzzleHttp $client, GuzzleHistory $history, Bag $bag)
+    public function __construct(GuzzleHttp $client, GuzzleHistory $history)
     {
-        $this->bag = $bag;
         $this->client = $client;
         $this->history = $history;
     }
@@ -40,7 +35,7 @@ class Api implements ContextInitializer
             return;
         }
 
-        $context->initializeApi($this->client, $this->history, $this->bag);
+        $context->initializeApi($this->client, $this->history);
     }
 }
 

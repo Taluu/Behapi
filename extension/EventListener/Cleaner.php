@@ -21,7 +21,7 @@ class Cleaner implements EventSubscriberInterface
     private $history;
 
     /** @var Bag[] */
-    private $bags;
+    private $bags = [];
 
     public function __construct(HistorySubscriber $history)
     {

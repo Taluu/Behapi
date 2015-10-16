@@ -7,8 +7,6 @@ use GuzzleHttp\Client as GuzzleClient;
 use GuzzleHttp\Subscriber\History as GuzzleHistory;
 use GuzzleHttp\Message\ResponseInterface as GuzzleResponse;
 
-use Wisembly\Behat\Extension\Tools\Bag;
-
 trait ApiTrait
 {
     /** @var GuzzleClient */
@@ -17,13 +15,9 @@ trait ApiTrait
     /** @var GuzzleHistory */
     private $history = null;
 
-    /** @var Bag */
-    private $authBag;
-
     /** {@inheritDoc} */
-    public function initializeApi(GuzzleClient $client, GuzzleHistory $history, Bag $bag)
+    public function initializeApi(GuzzleClient $client, GuzzleHistory $history)
     {
-        $this->authBag = $bag;
         $this->client = $client;
         $this->history = $history;
     }
