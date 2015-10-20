@@ -76,11 +76,6 @@ class Wiz implements Extension
                         ->end()
                     ->end()
                 ->end()
-
-                ->arrayNode('guzzle')
-                    ->useAttributeAsKey('key')
-                    ->prototype('variable')
-                ->end()
             ->end()
         ->end();
 
@@ -94,8 +89,8 @@ class Wiz implements Extension
     /** {@inheritDoc} */
     public function load(ContainerBuilder $container, array $config)
     {
-        $this->loadGuzzle($container, $config['guzzle'], $config['base_url']);
-        unset($config['guzzle'], $config['base_url']);
+        $this->loadGuzzle($container, $config['base_url']);
+        unset($config['base_url']);
 
         $this->loadSubscribers($container);
         $this->loadProfiler($container, $config['environment']);
@@ -127,19 +122,16 @@ class Wiz implements Extension
         ;
     }
 
-    private function loadGuzzle(ContainerBuilder $container, array $config, $baseUrl)
+    private function loadGuzzle(ContainerBuilder $container, $baseUrl)
     {
-        $config = array_replace_recursive(
-            [
-                'base_url' => $baseUrl,
+        $config = [
+            'base_url' => $baseUrl,
 
-                'defaults' => [
-                    'allow_redirects' => false,
-                    'exceptions' => false
-                ]
-            ],
-            $config
-        );
+            'defaults' => [
+                'allow_redirects' => false,
+                'exceptions' => false
+            ]
+        ];
 
         $container->register('guzzle.history', History::class)
             ->addArgument(1); // note : limit on the last request only ?
