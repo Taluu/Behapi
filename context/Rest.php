@@ -37,7 +37,6 @@ class Rest implements ApiInterface, Context
         $history->clear();
         $this->request = $client->createRequest(strtoupper($method), $url);
 
-
         // let's set a default content-type
         $this->setContentType('application/json');
     }
