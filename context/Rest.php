@@ -138,6 +138,34 @@ class Rest implements ApiInterface, Context
         Assert::assertNull($response->getBody());
     }
 
+    /** @Then the response should contain :data */
+    public function responseShouldContain($data)
+    {
+        $response = $this->getResponse();
+        Assert::assertContains($data, (string) $response->getBody());
+    }
+
+    /** @Then the response should not contain :data */
+    public function responseShouldNotContain($data)
+    {
+        $response = $this->getResponse();
+        Assert::assertNotContains($data, (string) $response->getBody());
+    }
+
+    /** @Then the response should be :data */
+    public function responseShouldBe($data)
+    {
+        $response = $this->getResponse();
+        Assert::assertEquals($data, (string) $response->getBody());
+    }
+
+    /** @Then the response should not be :data */
+    public function responseShouldNotBe($data)
+    {
+        $response = $this->getResponse();
+        Assert::assertNotEquals($data, (string) $response->getBody());
+    }
+
     /**
      * @AfterScenario @api
      * @AfterScenario @rest
