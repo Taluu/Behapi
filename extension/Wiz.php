@@ -16,12 +16,15 @@ use Symfony\Component\DependencyInjection\ContainerBuilder;
 use GuzzleHttp\Client;
 use GuzzleHttp\Subscriber\History;
 
+use Predis\Client as RedisClient;
+
 use Wisembly\Behat\Extension\Tools\Bag;
 use Wisembly\Behat\Extension\Tools\GuzzleFactory;
 
 use Wisembly\Behat\Extension\EventListener\Cleaner;
 
 use Wisembly\Behat\Extension\Initializer\Api;
+use Wisembly\Behat\Extension\Initializer\RedisAware;
 use Wisembly\Behat\Extension\Initializer\ProfilerAware;
 use Wisembly\Behat\Extension\Initializer\RestAuthentication;
 use Wisembly\Behat\Extension\Initializer\Wiz as WizInitializer;
@@ -61,6 +64,8 @@ class Wiz implements Extension
                     ->defaultFalse()
                 ->end()
 
+                // TODO: add redis config here
+
                 ->arrayNode('app')
                     ->children()
                         ->scalarNode('id')
@@ -92,6 +97,7 @@ class Wiz implements Extension
         $this->loadGuzzle($container, $config['base_url']);
         unset($config['base_url']);
 
+        $this->loadRedis($container);
         $this->loadSubscribers($container);
         $this->loadProfiler($container, $config['environment']);
 
@@ -120,6 +126,12 @@ class Wiz implements Extension
             ->addArgument(new Reference('guzzle.history'))
             ->addTag('event_dispatcher.subscriber')
         ;
+    }
+
+    private function loadRedis(ContainerBuilder $container)
+    {
+        // TODO: configure redis clients through the config tree
+        $container->register('predis.client', RedisClient::class);
     }
 
     private function loadGuzzle(ContainerBuilder $container, $baseUrl)
@@ -168,6 +180,11 @@ class Wiz implements Extension
         $container->register('wiz.initializer.api', Api::class)
             ->addArgument(new Reference('guzzle.client'))
             ->addArgument(new Reference('guzzle.history'))
+            ->addTag('context.initializer')
+        ;
+
+        $container->register('wiz.initializer.redis', RedisAware::class)
+            ->addArgument(new Reference('predis.client'))
             ->addTag('context.initializer')
         ;
 
