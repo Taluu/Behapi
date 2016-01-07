@@ -204,5 +204,29 @@ abstract class AbstractJson implements Context
         Assert::assertInternalType('array', $value);
         Assert::assertLessThanOrEqual((int) $count, count($value));
     }
+
+    /** @Then in the json, the root should be an array */
+    public function rootShouldBeAnArray()
+    {
+        Assert::assertInternalType('array', $this->getJson());
+    }
+
+    /** @Then in the json, the root should have :count element(s) */
+    public function theRootShouldHaveElements($count)
+    {
+        $value = $this->getJson();
+
+        Assert::assertInternalType('array', $value);
+        Assert::assertCount((int) $count, $value);
+    }
+
+    /** @Then in the json, the root should have at most :count element(s) */
+    public function theRootShouldHaveAtMostElements($count)
+    {
+        $value = $this->getJson();
+
+        Assert::assertInternalType('array', $value);
+        Assert::assertLessThanOrEqual((int) $count, count($value));
+    }
 }
 

@@ -104,6 +104,13 @@ class Rest implements ApiInterface, Context
         Assert::assertSame((int) $expected, (int) $response->getStatusCode());
     }
 
+    /** @Then the status code should not be :expected */
+    public function statusCodeShouldNotBe($expected)
+    {
+        $response = $this->getResponse();
+        Assert::assertNotSame((int) $expected, (int) $response->getStatusCode());
+    }
+
     /** @Then the content-type should be equal to :expected */
     public function contentTypeShouldBe($expected)
     {
