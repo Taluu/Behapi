@@ -26,25 +26,29 @@ class Json extends AbstractJson implements ApiInterface
         parent::responseIsValidjson();
     }
 
-    /** @Then in the json, the date difference between :from and :to should be equal to :diff day(s) */
+    /** @Then in the json, the date difference between :from and :to should be equal to :diff :format */
     public function theDateDiffShouldBeEqualTo($from, $to, $diff, $format = 'days')
     {
         $to = new DatetimeImmutable($this->getValue($to));
         $from = new DatetimeImmutable($this->getValue($from));
 
         switch ($format) {
+            case 'day':
             case 'days':
                 $format = '%a';
                 break;
 
+            case 'hour':
             case 'hours':
                 $format = '%h';
                 break;
 
+            case 'minute':
             case 'minutes':
                 $format = '%i';
                 break;
 
+            case 'second':
             case 'seconds':
                 $format = '%s';
                 break;
