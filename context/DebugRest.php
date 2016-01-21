@@ -74,20 +74,12 @@ class DebugRest implements Context, ApiInterface, WizInterface
             }
         }
 
-        $buffer = ob_get_clean();
-
-        echo "\n\n";
-
         foreach ($debug as $key => $value) {
             echo "\033[36m| \033[1m$key : \033[0;36m$value\033[0m\n";
         }
 
         echo "\n";
         echo (string) $response->getBody();
-        echo "\n\n";
-
-        ob_start();
-        echo $buffer;
     }
 }
 
