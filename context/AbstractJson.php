@@ -135,6 +135,20 @@ abstract class AbstractJson implements Context
         Assert::assertNotContains($expected, $this->getValue($path));
     }
 
+    /** @Then in the json, :path collection should contain an element with :value equal to :expected */
+    public function theJsonPathCollectionContains($path, $value, $expected)
+    {
+        $collection = $this->accessor->getValue($this->getJson(), $path);
+
+        foreach ($collection as $element) {
+            if ($expected === $this->accessor->getValue($element, $value)) {
+                return;
+            }
+        }
+
+        Assert::fail("$path collection does not contain an element with $value equal to $expected");
+    }
+
     /** @Then in the json, :path should be a valid date(time) */
     public function theJsonPathShouldBeAValidDate($path)
     {
