@@ -18,6 +18,7 @@ use GuzzleHttp\Subscriber\History;
 
 use Predis\Client as RedisClient;
 
+use Wisembly\Behat\Extension\Initializer\TwigInitializer;
 use Wisembly\Behat\Extension\Tools\Bag;
 use Wisembly\Behat\Extension\Tools\GuzzleFactory;
 
@@ -28,6 +29,7 @@ use Wisembly\Behat\Extension\Initializer\RedisAware;
 use Wisembly\Behat\Extension\Initializer\ProfilerAware;
 use Wisembly\Behat\Extension\Initializer\RestAuthentication;
 use Wisembly\Behat\Extension\Initializer\Wiz as WizInitializer;
+use Wisembly\Behat\Extension\Tools\Twig;
 
 /**
  * WizContext feeder
@@ -100,6 +102,7 @@ class Wiz implements Extension
         $this->loadRedis($container);
         $this->loadSubscribers($container);
         $this->loadProfiler($container, $config['environment']);
+        $this->loadTwig($container, $config['environment'], $config['debug']);
 
         $this->loadInitializers($container, $config);
     }
@@ -198,6 +201,24 @@ class Wiz implements Extension
             ->addArgument($config['app']['secret'])
             ->addTag('context.initializer')
         ;
+
+        $container->register('wiz.initializer.twig', TwigInitializer::class)
+            ->addArgument(new Reference('twig'))
+            ->addTag('context.initializer')
+        ;
+    }
+
+    private function loadTwig(ContainerBuilder $container, $environment, $debug)
+    {
+        $container->register('twig.loader', \Twig_Loader_Chain::class);
+
+        $container->register('twig', \Twig_Environment::class)
+            ->addArgument(new Reference('twig.loader'))
+            ->addArgument([
+                'debug' => $debug,
+                'cache' => sprintf('%s/../../app/cache/%s/profiler', __DIR__, $environment),
+                'autoescape' => false
+            ]);
     }
 }
 

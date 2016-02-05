@@ -14,13 +14,22 @@ use GuzzleHttp\Message\RequestInterface as GuzzleRequest;
 
 use Wisembly\Behat\Extension\Context\ApiTrait;
 use Wisembly\Behat\Extension\Context\ApiInterface;
+use Wisembly\Behat\Extension\Context\TwigInterface;
 
-class Rest implements ApiInterface, Context
+class Rest implements ApiInterface, Context, TwigInterface
 {
     use ApiTrait;
 
     /** @var GuzzleRequest|null */
     private $request;
+
+    /** @var  \Twig_Environment */
+    private $twig;
+
+    public function initializeTwig(\Twig_Environment $twig)
+    {
+        $this->twig = $twig;
+    }
 
     /** @When /^I create a "(?P<method>GET|POST|PATCH|PUT|DELETE)" request to "(?P<url>.+?)"$/ */
     public function createARequest($method, $url)
@@ -71,7 +80,7 @@ class Rest implements ApiInterface, Context
     public function setTheBody(PyStringNode $body)
     {
         $request = $this->getRequest();
-        $request->setBody(Stream::factory((string) $body));
+        $request->setBody(Stream::factory($this->twig->createTemplate((string) $body)->render([])));
     }
 
     /** @When I add/set the value :value to the header :header */
