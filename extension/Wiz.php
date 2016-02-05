@@ -29,7 +29,6 @@ use Wisembly\Behat\Extension\Initializer\RedisAware;
 use Wisembly\Behat\Extension\Initializer\ProfilerAware;
 use Wisembly\Behat\Extension\Initializer\RestAuthentication;
 use Wisembly\Behat\Extension\Initializer\Wiz as WizInitializer;
-use Wisembly\Behat\Extension\Tools\Twig;
 
 /**
  * WizContext feeder
@@ -216,7 +215,7 @@ class Wiz implements Extension
             ->addArgument(new Reference('twig.loader'))
             ->addArgument([
                 'debug' => $debug,
-                'cache' => sprintf('%s/../../app/cache/%s/profiler', __DIR__, $environment),
+                'cache' => sprintf('%s/../../app/cache/%s/twig/behat', __DIR__, $environment),
                 'autoescape' => false
             ]);
     }
