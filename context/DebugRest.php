@@ -32,6 +32,7 @@ class DebugRest implements Context, ApiInterface, WizInterface
     {
         if ($scope->getScenario()->hasTag('debug')) {
             $this->debug();
+            return;
         }
 
         if (false === $this->debug) {
