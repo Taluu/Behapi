@@ -60,6 +60,9 @@ class Rest implements ApiInterface, Context, TwigInterface
         $query->clear();
 
         foreach ($parameters->getRowsHash() as $parameter => $value) {
+            if (is_string($value)) {
+                $value = $this->renderString($value);
+            }
             $query->add($parameter, $value);
         }
     }
