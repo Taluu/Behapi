@@ -132,6 +132,13 @@ class Rest implements ApiInterface, Context, TwigInterface
         Assert::assertSame($expected, $response->getHeader($header));
     }
 
+    /** @Then the response header :header should contain :expected */
+    public function headerShouldContain($header, $expected)
+    {
+        $response = $this->getResponse();
+        Assert::assertContains($expected, (string) $response->getHeader($header));
+    }
+
     /** @Then the response should have a header :header */
     public function responseShouldHaveHeader($header)
     {
