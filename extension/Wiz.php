@@ -3,6 +3,7 @@ namespace Wisembly\Behat\Extension;
 
 use Behat\Testwork\ServiceContainer\Extension;
 use Behat\Testwork\ServiceContainer\ExtensionManager;
+use Behat\Testwork\Cli\ServiceContainer\CliExtension;
 
 use Symfony\Component\HttpKernel\Profiler\Profiler;
 use Symfony\Component\HttpKernel\Profiler\FileProfilerStorage;
@@ -18,15 +19,17 @@ use GuzzleHttp\Subscriber\History;
 
 use Predis\Client as RedisClient;
 
-use Wisembly\Behat\Extension\Initializer\TwigInitializer;
 use Wisembly\Behat\Extension\Tools\Bag;
+use Wisembly\Behat\Extension\Tools\Debug;
 use Wisembly\Behat\Extension\Tools\GuzzleFactory;
 
+use Wisembly\Behat\Extension\Cli\DebugController;
 use Wisembly\Behat\Extension\EventListener\Cleaner;
 
 use Wisembly\Behat\Extension\Initializer\Api;
 use Wisembly\Behat\Extension\Initializer\RedisAware;
 use Wisembly\Behat\Extension\Initializer\ProfilerAware;
+use Wisembly\Behat\Extension\Initializer\TwigInitializer;
 use Wisembly\Behat\Extension\Initializer\RestAuthentication;
 use Wisembly\Behat\Extension\Initializer\Wiz as WizInitializer;
 
@@ -95,6 +98,8 @@ class Wiz implements Extension
     /** {@inheritDoc} */
     public function load(ContainerBuilder $container, array $config)
     {
+        $this->loadDebug($container);
+
         $this->loadGuzzle($container, $config['base_url']);
         unset($config['base_url']);
 
@@ -120,6 +125,16 @@ class Wiz implements Extension
                 $definition->addMethodCall('addBag', [new Reference($id)]);
             }
         }
+    }
+
+    private function loadDebug(ContainerBuilder $container)
+    {
+        $container->register('wiz.debug', Debug::class);
+
+        $container->register('wiz.controller.debug', DebugController::class)
+            ->addArgument(new Reference('wiz.debug'))
+            ->addTag(CliExtension::CONTROLLER_TAG, ['priority' => 10])
+        ;
     }
 
     private function loadSubscribers(ContainerBuilder $container)
