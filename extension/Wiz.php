@@ -64,10 +64,6 @@ class Wiz implements Extension
                     ->defaultValue('dev')
                 ->end()
 
-                ->booleanNode('debug')
-                    ->defaultFalse()
-                ->end()
-
                 // TODO: add redis config here
 
                 ->arrayNode('app')
@@ -106,7 +102,7 @@ class Wiz implements Extension
         $this->loadRedis($container);
         $this->loadSubscribers($container);
         $this->loadProfiler($container, $config['environment']);
-        $this->loadTwig($container, $config['environment'], $config['debug']);
+        $this->loadTwig($container, $config['environment']);
 
         $this->loadInitializers($container, $config);
     }
@@ -190,7 +186,7 @@ class Wiz implements Extension
     {
         $container->register('wiz.initializer.wiz', WizInitializer::class)
             ->addArgument($config['environment'])
-            ->addArgument(true === $config['debug'])
+            ->addArgument(new Reference('wiz.debug'))
             ->addTag('context.initializer')
         ;
 
@@ -222,14 +218,14 @@ class Wiz implements Extension
         ;
     }
 
-    private function loadTwig(ContainerBuilder $container, $environment, $debug)
+    private function loadTwig(ContainerBuilder $container, $environment)
     {
         $container->register('twig.loader', \Twig_Loader_Chain::class);
 
         $container->register('twig', \Twig_Environment::class)
             ->addArgument(new Reference('twig.loader'))
             ->addArgument([
-                'debug' => $debug,
+                //'debug' => (bool) $debug, // ??? maybe if `'dev' === $environment` instead ? or a proper class instead ?
                 'cache' => sprintf('%s/../../app/cache/%s/twig/behat', __DIR__, $environment),
                 'autoescape' => false
             ]);

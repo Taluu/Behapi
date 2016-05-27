@@ -4,6 +4,7 @@ namespace Wisembly\Behat\Extension\Initializer;
 use Behat\Behat\Context\Context;
 use Behat\Behat\Context\Initializer\ContextInitializer;
 
+use Wisembly\Behat\Extension\Tools\Debug;
 use Wisembly\Behat\Extension\Context\WizInterface;
 
 /**
@@ -16,15 +17,16 @@ class Wiz implements ContextInitializer
     /** @var string */
     private $environment;
 
-    private $debug = false;
+    /** @var Debug */
+    private $debug;
 
     /*
      * @param string $environment Environment in which the behat suite is ran
      * @param boolean $debug Is the debug mode activated ?
      */
-    public function __construct($environment, $debug = false)
+    public function __construct($environment, Debug $debug)
     {
-        $this->debug = (bool) $debug;
+        $this->debug = $debug;
         $this->environment = (string) $environment;
     }
 
@@ -35,7 +37,7 @@ class Wiz implements ContextInitializer
             return;
         }
 
-        $context->initializeWiz($this->environment, $this->debug);
+        $context->initializeWiz($this->environment, $this->debug->getStatus());
     }
 }
 
