@@ -8,6 +8,7 @@ use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Input\InputInterface;
 
 use Behat\Testwork\Cli\Controller;
+use Behat\Testwork\Output\OutputManager;
 
 use Wisembly\Behat\Extension\Tools\Debug;
 
@@ -16,9 +17,13 @@ final class DebugController implements Controller
     /** @var Debug */
     private $debug;
 
-    public function __construct(Debug $debug)
+    /** @var OutputManager */
+    private $outputManager;
+
+    public function __construct(OutputManager $manager, Debug $debug)
     {
         $this->debug = $debug;
+        $this->manager = $manager;
     }
 
     /** {@inheritDoc} */
@@ -32,6 +37,12 @@ final class DebugController implements Controller
     public function execute(InputInterface $input, OutputInterface $output)
     {
         $this->debug->setStatus($input->getOption('debug'));
+
+        if (true === $this->debug->getStatus()) {
+            // disable all formatters, enable only the pretty one
+            $this->manager->disableAllFormatters();
+            $this->manager->enableFormatter('pretty');
+        }
     }
 }
 

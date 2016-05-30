@@ -128,6 +128,7 @@ class Wiz implements Extension
         $container->register('wiz.debug', Debug::class);
 
         $container->register('wiz.controller.debug', DebugController::class)
+            ->addArgument(new Reference('output.manager'))
             ->addArgument(new Reference('wiz.debug'))
             ->addTag(CliExtension::CONTROLLER_TAG, ['priority' => 10])
         ;
