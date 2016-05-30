@@ -1,17 +1,19 @@
 <?php
 namespace Wisembly\Behat\Extension\Context;
 
+use Wisembly\Behat\Extension\Tools\Debug;
+
 trait WizTrait
 {
     /** @var string environment which under the behat test suite is run */
     private $environment = 'dev';
 
-    /** @var boolean */
-    private $debug = true;
+    /** @var Debug */
+    private $debug;
 
-    public function initializeWiz($environment, $debug = false)
+    public function initializeWiz($environment, Debug $debug)
     {
-        $this->debug = (bool) $debug;
+        $this->debug = $debug;
         $this->environment = (string) $environment;
     }
 }

@@ -35,7 +35,7 @@ class DebugRest implements Context, ApiInterface, WizInterface
             return;
         }
 
-        if (false === $this->debug) {
+        if (false === $this->debug->getStatus()) {
             return;
         }
 

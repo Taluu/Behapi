@@ -1,6 +1,8 @@
 <?php
 namespace Wisembly\Behat\Extension\Context;
 
+use Wisembly\Behat\Extension\Tools\Debug;
+
 /**
  * Base context interface that all contexts must implement
  *
@@ -12,8 +14,8 @@ interface WizInterface
      * Initialize this WizContext
      *
      * @param string $environment Environment in which the behat suite is ran
-     * @param boolean $debug Is the debug mode activated ?
+     * @param Debug $debug
      */
-    public function initializeWiz($environment, $debug = false);
+    public function initializeWiz($environment, Debug $debug);
 }
 

@@ -37,7 +37,7 @@ class Wiz implements ContextInitializer
             return;
         }
 
-        $context->initializeWiz($this->environment, $this->debug->getStatus());
+        $context->initializeWiz($this->environment, $this->debug);
     }
 }
 
