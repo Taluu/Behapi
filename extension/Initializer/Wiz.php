@@ -33,7 +33,7 @@ class Wiz implements ContextInitializer
     /** {@inheritDoc} */
     public function initializeContext(Context $context)
     {
-        if (!$context instanceof WizContextInterface) {
+        if (!$context instanceof WizInterface) {
             return;
         }
 
