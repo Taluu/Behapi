@@ -20,10 +20,14 @@ final class DebugController implements Controller
     /** @var OutputManager */
     private $outputManager;
 
-    public function __construct(OutputManager $manager, Debug $debug)
+    /** @var string Formatter's name to use on debug occasions */
+    private $formatter;
+
+    public function __construct(OutputManager $manager, Debug $debug, $formatter = 'pretty')
     {
         $this->debug = $debug;
         $this->manager = $manager;
+        $this->formatter = $formatter;
     }
 
     /** {@inheritDoc} */
@@ -41,7 +45,7 @@ final class DebugController implements Controller
         if (true === $this->debug->getStatus()) {
             // disable all formatters, enable only the pretty one
             $this->manager->disableAllFormatters();
-            $this->manager->enableFormatter('pretty');
+            $this->manager->enableFormatter($this->formatter);
         }
     }
 }

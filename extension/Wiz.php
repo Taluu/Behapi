@@ -64,7 +64,11 @@ class Wiz implements Extension
                     ->defaultValue('dev')
                 ->end()
 
-                // TODO: add redis config here
+                ->scalarNode('debug_formatter')
+                    ->defaultValue('pretty')
+                ->end()
+
+                // TODO: add redis config here ?
 
                 ->arrayNode('app')
                     ->children()
@@ -94,7 +98,7 @@ class Wiz implements Extension
     /** {@inheritDoc} */
     public function load(ContainerBuilder $container, array $config)
     {
-        $this->loadDebug($container);
+        $this->loadDebug($container, $config);
 
         $this->loadGuzzle($container, $config['base_url']);
         unset($config['base_url']);
@@ -123,13 +127,14 @@ class Wiz implements Extension
         }
     }
 
-    private function loadDebug(ContainerBuilder $container)
+    private function loadDebug(ContainerBuilder $container, array $config)
     {
         $container->register('wiz.debug', Debug::class);
 
         $container->register('wiz.controller.debug', DebugController::class)
             ->addArgument(new Reference('output.manager'))
             ->addArgument(new Reference('wiz.debug'))
+            ->addArgument($config['debug_formatter'])
             ->addTag(CliExtension::CONTROLLER_TAG, ['priority' => 10])
         ;
     }
