@@ -231,7 +231,7 @@ class Wiz implements Extension
         $container->register('twig', \Twig_Environment::class)
             ->addArgument(new Reference('twig.loader'))
             ->addArgument([
-                //'debug' => (bool) $debug, // ??? maybe if `'dev' === $environment` instead ? or a proper class instead ?
+                'debug' => 'dev' === $environment,
                 'cache' => sprintf('%s/../../app/cache/%s/twig/behat', __DIR__, $environment),
                 'autoescape' => false
             ]);
