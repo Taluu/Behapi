@@ -1,0 +1,7 @@
+#behat
+behat.yml
+
+!.gitignore
+
+vendor/
+

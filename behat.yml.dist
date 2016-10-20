@@ -1,0 +1,36 @@
+default:
+  formatters:
+    progress: true
+
+  gherkin:
+    filters:
+      tags: ~@wip
+
+  suites:
+    main:
+      paths: [%paths.base%/features/specs]
+      contexts:
+        - Wisembly\Behat\Context\Rest
+        - Wisembly\Behat\Context\Json
+        - Wisembly\Behat\Context\Email
+        - Wisembly\Behat\Context\Console
+        - Wisembly\Behat\Context\DebugRest
+        - Wisembly\Behat\Context\RestAuthentication
+
+  extensions:
+    Wisembly\Behat\Extension\Wiz: 
+      environment: dev
+      debug_formatter: pretty
+      base_url: 'http://localhost/app_dev.php/'
+
+      app:
+        id: behat_app
+        secret: behat_secret
+
+test:
+  extensions:
+    Wisembly\Behat\Extension\Wiz: 
+      environment: test
+      debug_formatter: pretty
+      base_url: 'http://localhost/app_test.php/'
+

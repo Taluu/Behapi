@@ -1,0 +1,36 @@
+{
+    "name": "taluu/behat-api",
+    "description": "Test your remote api locally through Behat",
+    "keywords": ["behat", "contexts", "extension", "api"],
+    "license": "MIT",
+
+    "authors": [
+        {
+            "name": "Baptiste Clavié",
+            "email": "clavie.b@gmail.com",
+            "role": "Lead maintainer"
+        }
+    ],
+
+    "autoload": {
+        "psr-4": {
+            "BehatApi\\": "src/"
+        }
+    },
+
+    "require": {
+        "php": "^7.0",
+
+        "twig/twig": "^1.26",
+        "symfony/property-access": "^3.1",
+
+        "guzzle/guzzle": "^3.9",
+        "guzzlehttp/guzzle": "^4.2",
+
+        "behat/transliterator": "^1.1"
+    },
+
+    "require-dev": {
+        "behat/behat": "^3.1"
+    }
+}
