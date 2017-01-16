@@ -34,13 +34,13 @@ final class DebugController implements Controller
     public function configure(Command $command)
     {
         $command
-            ->addOption('debug', null, InputOption::VALUE_NONE, 'Activates the debug mode');
+            ->addOption('api-debug', null, InputOption::VALUE_NONE, 'Activates the debug mode');
     }
 
     /** {@inheritDoc} */
     public function execute(InputInterface $input, OutputInterface $output)
     {
-        $this->debug->setStatus($input->getOption('debug'));
+        $this->debug->setStatus($input->getOption('api-debug'));
 
         if (true === $this->debug->getStatus()) {
             // disable all formatters, enable only the pretty one
@@ -49,4 +49,3 @@ final class DebugController implements Controller
         }
     }
 }
-
