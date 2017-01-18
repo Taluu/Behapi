@@ -19,6 +19,9 @@ use GuzzleHttp\Subscriber\History;
 
 use Predis\Client as RedisClient;
 
+use Twig_Environment;
+use Twig_Loader_Chain;
+
 use Wisembly\Behat\Extension\Tools\Bag;
 use Wisembly\Behat\Extension\Tools\Debug;
 use Wisembly\Behat\Extension\Tools\GuzzleFactory;
@@ -218,17 +221,23 @@ class Wiz implements Extension
             ->addTag('context.initializer')
         ;
 
-        $container->register('wiz.initializer.twig', TwigInitializer::class)
-            ->addArgument(new Reference('twig'))
-            ->addTag('context.initializer')
-        ;
+        if (class_exists(Twig_Environment::class)) {
+            $container->register('wiz.initializer.twig', TwigInitializer::class)
+                ->addArgument(new Reference('twig'))
+                ->addTag('context.initializer')
+            ;
+        }
     }
 
     private function loadTwig(ContainerBuilder $container, $environment)
     {
-        $container->register('twig.loader', \Twig_Loader_Chain::class);
+        if (!class_exists(Twig_Environment::class)) {
+            return;
+        }
 
-        $container->register('twig', \Twig_Environment::class)
+        $container->register('twig.loader', Twig_Loader_Chain::class);
+
+        $container->register('twig', Twig_Environment::class)
             ->addArgument(new Reference('twig.loader'))
             ->addArgument([
                 'debug' => 'dev' === $environment,

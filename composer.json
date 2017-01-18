@@ -21,11 +21,14 @@
     "require": {
         "php": "^7.0",
 
-        "twig/twig": "^1.26",
         "symfony/property-access": "^3.1",
 
         "guzzle/guzzle": "^3.9",
         "guzzlehttp/guzzle": "^4.2"
+    },
+
+    "suggest": {
+        "twig/twig": "In order to use the Twig template in some contexts"
     },
 
     "require-dev": {

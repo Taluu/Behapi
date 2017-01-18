@@ -1,12 +1,14 @@
 <?php
 namespace Wisembly\Behat\Extension\Context;
 
+use Twig_Environment;
+
 trait TwigTrait
 {
-    /** @var  \Twig_Environment */
+    /** @var  Twig_Environment */
     private $twig;
 
-    public function initializeTwig(\Twig_Environment $twig)
+    public function initializeTwig(Twig_Environment $twig = null)
     {
         $this->twig = $twig;
     }

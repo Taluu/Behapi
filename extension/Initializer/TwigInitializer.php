@@ -5,17 +5,18 @@ use Behat\Behat\Context\Context;
 use Behat\Behat\Context\Initializer\ContextInitializer;
 use Wisembly\Behat\Extension\Context\TwigInterface;
 
+use Twig_Environment;
+
 /**
  * Class TwigInitializer
- * @package Wisembly\Behat\Extension\Initializer
  * @author Manuel Raynaud <manu@raynaud.io>
  */
 class TwigInitializer implements ContextInitializer
 {
-    /** @var \Twig_Environment  */
+    /** @var Twig_Environment  */
     private $twig;
 
-    public function __construct(\Twig_Environment $twig)
+    public function __construct(Twig_Environment $twig = null)
     {
         $this->twig = $twig;
     }
