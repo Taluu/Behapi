@@ -14,8 +14,6 @@ use Symfony\Component\DependencyInjection\ContainerBuilder;
 use GuzzleHttp\Client;
 use GuzzleHttp\Subscriber\History;
 
-use Predis\Client as RedisClient;
-
 use Twig_Environment;
 use Twig_Loader_Chain;
 
@@ -27,7 +25,6 @@ use Behapi\Extension\Cli\DebugController;
 use Behapi\Extension\EventListener\Cleaner;
 
 use Behapi\Extension\Initializer\Api;
-use Behapi\Extension\Initializer\RedisAware;
 use Behapi\Extension\Initializer\TwigInitializer;
 use Behapi\Extension\Initializer\RestAuthentication;
 use Behapi\Extension\Initializer\Wiz as WizInitializer;
@@ -99,7 +96,6 @@ class Behapi implements Extension
         $this->loadGuzzle($container, $config['base_url']);
         unset($config['base_url']);
 
-        $this->loadRedis($container);
         $this->loadSubscribers($container);
         $this->loadTwig($container, $config['environment']);
 
@@ -142,12 +138,6 @@ class Behapi implements Extension
         ;
     }
 
-    private function loadRedis(ContainerBuilder $container)
-    {
-        // TODO: configure redis clients through the config tree
-        $container->register('predis.client', RedisClient::class);
-    }
-
     private function loadGuzzle(ContainerBuilder $container, $baseUrl)
     {
         $config = [
@@ -185,11 +175,6 @@ class Behapi implements Extension
         $container->register('behapi.initializer.api', Api::class)
             ->addArgument(new Reference('guzzle.client'))
             ->addArgument(new Reference('guzzle.history'))
-            ->addTag('context.initializer')
-        ;
-
-        $container->register('wiz.initializer.redis', RedisAware::class)
-            ->addArgument(new Reference('predis.client'))
             ->addTag('context.initializer')
         ;
 
