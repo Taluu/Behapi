@@ -1,5 +1,5 @@
 <?php
-namespace Wisembly\Behat\Extension\Context;
+namespace Behapi\Extension\Context;
 
 use RuntimeException;
 

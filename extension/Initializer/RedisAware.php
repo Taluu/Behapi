@@ -1,12 +1,12 @@
 <?php
-namespace Wisembly\Behat\Extension\Initializer;
+namespace Behapi\Extension\Initializer;
 
 use Behat\Behat\Context\Context;
 use Behat\Behat\Context\Initializer\ContextInitializer;
 
 use Predis\ClientInterface as Redis;
 
-use Wisembly\Behat\Extension\Context\RedisAwareInterface;
+use Behapi\Extension\Context\RedisAwareInterface;
 
 class RedisAware implements ContextInitializer
 {

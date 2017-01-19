@@ -1,5 +1,5 @@
 <?php
-namespace Wisembly\Behat\Extension\EventListener;
+namespace Behapi\Extension\EventListener;
 
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 
@@ -8,12 +8,12 @@ use GuzzleHttp\Subscriber\History as HistorySubscriber;
 use Behat\Behat\EventDispatcher\Event\OutlineTested;
 use Behat\Behat\EventDispatcher\Event\ScenarioTested;
 
-use Wisembly\Behat\Extension\Tools\Bag;
+use Behapi\Extension\Tools\Bag;
 
 /**
  * Listener that cleans everything once a Scenario was finished
  *
- * @author Baptiste Clavié <baptiste@wisembly.com>
+ * @author Baptiste Clavié <clavie.b@gmail.com>
  */
 class Cleaner implements EventSubscriberInterface
 {

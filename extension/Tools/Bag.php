@@ -1,5 +1,5 @@
 <?php
-namespace Wisembly\Behat\Extension\Tools;
+namespace Behapi\Extension\Tools;
 
 use ArrayAccess;
 

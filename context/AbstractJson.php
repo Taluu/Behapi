@@ -1,5 +1,5 @@
 <?php
-namespace Wisembly\Behat\Context;
+namespace Behapi\Context;
 
 use Datetime;
 

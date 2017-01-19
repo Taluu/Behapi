@@ -1,11 +1,11 @@
 <?php
-namespace Wisembly\Behat\Extension\Tools;
+namespace Behapi\Extension\Tools;
 
 /**
  * Simple value object true / false so it can be injected into the different
  * services. This is not pretty, no it isn't...
  *
- * @author Baptiste Clavié <baptiste@wisembly.com>
+ * @author Baptiste Clavié <clavie.b@gmail.com>
  */
 class Debug
 {

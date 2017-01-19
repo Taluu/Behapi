@@ -1,13 +1,13 @@
 <?php
-namespace Wisembly\Behat\Context;
+namespace Behapi\Context;
 
 use DatetimeImmutable;
 use InvalidArgumentException;
 
 use PHPUnit_Framework_Assert as Assert;
 
-use Wisembly\Behat\Extension\Context\ApiTrait;
-use Wisembly\Behat\Extension\Context\ApiInterface;
+use Behapi\Extension\Context\ApiTrait;
+use Behapi\Extension\Context\ApiInterface;
 
 class Json extends AbstractJson implements ApiInterface
 {

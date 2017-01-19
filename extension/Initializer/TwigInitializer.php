@@ -1,9 +1,9 @@
 <?php
-namespace Wisembly\Behat\Extension\Initializer;
+namespace Behapi\Extension\Initializer;
 
 use Behat\Behat\Context\Context;
 use Behat\Behat\Context\Initializer\ContextInitializer;
-use Wisembly\Behat\Extension\Context\TwigInterface;
+use Behapi\Extension\Context\TwigInterface;
 
 use Twig_Environment;
 

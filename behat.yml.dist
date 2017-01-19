@@ -10,15 +10,12 @@ default:
     main:
       paths: [%paths.base%/features/specs]
       contexts:
-        - Wisembly\Behat\Context\Rest
-        - Wisembly\Behat\Context\Json
-        - Wisembly\Behat\Context\Email
-        - Wisembly\Behat\Context\Console
-        - Wisembly\Behat\Context\DebugRest
-        - Wisembly\Behat\Context\RestAuthentication
+        - Behapi\Context\Rest
+        - Behapi\Context\Json
+        - Behapi\Context\DebugRest
 
   extensions:
-    Wisembly\Behat\Extension\Wiz: 
+    Behapi\Extension\Behapi:
       environment: dev
       debug_formatter: pretty
       base_url: 'http://localhost/app_dev.php/'

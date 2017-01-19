@@ -1,5 +1,5 @@
 <?php
-namespace Wisembly\Behat\Context;
+namespace Behapi\Context;
 
 use RuntimeException;
 
@@ -12,10 +12,10 @@ use PHPUnit_Framework_Assert as Assert;
 use GuzzleHttp\Stream\Stream;
 use GuzzleHttp\Message\RequestInterface as GuzzleRequest;
 
-use Wisembly\Behat\Extension\Context\ApiTrait;
-use Wisembly\Behat\Extension\Context\ApiInterface;
-use Wisembly\Behat\Extension\Context\TwigInterface;
-use Wisembly\Behat\Extension\Context\TwigTrait;
+use Behapi\Extension\Context\ApiTrait;
+use Behapi\Extension\Context\ApiInterface;
+use Behapi\Extension\Context\TwigInterface;
+use Behapi\Extension\Context\TwigTrait;
 
 class Rest implements ApiInterface, Context, TwigInterface
 {

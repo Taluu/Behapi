@@ -1,12 +1,12 @@
 <?php
-namespace Wisembly\Behat\Extension\Initializer;
+namespace Behapi\Extension\Initializer;
 
 use Behat\Behat\Context\Context;
 use Behat\Behat\Context\Initializer\ContextInitializer;
 
 use Symfony\Component\HttpKernel\Profiler\Profiler;
 
-use Wisembly\Behat\Extension\Context\ProfilerAwareInterface;
+use Behapi\Extension\Context\ProfilerAwareInterface;
 
 class ProfilerAware implements ContextInitializer
 {

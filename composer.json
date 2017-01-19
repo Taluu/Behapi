@@ -1,5 +1,5 @@
 {
-    "name": "taluu/behat-api",
+    "name": "taluu/behapi",
     "description": "Test your remote api locally through Behat",
     "keywords": ["behat", "contexts", "extension", "api"],
     "license": "MIT",
@@ -14,7 +14,8 @@
 
     "autoload": {
         "psr-4": {
-            "BehatApi\\": "src/"
+            "Behapi\\Context\\": "context/",
+            "Behapi\\Extension\\": "extension/"
         }
     },
 

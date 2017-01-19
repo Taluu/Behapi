@@ -1,16 +1,16 @@
 <?php
-namespace Wisembly\Behat\Extension\Initializer;
+namespace Behapi\Extension\Initializer;
 
 use Behat\Behat\Context\Context;
 use Behat\Behat\Context\Initializer\ContextInitializer;
 
-use Wisembly\Behat\Extension\Tools\Debug;
-use Wisembly\Behat\Extension\Context\WizInterface;
+use Behapi\Extension\Tools\Debug;
+use Behapi\Extension\Context\WizInterface;
 
 /**
  * Initializes wiz contexts (which should be implemented by all contexts)
  *
- * @author Baptiste Clavié <baptiste@wisembly.com>
+ * @author Baptiste Clavié <clavie.b@gmail.com>
  */
 class Wiz implements ContextInitializer
 {

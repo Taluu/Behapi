@@ -1,7 +1,7 @@
 <?php
-namespace Wisembly\Behat\Extension\Context;
+namespace Behapi\Extension\Context;
 
-use Wisembly\Behat\Extension\Tools\Debug;
+use Behapi\Extension\Tools\Debug;
 
 trait WizTrait
 {

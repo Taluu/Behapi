@@ -1,12 +1,12 @@
 <?php
-namespace Wisembly\Behat\Extension\Context;
+namespace Behapi\Extension\Context;
 
-use Wisembly\Behat\Extension\Tools\Debug;
+use Behapi\Extension\Tools\Debug;
 
 /**
  * Base context interface that all contexts must implement
  *
- * @author Baptiste Clavié <baptiste@wisembly.com>
+ * @author Baptiste Clavié <clavie.b@gmail.com>
  */
 interface WizInterface
 {

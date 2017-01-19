@@ -1,5 +1,5 @@
 <?php
-namespace Wisembly\Behat\Extension\Context;
+namespace Behapi\Extension\Context;
 
 use RuntimeException;
 
@@ -10,7 +10,7 @@ use GuzzleHttp\Message\ResponseInterface as GuzzleResponse;
 /**
  * Base context interface that all api contexts must implement
  *
- * @author Baptiste Clavié <baptiste@wisembly.com>
+ * @author Baptiste Clavié <clavie.b@gmail.com>
  */
 interface ApiInterface
 {

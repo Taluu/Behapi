@@ -1,5 +1,5 @@
 <?php
-namespace Wisembly\Behat\Context;
+namespace Behapi\Context;
 
 use RuntimeException;
 
@@ -9,10 +9,10 @@ use Behat\Behat\Hook\Scope\AfterScenarioScope;
 
 use GuzzleHttp\Message\ResponseInterface as GuzzleResponse;
 
-use Wisembly\Behat\Extension\Context\ApiTrait;
-use Wisembly\Behat\Extension\Context\WizTrait;
-use Wisembly\Behat\Extension\Context\ApiInterface;
-use Wisembly\Behat\Extension\Context\WizInterface;
+use Behapi\Extension\Context\ApiTrait;
+use Behapi\Extension\Context\WizTrait;
+use Behapi\Extension\Context\ApiInterface;
+use Behapi\Extension\Context\WizInterface;
 
 /**
  * Debug rest
@@ -20,7 +20,7 @@ use Wisembly\Behat\Extension\Context\WizInterface;
  * Allows to debug a scenario, or, if the debug is activated, to print
  * a message if a scenario failed for rest requests.
  *
- * @author Baptiste Clavié <baptiste@wisembly.com>
+ * @author Baptiste Clavié <clavie.b@gmail.com>
  */
 class DebugRest implements Context, ApiInterface, WizInterface
 {

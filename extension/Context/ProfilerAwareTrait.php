@@ -1,5 +1,5 @@
 <?php
-namespace Wisembly\Behat\Extension\Context;
+namespace Behapi\Extension\Context;
 
 use Symfony\Component\HttpKernel\Profiler\Profile;
 use Symfony\Component\HttpKernel\Profiler\Profiler;
