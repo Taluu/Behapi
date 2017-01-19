@@ -5,9 +5,6 @@ use Behat\Testwork\ServiceContainer\Extension;
 use Behat\Testwork\ServiceContainer\ExtensionManager;
 use Behat\Testwork\Cli\ServiceContainer\CliExtension;
 
-use Symfony\Component\HttpKernel\Profiler\Profiler;
-use Symfony\Component\HttpKernel\Profiler\FileProfilerStorage;
-
 use Symfony\Component\Config\Definition\Builder\ArrayNodeDefinition;
 
 use Symfony\Component\DependencyInjection\Reference;
@@ -31,7 +28,6 @@ use Behapi\Extension\EventListener\Cleaner;
 
 use Behapi\Extension\Initializer\Api;
 use Behapi\Extension\Initializer\RedisAware;
-use Behapi\Extension\Initializer\ProfilerAware;
 use Behapi\Extension\Initializer\TwigInitializer;
 use Behapi\Extension\Initializer\RestAuthentication;
 use Behapi\Extension\Initializer\Wiz as WizInitializer;
@@ -105,7 +101,6 @@ class Behapi implements Extension
 
         $this->loadRedis($container);
         $this->loadSubscribers($container);
-        $this->loadProfiler($container, $config['environment']);
         $this->loadTwig($container, $config['environment']);
 
         $this->loadInitializers($container, $config);
@@ -179,15 +174,6 @@ class Behapi implements Extension
             ->setFactory([$factory, 'getClient']);
     }
 
-    private function loadProfiler(ContainerBuilder $container, $environment)
-    {
-        $storage = new Definition(FileProfilerStorage::class);
-        $storage->addArgument(sprintf('file:%s/../../app/cache/%s/profiler', __DIR__, $environment));
-
-        $container->register('profiler', Profiler::class)
-            ->addArgument($storage);
-    }
-
     private function loadInitializers(ContainerBuilder $container, array $config)
     {
         $container->register('behapi.initializer.wiz', WizInitializer::class)
@@ -204,11 +190,6 @@ class Behapi implements Extension
 
         $container->register('wiz.initializer.redis', RedisAware::class)
             ->addArgument(new Reference('predis.client'))
-            ->addTag('context.initializer')
-        ;
-
-        $container->register('wiz.initializer.profiler', ProfilerAware::class)
-            ->addArgument(new Reference('profiler'))
             ->addTag('context.initializer')
         ;
 
