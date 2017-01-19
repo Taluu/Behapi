@@ -60,24 +60,6 @@ class Behapi implements Extension
                 ->scalarNode('debug_formatter')
                     ->defaultValue('pretty')
                 ->end()
-
-                // TODO: add redis config here ?
-
-                ->arrayNode('app')
-                    ->children()
-                        ->scalarNode('id')
-                            ->info('Application ID to use')
-                            ->isRequired()
-                            ->cannotBeEmpty()
-                        ->end()
-
-                        ->scalarNode('secret')
-                            ->info('Application Secret to use')
-                            ->isRequired()
-                            ->cannotBeEmpty()
-                        ->end()
-                    ->end()
-                ->end()
             ->end()
         ->end();
 
@@ -175,12 +157,6 @@ class Behapi implements Extension
         $container->register('behapi.initializer.api', Api::class)
             ->addArgument(new Reference('guzzle.client'))
             ->addArgument(new Reference('guzzle.history'))
-            ->addTag('context.initializer')
-        ;
-
-        $container->register('wiz.initializer.authentication', RestAuthentication::class)
-            ->addArgument($config['app']['id'])
-            ->addArgument($config['app']['secret'])
             ->addTag('context.initializer')
         ;
 

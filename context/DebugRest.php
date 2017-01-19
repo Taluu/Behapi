@@ -62,10 +62,6 @@ class DebugRest implements Context, ApiInterface, WizInterface
             'Request Content-Type' => $request->getHeader('Content-Type')
         ];
 
-        if ($request->hasHeader('Wisembly-Token')) {
-            $debug['Request token'] = $request->getHeader('Wisembly-Token');
-        }
-
         if ($response instanceof GuzzleResponse) {
             $debug['Response status-code'] = $response->getStatusCode();
             $debug['Response content-type'] = $response->getHeader('Content-Type');
