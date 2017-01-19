@@ -27,7 +27,7 @@ use Behapi\Extension\EventListener\Cleaner;
 use Behapi\Extension\Initializer\Api;
 use Behapi\Extension\Initializer\TwigInitializer;
 use Behapi\Extension\Initializer\RestAuthentication;
-use Behapi\Extension\Initializer\Wiz as WizInitializer;
+use Behapi\Extension\Initializer\Debug as DebugInitializer;
 
 /**
  * Extension which feeds the dependencies of behapi's features
@@ -148,8 +148,7 @@ class Behapi implements Extension
 
     private function loadInitializers(ContainerBuilder $container, array $config)
     {
-        $container->register('behapi.initializer.wiz', WizInitializer::class)
-            ->addArgument($config['environment'])
+        $container->register('behapi.initializer.debug', DebugInitializer::class)
             ->addArgument(new Reference('behapi.debug'))
             ->addTag('context.initializer')
         ;

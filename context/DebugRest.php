@@ -10,9 +10,9 @@ use Behat\Behat\Hook\Scope\AfterScenarioScope;
 use GuzzleHttp\Message\ResponseInterface as GuzzleResponse;
 
 use Behapi\Extension\Context\ApiTrait;
-use Behapi\Extension\Context\WizTrait;
+use Behapi\Extension\Context\DebugTrait;
 use Behapi\Extension\Context\ApiInterface;
-use Behapi\Extension\Context\WizInterface;
+use Behapi\Extension\Context\DebugInterface;
 
 /**
  * Debug rest
@@ -22,14 +22,18 @@ use Behapi\Extension\Context\WizInterface;
  *
  * @author Baptiste Clavié <clavie.b@gmail.com>
  */
-class DebugRest implements Context, ApiInterface, WizInterface
+class DebugRest implements Context, ApiInterface, DebugInterface
 {
     use ApiTrait;
-    use WizTrait;
+    use DebugTrait;
 
     /** @AfterScenario @api */
     public function debugAfter(AfterScenarioScope $scope)
     {
+        if (null === $this->debug) {
+            return;
+        }
+
         if ($scope->getScenario()->hasTag('debug')) {
             $this->debug();
             return;
@@ -48,6 +52,10 @@ class DebugRest implements Context, ApiInterface, WizInterface
 
     private function debug()
     {
+        if (null === $this->debug) {
+            return;
+        }
+
         $history = $this->getHistory();
 
         if (0 === count($history)) {
