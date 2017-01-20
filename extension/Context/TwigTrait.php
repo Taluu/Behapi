@@ -8,17 +8,26 @@ trait TwigTrait
     /** @var  Twig_Environment */
     private $twig;
 
-    public function initializeTwig(Twig_Environment $twig = null)
+    public function initializeTwig(Twig_Environment $twig)
     {
         $this->twig = $twig;
     }
 
-    public function renderString($string)
+    public function renderString($string, array $context = [])
     {
         if (null === $this->twig) {
             return $string;
         }
 
-        return $this->twig->createTemplate($string)->render([]);
+        $key = sprintf('__behapi_tpl__%s', hash('sha256', $string));
+
+        // this is assuming that the loader is Twig_Loader_Array
+        // as this was privately set in the initializer, it should be OK
+        // to assume that this is still a Twig_Loader_Array
+        $loader = $this->twig->getLoader();
+        $loader->setTemplate($key, $string);
+
+        return $this->twig->load($key)->render($context);
     }
 }
+

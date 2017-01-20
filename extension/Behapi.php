@@ -15,7 +15,6 @@ use GuzzleHttp\Client;
 use GuzzleHttp\Subscriber\History;
 
 use Twig_Environment;
-use Twig_Loader_Chain;
 
 use Behapi\Extension\Tools\Bag;
 use Behapi\Extension\Tools\Debug;
@@ -60,6 +59,27 @@ class Behapi implements Extension
                 ->scalarNode('debug_formatter')
                     ->defaultValue('pretty')
                 ->end()
+
+                ->arrayNode('twig')
+                    ->addDefaultsIfNotSet()
+                    ->children()
+                        ->scalarNode('cache')
+                            ->defaultNull()
+                            ->beforeNormalization()
+                                ->ifEmpty()
+                                ->thenUnset()
+                            ->end()
+                            ->validate()
+                            ->ifTrue(function ($v) { return !is_dir($v); })
+                                ->thenInvalid('Directory does not exist')
+                            ->end()
+                        ->end()
+                        ->enumNode('autoescape')
+                            ->values([false, 'html', 'js', 'name'])
+                            ->defaultFalse()
+                        ->end()
+                    ->end()
+                ->end()
             ->end()
         ->end();
 
@@ -79,7 +99,6 @@ class Behapi implements Extension
         unset($config['base_url']);
 
         $this->loadSubscribers($container);
-        $this->loadTwig($container, $config['environment']);
 
         $this->loadInitializers($container, $config);
     }
@@ -161,27 +180,11 @@ class Behapi implements Extension
 
         if (class_exists(Twig_Environment::class)) {
             $container->register('behapi.initializer.twig', TwigInitializer::class)
-                ->addArgument(new Reference('twig'))
+                ->addArgument(new Reference('behapi.debug'))
+                ->addArgument($config['twig'])
                 ->addTag('context.initializer')
             ;
         }
-    }
-
-    private function loadTwig(ContainerBuilder $container, $environment)
-    {
-        if (!class_exists(Twig_Environment::class)) {
-            return;
-        }
-
-        $container->register('twig.loader', Twig_Loader_Chain::class);
-
-        $container->register('twig', Twig_Environment::class)
-            ->addArgument(new Reference('twig.loader'))
-            ->addArgument([
-                'debug' => 'dev' === $environment,
-                'cache' => sprintf('%s/../../app/cache/%s/twig/behat', __DIR__, $environment),
-                'autoescape' => false
-            ]);
     }
 }
 

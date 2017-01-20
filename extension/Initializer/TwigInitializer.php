@@ -3,9 +3,12 @@ namespace Behapi\Extension\Initializer;
 
 use Behat\Behat\Context\Context;
 use Behat\Behat\Context\Initializer\ContextInitializer;
+
+use Behapi\Extension\Tools\Debug;
 use Behapi\Extension\Context\TwigInterface;
 
 use Twig_Environment;
+use Twig_Loader_Array;
 
 /**
  * Class TwigInitializer
@@ -16,9 +19,13 @@ class TwigInitializer implements ContextInitializer
     /** @var Twig_Environment  */
     private $twig;
 
-    public function __construct(Twig_Environment $twig = null)
+    public function __construct(Debug $debug, array $config)
     {
-        $this->twig = $twig;
+        $this->twig = new Twig_Environment(new Twig_Loader_Array, [
+            'debug' => $debug->getStatus(),
+            'cache' => isset($config['cache']) ? new $config['cache'] : false,
+            'autoescape' => isset($config['autoescape']) ? $config['autoescape'] : false
+        ]);
     }
 
     /**
