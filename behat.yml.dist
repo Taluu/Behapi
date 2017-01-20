@@ -9,7 +9,6 @@ default:
 
   extensions:
     Behapi\Extension\Behapi:
-      environment: dev
       debug_formatter: pretty
       base_url: 'http://localhost/app_dev.php/'
 

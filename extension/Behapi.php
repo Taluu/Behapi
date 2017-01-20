@@ -51,11 +51,6 @@ class Behapi implements Extension
                     ->cannotBeEmpty()
                 ->end()
 
-                ->enumNode('environment')
-                    ->values(['dev', 'test'])
-                    ->defaultValue('dev')
-                ->end()
-
                 ->scalarNode('debug_formatter')
                     ->defaultValue('pretty')
                 ->end()
