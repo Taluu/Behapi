@@ -25,7 +25,6 @@ class Rest implements ApiInterface, Context, TwigInterface
     /** @var GuzzleRequest|null */
     private $request;
 
-
     /** @When /^I create a "(?P<method>GET|POST|PATCH|PUT|DELETE)" request to "(?P<url>.+?)"$/ */
     public function createARequest($method, $url)
     {
@@ -42,7 +41,7 @@ class Rest implements ApiInterface, Context, TwigInterface
         $this->request = $client->createRequest(strtoupper($method), $url);
 
         // let's set a default content-type
-        $this->setContentType('application/json');
+        $this->setContentType($this->getDefaultContentType());
     }
 
     /** @When I add/set the value :value to the parameter :parameter */
@@ -207,6 +206,16 @@ class Rest implements ApiInterface, Context, TwigInterface
         }
 
         return $this->request;
+    }
+
+    /**
+     * Get the default content type, used when makeRequest is called
+     *
+     * @return string
+     */
+    protected function getDefaultContentType(): string
+    {
+        return 'application/json';
     }
 }
 
