@@ -242,5 +242,14 @@ abstract class AbstractJson implements Context
         Assert::assertInternalType('array', $value);
         Assert::assertLessThanOrEqual((int) $count, count($value));
     }
+
+    /** @Then in the json, :path should be a valid json encoded string */
+    public function theJsonPathShouldBeAValidJsonEncodedString($path)
+    {
+        $value = json_decode($this->getValue($path));
+
+        Assert::assertNotNull($value);
+        Assert::assertSame(JSON_ERROR_NONE, json_last_error());
+    }
 }
 
