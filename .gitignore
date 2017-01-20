@@ -2,6 +2,7 @@
 behat.yml
 
 !.gitignore
+composer.lock
 
 vendor/
 
