@@ -16,7 +16,6 @@ use GuzzleHttp\Subscriber\History;
 
 use Twig_Environment;
 
-use Behapi\Extension\Tools\Bag;
 use Behapi\Extension\Tools\Debug;
 use Behapi\Extension\Tools\GuzzleFactory;
 
@@ -101,17 +100,6 @@ class Behapi implements Extension
     /** {@inheritDoc} */
     public function process(ContainerBuilder $container)
     {
-        $definition = $container->getDefinition('behapi.subscriber.cleaner');
-
-        foreach ($container->findTaggedServiceIds('behapi.bag') as $id => $tags) {
-            foreach ($tags as $tag) {
-                if (!isset($tag['reset']) || true !== $tag['reset']) {
-                    continue;
-                }
-
-                $definition->addMethodCall('addBag', [new Reference($id)]);
-            }
-        }
     }
 
     private function loadDebug(ContainerBuilder $container, array $config)

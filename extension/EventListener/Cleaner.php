@@ -8,8 +8,6 @@ use GuzzleHttp\Subscriber\History as HistorySubscriber;
 use Behat\Behat\EventDispatcher\Event\OutlineTested;
 use Behat\Behat\EventDispatcher\Event\ScenarioTested;
 
-use Behapi\Extension\Tools\Bag;
-
 /**
  * Listener that cleans everything once a Scenario was finished
  *
@@ -20,17 +18,9 @@ class Cleaner implements EventSubscriberInterface
     /** @var GuzzleHistory */
     private $history;
 
-    /** @var Bag[] */
-    private $bags = [];
-
     public function __construct(HistorySubscriber $history)
     {
         $this->history = $history;
-    }
-
-    public function addBag(Bag $bag)
-    {
-        $this->bags[] = $bag;
     }
 
     /** {@inheritDoc} */
@@ -46,10 +36,6 @@ class Cleaner implements EventSubscriberInterface
     public function clear()
     {
         $this->history->clear();
-
-        foreach ($this->bags as $bag) {
-            $bag->reset();
-        }
     }
 }
 
