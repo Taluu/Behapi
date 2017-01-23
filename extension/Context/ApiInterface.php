@@ -3,9 +3,13 @@ namespace Behapi\Extension\Context;
 
 use RuntimeException;
 
-use GuzzleHttp\Client as GuzzleClient;
-use GuzzleHttp\Subscriber\History as GuzzleHistory;
-use GuzzleHttp\Message\ResponseInterface as GuzzleResponse;
+use Psr\Http\Message\ResponseInterface;
+
+use Http\Client\HttpClient;
+use Http\Message\StreamFactory;
+use Http\Message\MessageFactory;
+
+use Behapi\Extension\Tools\LastHistory;
 
 /**
  * Base context interface that all api contexts must implement
@@ -17,12 +21,12 @@ interface ApiInterface
     /**
      * Get the latest response
      *
-     * @return GuzzleResponse
+     * @return ResponseInterface
      * @throws RuntimeException No request sent, no response received
      */
-    public function getResponse(): GuzzleResponse;
+    public function getResponse(): ResponseInterface;
 
     /** Setup this context */
-    public function initializeApi(GuzzleClient $client, GuzzleHistory $history): void;
+    public function initializeApi(HttpClient $client, StreamFactory $streamFactory, MessageFactory $messageFactory, LastHistory $history): void;
 }
 

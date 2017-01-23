@@ -3,12 +3,12 @@ namespace Behapi\Context;
 
 use RuntimeException;
 
+use Psr\Http\Message\RequestInterface;
+use Psr\Http\Message\ResponseInterface;
+
 use Behat\Behat\Context\Context;
 use Behat\Testwork\Tester\Result\TestResult;
 use Behat\Behat\Hook\Scope\AfterScenarioScope;
-
-use GuzzleHttp\Message\RequestInterface as GuzzleRequest;
-use GuzzleHttp\Message\ResponseInterface as GuzzleResponse;
 
 use Behapi\Extension\Context\ApiTrait;
 use Behapi\Extension\Context\DebugTrait;
@@ -53,20 +53,18 @@ class DebugRest implements Context, ApiInterface, DebugInterface
 
     private function debug(): void
     {
-        if (null === $this->debug) {
-            return;
-        }
-
         $history = $this->getHistory();
-
-        if (0 === count($history)) {
-            return;
-        }
 
         $request = $history->getLastRequest();
         $response = $history->getLastResponse();
 
-        foreach ($this->getDebug($request, $response) as $key => $value) {
+        if (!$request instanceof RequestInterface) {
+            return;
+        }
+
+        $debug = $this->getDebug($request, $response);
+
+        foreach ($debug as $key => $value) {
             echo "\033[36m| \033[1m$key : \033[0;36m$value\033[0m\n";
         }
 
@@ -74,16 +72,21 @@ class DebugRest implements Context, ApiInterface, DebugInterface
         echo (string) $response->getBody();
     }
 
-    protected function getDebug(GuzzleRequest $request, ?GuzzleResponse $response): iterable
+    /**
+     * Get the interesting header informations to display
+     *
+     * @return iterable
+     */
+    protected function getDebug(RequestInterface $request, ?ResponseInterface $response): iterable
     {
         $debug = [
-            'Request' => "{$request->getMethod()} {$request->getUrl()}",
-            'Request Content-Type' => $request->getHeader('Content-Type')
+            'Request' => "{$request->getMethod()} {$request->getUri()}",
+            'Request Content-Type' => $request->getHeaderLine('Content-Type'),
         ];
 
-        if ($response instanceof GuzzleResponse) {
-            $debug['Response status-code'] = $response->getStatusCode();
-            $debug['Response content-type'] = $response->getHeader('Content-Type');
+        if ($response instanceof ResponseInterface) {
+            $debug['Response status'] = "{$response->getStatusCode()} {$response->getReasonPhrase()}";
+            $debug['Response Content-Type'] = $response->getHeaderLine('Content-Type');
         }
 
         return $debug;

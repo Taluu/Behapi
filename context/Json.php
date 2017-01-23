@@ -15,12 +15,12 @@ class Json extends AbstractJson implements ApiInterface
     /** {@inheritDoc} */
     protected function getJson(): stdClass
     {
-        return $this->getResponse()->json(['object' => true]);
+        return json_decode((string) $this->getResponse()->getBody());
     }
 
     public function responseIsValidjson()
     {
-        Assert::assertSame('application/json', $this->getResponse()->getHeader('Content-Type', false), 'The response should have a valid content-type');
+        Assert::assertSame('application/json', $this->getResponse()->getHeaderLine('Content-Type'), 'The response should have a valid content-type');
 
         parent::responseIsValidjson();
     }
