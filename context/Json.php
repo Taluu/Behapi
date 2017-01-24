@@ -1,8 +1,6 @@
 <?php
 namespace Behapi\Context;
 
-use DatetimeImmutable;
-use InvalidArgumentException;
 
 use PHPUnit_Framework_Assert as Assert;
 
@@ -24,41 +22,5 @@ class Json extends AbstractJson implements ApiInterface
         Assert::assertSame('application/json', $this->getResponse()->getHeader('Content-Type', false), 'The response should have a valid content-type');
 
         parent::responseIsValidjson();
-    }
-
-    /** @Then in the json, the date difference between :from and :to should be equal to :diff :format */
-    public function theDateDiffShouldBeEqualTo($from, $to, $diff, $format = 'days')
-    {
-        $to = new DatetimeImmutable($this->getValue($to));
-        $from = new DatetimeImmutable($this->getValue($from));
-
-        switch ($format) {
-            case 'day':
-            case 'days':
-                $format = '%a';
-                break;
-
-            case 'hour':
-            case 'hours':
-                $format = '%h';
-                break;
-
-            case 'minute':
-            case 'minutes':
-                $format = '%i';
-                break;
-
-            case 'second':
-            case 'seconds':
-                $format = '%s';
-                break;
-
-            default:
-                throw new InvalidArgumentException(sprintf('Format %s not recognized', $format));
-        }
-
-        $interval = $to->diff($from, true);
-
-        Assert::assertEquals($diff, $interval->format($format));
     }
 }

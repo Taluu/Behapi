@@ -159,12 +159,6 @@ abstract class AbstractJson implements Context
         }
     }
 
-    /** @Then in the json, :path should be a valid :format formatted date(time) */
-    public function theJsonPatShouldHaveThisFormat($path, $format)
-    {
-        Assert::assertNotFalse(Datetime::createFromFormat($format, $this->getValue($path)));
-    }
-
     /** @Then in the json, :path should be greater than :expected */
     public function theJsonPathShouldBeGreaterThan($path, $expected)
     {
