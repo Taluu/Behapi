@@ -145,6 +145,7 @@ class Rest implements ApiInterface, Context, TwigInterface
         Assert::assertTrue($response->hasHeader($header));
     }
 
+    /** @Then the response should have sent some data */
     public function responseShouldHaveSentSomeData()
     {
         $response = $this->getResponse();
