@@ -20,9 +20,9 @@ interface ApiInterface
      * @return GuzzleResponse
      * @throws RuntimeException No request sent, no response received
      */
-    public function getResponse();
+    public function getResponse(): GuzzleResponse;
 
     /** Setup this context */
-    public function initializeApi(GuzzleClient $client, GuzzleHistory $history);
+    public function initializeApi(GuzzleClient $client, GuzzleHistory $history): void;
 }
 

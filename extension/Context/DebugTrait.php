@@ -8,7 +8,7 @@ trait DebugTrait
     /** @var Debug */
     private $debug;
 
-    public function setDebug(Debug $debug)
+    public function setDebug(Debug $debug): void
     {
         $this->debug = $debug;
     }

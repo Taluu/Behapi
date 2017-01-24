@@ -23,7 +23,7 @@ trait ApiTrait
     }
 
     /** {@inheritDoc} */
-    public function getResponse()
+    public function getResponse(): GuzzleResponse
     {
         $history = $this->getHistory();
 
@@ -43,9 +43,9 @@ trait ApiTrait
     /**
      * Get the guzzle http client
      *
-     * @return GuzzleHttp
+     * @return GuzzleClient
      */
-    private function getClient()
+    private function getClient(): GuzzleClient
     {
         if (null === $this->client) {
             throw new RuntimeException('The client was not initialized within this context');
@@ -59,7 +59,7 @@ trait ApiTrait
      *
      * @return GuzzleHistory
      */
-    private function getHistory()
+    private function getHistory(): GuzzleHistory
     {
         if (null === $this->history) {
             throw new RuntimeException('The history was not initialized within this context');

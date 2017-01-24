@@ -11,6 +11,6 @@ interface DebugInterface
     /**
      * @param Debug $debug
      */
-    public function setDebug(Debug $debug);
+    public function setDebug(Debug $debug): void;
 }
 

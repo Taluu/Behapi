@@ -1,6 +1,7 @@
 <?php
 namespace Behapi\Context;
 
+use stdClass;
 use Datetime;
 
 use Behat\Behat\Context\Context;
@@ -26,7 +27,7 @@ abstract class AbstractJson implements Context
      *
      * @return stdClass decoded json into an object
      */
-    abstract protected function getJson();
+    abstract protected function getJson(): stdClass;
 
     /**
      * Get the value for a path
@@ -36,7 +37,7 @@ abstract class AbstractJson implements Context
      * @return mixed
      * @throws AccessException path not valid
      */
-    protected function getValue($path)
+    protected function getValue(string $path)
     {
         return $this->accessor->getValue($this->getJson(), $path);
     }
@@ -58,85 +59,85 @@ abstract class AbstractJson implements Context
     }
 
     /** @Then :path should be accessible in the latest json response */
-    public function pathShouldBeReadable($path, $default = null)
+    public function pathShouldBeReadable(string $path, $default = null)
     {
         Assert::assertTrue($this->accessor->isReadable($this->getJson(), $path), "The path $path should be a valid path");
     }
 
     /** @Then :path should not exist in the latest json response */
-    public function pathShouldNotBeReadable($path)
+    public function pathShouldNotBeReadable(string $path)
     {
         Assert::assertFalse($this->accessor->isReadable($this->getJson(), $path), "The path $path should not be a valid path");
     }
 
     /** @Then in the json, :path should be equal to :expected */
-    public function theJsonPathShouldBeEqualTo($path, $expected)
+    public function theJsonPathShouldBeEqualTo(string $path, $expected)
     {
         Assert::assertEquals($expected, $this->getValue($path));
     }
 
     /** @Then in the json, :path should not be equal to :expected */
-    public function theJsonPathShouldNotBeEqualTo($path, $expected)
+    public function theJsonPathShouldNotBeEqualTo(string $path, $expected)
     {
         Assert::assertNotEquals($expected, $this->getValue($path));
     }
 
     /** @Then in the json, :path should be: */
-    public function theJsonPathShouldBePyString($path, PyStringNode $expected)
+    public function theJsonPathShouldBePyString(string $path, PyStringNode $expected)
     {
         Assert::assertSame($expected, $this->getValue($path)->getRaw());
     }
 
     /** @Then /^in the json, "(?P<path>(?:[^"]|\\")*)" should be (?P<expected>true|false)$/ */
-    public function theJsonPathShouldBe($path, $expected)
+    public function theJsonPathShouldBe(string $path, string $expected)
     {
         Assert::assertSame('true' === $expected, $this->getValue($path));
     }
 
     /** @Then /^in the json, "(?P<path>(?:[^"]|\\")*)" should not be (?P<expected>true|false)$/ */
-    public function theJsonPathShouldNotBe($path, $expected)
+    public function theJsonPathShouldNotBe(string $path, string $expected)
     {
         Assert::assertNotSame('true' === $expected, $this->getValue($path));
     }
 
     /** @Then in the json, :path should be null */
-    public function theJsonPathShouldBeNull($path)
+    public function theJsonPathShouldBeNull(string $path)
     {
         Assert::assertNull($this->getValue($path));
     }
 
     /** @Then in the json, :path should not be null */
-    public function theJsonPathShouldNotBeNull($path)
+    public function theJsonPathShouldNotBeNull(string $path)
     {
         Assert::assertNotNull($this->getValue($path));
     }
 
     /** @Then in the json, :path should be empty */
-    public function theJsonPathShouldBeEmpty($path)
+    public function theJsonPathShouldBeEmpty(string $path)
     {
         Assert::assertEmpty($this->getValue($path));
     }
 
     /** @Then in the json, :path should not be empty */
-    public function theJsonPathShouldNotBeEmpty($path)
+    public function theJsonPathShouldNotBeEmpty(string $path)
     {
         Assert::assertNotEmpty($this->getValue($path));
     }
 
     /** @Then in the json, :path should contain :expected */
-    public function theJsonPathContains($path, $expected)
+    public function theJsonPathContains(string $path, $expected)
     {
         Assert::assertContains($expected, $this->getValue($path));
     }
 
     /** @Then /^in the json, :path should not contain :expected */
-    public function theJsonPathNotContains($path, $expected)
+    public function theJsonPathNotContains(string $path, $expected)
     {
         Assert::assertNotContains($expected, $this->getValue($path));
     }
 
     /** @Then in the json, :path collection should contain an element with :value equal to :expected */
-    public function theJsonPathCollectionContains($path, $value, $expected)
+    public function theJsonPathCollectionContains(string $path, string $value, $expected)
     {
         $collection = $this->accessor->getValue($this->getJson(), $path);
 
@@ -150,7 +151,7 @@ abstract class AbstractJson implements Context
     }
 
     /** @Then in the json, :path should be a valid date(time) */
-    public function theJsonPathShouldBeAValidDate($path)
+    public function theJsonPathShouldBeAValidDate(string $path)
     {
         try {
             new Datetime($this->getValue($path));
@@ -160,57 +161,57 @@ abstract class AbstractJson implements Context
     }
 
     /** @Then in the json, :path should be greater than :expected */
-    public function theJsonPathShouldBeGreaterThan($path, $expected)
+    public function theJsonPathShouldBeGreaterThan(string $path, int $expected)
     {
-        Assert::assertGreaterThan((int) $expected, $this->getValue($path));
+        Assert::assertGreaterThan($expected, $this->getValue($path));
     }
 
     /** @Then in the json, :path should be greater than or equal to :expected */
-    public function theJsonPathShouldBeGreaterOrEqualThan($path, $expected)
+    public function theJsonPathShouldBeGreaterOrEqualThan(string $path, int $expected)
     {
-        Assert::assertGreaterThanOrEqual((int) $expected, $this->getValue($path));
+        Assert::assertGreaterThanOrEqual($expected, $this->getValue($path));
     }
 
     /** @Then in the json, :path should be less than :expected */
-    public function theJsonPathShouldBeLessThan($path, $expected)
+    public function theJsonPathShouldBeLessThan(string $path, int $expected)
     {
-        Assert::assertLessThan((int) $expected, $this->getValue($path));
+        Assert::assertLessThan($expected, $this->getValue($path));
     }
 
     /** @Then in the json, :path should be less than or equal to :expected */
-    public function theJsonPathShouldBeLessOrEqualThan($path, $expected)
+    public function theJsonPathShouldBeLessOrEqualThan(string $path, int $expected)
     {
-        Assert::assertLessThanOrEqual((int) $expected, $this->getValue($path));
+        Assert::assertLessThanOrEqual($expected, $this->getValue($path));
     }
 
     /** @Then in the json, :path should be an array */
-    public function shouldBeAnArray($path)
+    public function shouldBeAnArray(string $path)
     {
         Assert::assertInternalType('array', $this->getValue($path));
     }
 
     /** @Then in the json, :path should have at least :count element(s) */
-    public function theJsonPathShouldHaveAtLeastElements($path, $count)
+    public function theJsonPathShouldHaveAtLeastElements(string $path, int $count)
     {
         $value = $this->getValue($path);
 
         Assert::assertInternalType('array', $value);
-        Assert::assertGreaterThanOrEqual((int) $count, count($value));
+        Assert::assertGreaterThanOrEqual($count, count($value));
     }
 
     /** @Then in the json, :path should have :count element(s) */
-    public function theJsonPathShouldHaveElements($path, $count)
+    public function theJsonPathShouldHaveElements(string $path, int $count)
     {
-        Assert::assertCount((int) $count, $this->getValue($path));
+        Assert::assertCount($count, $this->getValue($path));
     }
 
     /** @Then in the json, :path should have at most :count element(s) */
-    public function theJsonPathShouldHaveAtMostElements($path, $count)
+    public function theJsonPathShouldHaveAtMostElements(string $path, int $count)
     {
         $value = $this->getValue($path);
 
         Assert::assertInternalType('array', $value);
-        Assert::assertLessThanOrEqual((int) $count, count($value));
+        Assert::assertLessThanOrEqual($count, count($value));
     }
 
     /** @Then in the json, the root should be an array */
@@ -220,25 +221,25 @@ abstract class AbstractJson implements Context
     }
 
     /** @Then in the json, the root should have :count element(s) */
-    public function theRootShouldHaveElements($count)
+    public function theRootShouldHaveElements(int $count)
     {
         $value = $this->getJson();
 
         Assert::assertInternalType('array', $value);
-        Assert::assertCount((int) $count, $value);
+        Assert::assertCount($count, $value);
     }
 
     /** @Then in the json, the root should have at most :count element(s) */
-    public function theRootShouldHaveAtMostElements($count)
+    public function theRootShouldHaveAtMostElements(int $count)
     {
         $value = $this->getJson();
 
         Assert::assertInternalType('array', $value);
-        Assert::assertLessThanOrEqual((int) $count, count($value));
+        Assert::assertLessThanOrEqual($count, count($value));
     }
 
     /** @Then in the json, :path should be a valid json encoded string */
-    public function theJsonPathShouldBeAValidJsonEncodedString($path)
+    public function theJsonPathShouldBeAValidJsonEncodedString(string $path)
     {
         $value = json_decode($this->getValue($path));
 

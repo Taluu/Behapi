@@ -51,7 +51,7 @@ class DebugRest implements Context, ApiInterface, DebugInterface
         $this->debug();
     }
 
-    private function debug()
+    private function debug(): void
     {
         if (null === $this->debug) {
             return;

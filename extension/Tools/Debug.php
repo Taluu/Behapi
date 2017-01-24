@@ -11,14 +11,14 @@ class Debug
 {
     private $status = false;
 
-    public function setStatus($status)
+    public function setStatus(bool $status)
     {
-        $this->status = (bool) $status;
+        $this->status = $status;
     }
 
-    public function getStatus()
+    public function getStatus(): bool
     {
-        return (bool) $this->status;
+        return $this->status;
     }
 }
 

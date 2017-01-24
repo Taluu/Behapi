@@ -1,6 +1,7 @@
 <?php
 namespace Behapi\Context;
 
+use stdClass;
 
 use PHPUnit_Framework_Assert as Assert;
 
@@ -12,7 +13,7 @@ class Json extends AbstractJson implements ApiInterface
     use ApiTrait;
 
     /** {@inheritDoc} */
-    protected function getJson()
+    protected function getJson(): stdClass
     {
         return $this->getResponse()->json(['object' => true]);
     }

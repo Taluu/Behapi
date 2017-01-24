@@ -23,7 +23,7 @@ final class DebugController implements Controller
     /** @var string Formatter's name to use on debug occasions */
     private $formatter;
 
-    public function __construct(OutputManager $manager, Debug $debug, $formatter = 'pretty')
+    public function __construct(OutputManager $manager, Debug $debug, string $formatter = 'pretty')
     {
         $this->debug = $debug;
         $this->manager = $manager;

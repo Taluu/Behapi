@@ -9,12 +9,12 @@ class GuzzleFactory
     /** @var EventSubscriberInterface[] */
     private $subscribers;
 
-    public function addSubscriber(SubscriberInterface $subscriber)
+    public function addSubscriber(SubscriberInterface $subscriber): void
     {
         $this->subscribers[] = $subscriber;
     }
 
-    public function getClient(array $config)
+    public function getClient(array $config): Client
     {
         $client = new Client($config);
 

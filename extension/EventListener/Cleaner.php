@@ -33,7 +33,7 @@ class Cleaner implements EventSubscriberInterface
     }
 
     /** Resets the current history of the current client */
-    public function clear()
+    public function clear(): void
     {
         $this->history->clear();
     }

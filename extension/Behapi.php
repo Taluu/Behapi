@@ -102,7 +102,7 @@ class Behapi implements Extension
     {
     }
 
-    private function loadDebug(ContainerBuilder $container, array $config)
+    private function loadDebug(ContainerBuilder $container, array $config): void
     {
         $container->register('behapi.debug', Debug::class);
 
@@ -114,7 +114,7 @@ class Behapi implements Extension
         ;
     }
 
-    private function loadSubscribers(ContainerBuilder $container)
+    private function loadSubscribers(ContainerBuilder $container): void
     {
         $container->register('behapi.subscriber.cleaner', Cleaner::class)
             ->addArgument(new Reference('guzzle.history'))
@@ -122,7 +122,7 @@ class Behapi implements Extension
         ;
     }
 
-    private function loadGuzzle(ContainerBuilder $container, $baseUrl)
+    private function loadGuzzle(ContainerBuilder $container, string $baseUrl): void
     {
         $config = [
             'base_url' => $baseUrl,
@@ -148,7 +148,7 @@ class Behapi implements Extension
             ->setFactory([$factory, 'getClient']);
     }
 
-    private function loadInitializers(ContainerBuilder $container, array $config)
+    private function loadInitializers(ContainerBuilder $container, array $config): void
     {
         $container->register('behapi.initializer.debug', DebugInitializer::class)
             ->addArgument(new Reference('behapi.debug'))
