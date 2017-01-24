@@ -7,6 +7,7 @@ use Behat\Behat\Context\Context;
 use Behat\Testwork\Tester\Result\TestResult;
 use Behat\Behat\Hook\Scope\AfterScenarioScope;
 
+use GuzzleHttp\Message\RequestInterface as GuzzleRequest;
 use GuzzleHttp\Message\ResponseInterface as GuzzleResponse;
 
 use Behapi\Extension\Context\ApiTrait;
@@ -65,8 +66,18 @@ class DebugRest implements Context, ApiInterface, DebugInterface
         $request = $history->getLastRequest();
         $response = $history->getLastResponse();
 
+        foreach ($this->getDebug($request, $response) as $key => $value) {
+            echo "\033[36m| \033[1m$key : \033[0;36m$value\033[0m\n";
+        }
+
+        echo "\n";
+        echo (string) $response->getBody();
+    }
+
+    protected function getDebug(GuzzleRequest $request, ?GuzzleResponse $response): iterable
+    {
         $debug = [
-            'Request' => $request->getMethod()  . ' ' . $request->getUrl(),
+            'Request' => "{$request->getMethod()} {$request->getUrl()}",
             'Request Content-Type' => $request->getHeader('Content-Type')
         ];
 
@@ -75,12 +86,7 @@ class DebugRest implements Context, ApiInterface, DebugInterface
             $debug['Response content-type'] = $response->getHeader('Content-Type');
         }
 
-        foreach ($debug as $key => $value) {
-            echo "\033[36m| \033[1m$key : \033[0;36m$value\033[0m\n";
-        }
-
-        echo "\n";
-        echo (string) $response->getBody();
+        return $debug;
     }
 }
 
