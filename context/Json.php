@@ -25,3 +25,4 @@ class Json extends AbstractJson implements ApiInterface
         parent::responseIsValidjson();
     }
 }
+
