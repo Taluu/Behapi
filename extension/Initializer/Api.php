@@ -4,9 +4,11 @@ namespace Behapi\Extension\Initializer;
 use Behat\Behat\Context\Context;
 use Behat\Behat\Context\Initializer\ContextInitializer;
 
-use GuzzleHttp\Client as GuzzleHttp;
-use GuzzleHttp\Subscriber\History as GuzzleHistory;
+use Http\Client\HttpClient;
+use Http\Message\StreamFactory;
+use Http\Message\MessageFactory;
 
+use Behapi\Extension\Tools\LastHistory;
 use Behapi\Extension\Context\ApiInterface;
 
 /**
@@ -16,15 +18,24 @@ use Behapi\Extension\Context\ApiInterface;
  */
 class Api implements ContextInitializer
 {
-    /** @var GuzzleHttp */
+    /** @var HttpClient */
     private $client;
 
-    /** @var GuzzleHistory */
+    /** @var StreamFactory */
+    private $streamFactory;
+
+    /** @var MessageFactory */
+    private $messageFactory;
+
+    /** @var LastHistory */
     private $history;
 
-    public function __construct(GuzzleHttp $client, GuzzleHistory $history)
+    public function __construct(HttpClient $client, StreamFactory $streamFactory, MessageFactory $messageFactory, LastHistory $history)
     {
         $this->client = $client;
+        $this->streamFactory = $streamFactory;
+        $this->messageFactory = $messageFactory;
+
         $this->history = $history;
     }
 
@@ -35,7 +46,7 @@ class Api implements ContextInitializer
             return;
         }
 
-        $context->initializeApi($this->client, $this->history);
+        $context->initializeApi($this->client, $this->streamFactory, $this->messageFactory, $this->history);
     }
 }
 

@@ -3,10 +3,10 @@ namespace Behapi\Extension\EventListener;
 
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 
-use GuzzleHttp\Subscriber\History as HistorySubscriber;
-
 use Behat\Behat\EventDispatcher\Event\OutlineTested;
 use Behat\Behat\EventDispatcher\Event\ScenarioTested;
+
+use Behapi\Extension\Tools\LastHistory;
 
 /**
  * Listener that cleans everything once a Scenario was finished
@@ -15,10 +15,10 @@ use Behat\Behat\EventDispatcher\Event\ScenarioTested;
  */
 class Cleaner implements EventSubscriberInterface
 {
-    /** @var GuzzleHistory */
+    /** @var LastHistory */
     private $history;
 
-    public function __construct(HistorySubscriber $history)
+    public function __construct(LastHistory $history)
     {
         $this->history = $history;
     }
@@ -35,7 +35,7 @@ class Cleaner implements EventSubscriberInterface
     /** Resets the current history of the current client */
     public function clear(): void
     {
-        $this->history->clear();
+        $this->history->reset();
     }
 }
 

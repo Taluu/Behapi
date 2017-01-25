@@ -3,49 +3,57 @@ namespace Behapi\Extension\Context;
 
 use RuntimeException;
 
-use GuzzleHttp\Client as GuzzleClient;
-use GuzzleHttp\Subscriber\History as GuzzleHistory;
-use GuzzleHttp\Message\ResponseInterface as GuzzleResponse;
+use Psr\Http\Message\ResponseInterface;
+
+use Http\Client\HttpClient;
+use Http\Message\StreamFactory;
+use Http\Message\MessageFactory;
+
+use Behapi\Extension\Tools\LastHistory;
 
 trait ApiTrait
 {
-    /** @var GuzzleClient */
-    private $client = null;
+    /** @var HttpClient */
+    private $client;
 
-    /** @var GuzzleHistory */
-    private $history = null;
+    /** @var StreamFactory */
+    private $streamFactory;
+
+    /** @var MessageFactory */
+    private $messageFactory;
+
+    /** @var LastHistory */
+    private $history;
 
     /** {@inheritDoc} */
-    public function initializeApi(GuzzleClient $client, GuzzleHistory $history)
+    public function initializeApi(HttpClient $client, StreamFactory $streamFactory, MessageFactory $messageFactory, LastHistory $history)
     {
         $this->client = $client;
+        $this->streamFactory = $streamFactory;
+        $this->messageFactory = $messageFactory;
+
         $this->history = $history;
     }
 
     /** {@inheritDoc} */
-    public function getResponse(): GuzzleResponse
+    public function getResponse(): ResponseInterface
     {
         $history = $this->getHistory();
-
-        if (0 === count($history)) {
-            throw new RuntimeException('No request were sent');
-        }
-
         $response = $history->getLastResponse();
 
-        if (!$response instanceof GuzzleResponse) {
+        if (!$response instanceof ResponseInterface) {
             throw new RuntimeException('No response');
         }
 
-        return $this->response = $response;
+        return $response;
     }
 
     /**
-     * Get the guzzle http client
+     * Get the http client
      *
-     * @return GuzzleClient
+     * @return HttpClient
      */
-    private function getClient(): GuzzleClient
+    private function getClient(): HttpClient
     {
         if (null === $this->client) {
             throw new RuntimeException('The client was not initialized within this context');
@@ -55,11 +63,39 @@ trait ApiTrait
     }
 
     /**
-     * Get the Guzzle History
+     * Get the http message factory
      *
-     * @return GuzzleHistory
+     * @return MessageFactory
      */
-    private function getHistory(): GuzzleHistory
+    private function getMessageFactory(): MessageFactory
+    {
+        if (null === $this->messageFactory) {
+            throw new RuntimeException('The message factory was not initialized within this context');
+        }
+
+        return $this->messageFactory;
+    }
+
+    /**
+     * Get the http stream factory
+     *
+     * @return StreamFactory
+     */
+    private function getStreamFactory(): StreamFactory
+    {
+        if (null === $this->streamFactory) {
+            throw new RuntimeException('The stream factory was not initialized within this context');
+        }
+
+        return $this->streamFactory;
+    }
+
+    /**
+     * Get the History
+     *
+     * @return LastHistory
+     */
+    private function getHistory(): LastHistory
     {
         if (null === $this->history) {
             throw new RuntimeException('The history was not initialized within this context');

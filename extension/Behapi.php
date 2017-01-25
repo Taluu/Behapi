@@ -11,13 +11,28 @@ use Symfony\Component\DependencyInjection\Reference;
 use Symfony\Component\DependencyInjection\Definition;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 
-use GuzzleHttp\Client;
-use GuzzleHttp\Subscriber\History;
-
 use Twig_Environment;
 
+use Psr\Http\Message\UriInterface;
+
+use Http\Client\HttpClient;
+
+use Http\Message\UriFactory;
+use Http\Message\StreamFactory;
+use Http\Message\MessageFactory;
+
+use Http\Discovery\HttpClientDiscovery;
+use Http\Discovery\UriFactoryDiscovery;
+use Http\Discovery\StreamFactoryDiscovery;
+use Http\Discovery\MessageFactoryDiscovery;
+
+use Http\Client\Common\PluginClient;
+use Http\Client\Common\Plugin\BaseUriPlugin;
+use Http\Client\Common\Plugin\HistoryPlugin;
+use Http\Client\Common\Plugin\ContentLengthPlugin;
+
 use Behapi\Extension\Tools\Debug;
-use Behapi\Extension\Tools\GuzzleFactory;
+use Behapi\Extension\Tools\LastHistory;
 
 use Behapi\Extension\Cli\DebugController;
 use Behapi\Extension\EventListener\Cleaner;
@@ -89,7 +104,7 @@ class Behapi implements Extension
     {
         $this->loadDebug($container, $config);
 
-        $this->loadGuzzle($container, $config['base_url']);
+        $this->loadHttp($container, $config['base_url']);
         unset($config['base_url']);
 
         $this->loadSubscribers($container);
@@ -117,35 +132,53 @@ class Behapi implements Extension
     private function loadSubscribers(ContainerBuilder $container): void
     {
         $container->register('behapi.subscriber.cleaner', Cleaner::class)
-            ->addArgument(new Reference('guzzle.history'))
+            ->addArgument(new Reference('behapi.history'))
             ->addTag('event_dispatcher.subscriber')
         ;
     }
 
-    private function loadGuzzle(ContainerBuilder $container, string $baseUrl): void
+    private function loadHttp(ContainerBuilder $container, string $baseUrl): void
     {
-        $config = [
-            'base_url' => $baseUrl,
+        $container->register('behapi.history', LastHistory::class);
 
-            'defaults' => [
-                'allow_redirects' => false,
-                'exceptions' => false
-            ]
+        // instantiate a "void" uri factory, so we can get the UriInterface for
+        // the BaseUri plugin
+        $uriFactory = UriFactoryDiscovery::find();
+
+        $uri = new Definition(UriInterface::class);
+        $uri->setFactory([get_class($uriFactory), 'createUri']);
+        $uri->addArgument($baseUrl);
+
+        // plugins
+        $plugins = [
+            // history
+            new Definition(HistoryPlugin::class, [new Reference('behapi.history')]),
+
+            // content-length
+            new Definition(ContentLengthPlugin::class),
+
+            // BaseUri
+            new Definition(BaseUriPlugin::class, [$uri])
         ];
 
-        $container->register('guzzle.history', History::class)
-            ->addArgument(1); // note : limit on the last request only ?
+        $client = new Definition(HttpClient::class);
+        $client->setFactory([HttpClientDiscovery::class, 'find']);
 
-        $factory = new Definition(GuzzleFactory::class);
-        $factory
-            ->addMethodCall('addSubscriber', [
-                new Reference('guzzle.history')
-            ])
+        $container
+            ->register('behapi.http.client', PluginClient::class)
+            ->addArgument($client)
+            ->addArgument($plugins)
         ;
 
-        $container->register('guzzle.client', Client::class)
-            ->addArgument($config)
-            ->setFactory([$factory, 'getClient']);
+        $container
+            ->register('behapi.http.message_factory', MessageFactory::class)
+            ->setFactory([MessageFactoryDiscovery::class, 'find'])
+        ;
+
+        $container
+            ->register('behapi.http.stream_factory', MessageFactory::class)
+            ->setFactory([StreamFactoryDiscovery::class, 'find'])
+        ;
     }
 
     private function loadInitializers(ContainerBuilder $container, array $config): void
@@ -156,8 +189,10 @@ class Behapi implements Extension
         ;
 
         $container->register('behapi.initializer.api', Api::class)
-            ->addArgument(new Reference('guzzle.client'))
-            ->addArgument(new Reference('guzzle.history'))
+            ->addArgument(new Reference('behapi.http.client'))
+            ->addArgument(new Reference('behapi.http.stream_factory'))
+            ->addArgument(new Reference('behapi.http.message_factory'))
+            ->addArgument(new Reference('behapi.history'))
             ->addTag('context.initializer')
         ;
 
