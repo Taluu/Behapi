@@ -8,12 +8,12 @@ use Psr\Http\Message\RequestInterface;
 use Behat\Behat\Context\Context;
 use Behat\Gherkin\Node\TableNode;
 
-use PHPUnit_Framework_Assert as Assert;
-
 use Behapi\Extension\Context\ApiTrait;
 use Behapi\Extension\Context\ApiInterface;
 use Behapi\Extension\Context\TwigInterface;
 use Behapi\Extension\Context\TwigTrait;
+
+use Behapi\Extension\Tools\Assert;
 
 class Rest implements ApiInterface, Context, TwigInterface
 {
@@ -139,84 +139,84 @@ class Rest implements ApiInterface, Context, TwigInterface
     public function statusCodeShouldBe(int $expected)
     {
         $response = $this->getResponse();
-        Assert::assertSame($expected, (int) $response->getStatusCode());
+        Assert::same((int) $response->getStatusCode(), $expected);
     }
 
     /** @Then the status code should not be :expected */
     public function statusCodeShouldNotBe(int $expected)
     {
         $response = $this->getResponse();
-        Assert::assertNotSame($expected, (int) $response->getStatusCode());
+        Assert::notSame((int) $response->getStatusCode(), $expected);
     }
 
     /** @Then the content-type should be equal to :expected */
     public function contentTypeShouldBe(string $expected)
     {
         $response = $this->getResponse();
-        Assert::assertSame($expected, $response->getHeaderLine('Content-type'));
+        Assert::same($response->getHeaderLine('Content-type'), $expected);
     }
 
     /** @Then the response header :header should be equal to :expected */
     public function headerShouldBe(string $header, string $expected)
     {
         $response = $this->getResponse();
-        Assert::assertSame($expected, $response->getHeaderLine($header));
+        Assert::same($response->getHeaderLine($header), $expected);
     }
 
     /** @Then the response header :header should contain :expected */
     public function headerShouldContain(string $header, string $expected)
     {
         $response = $this->getResponse();
-        Assert::assertContains($expected, (string) $response->getHeaderLine($header));
+        Assert::contains((string) $response->getHeaderLine($header), $expected);
     }
 
     /** @Then the response should have a header :header */
     public function responseShouldHaveHeader(string $header)
     {
         $response = $this->getResponse();
-        Assert::assertTrue($response->hasHeader($header));
+        Assert::true($response->hasHeader($header));
     }
 
     /** @Then the response should have sent some data */
     public function responseShouldHaveSentSomeData()
     {
         $response = $this->getResponse();
-        Assert::assertGreaterThan(0, $response->getSize());
+        Assert::greaterThan($response->getSize(), 0);
     }
 
     /** @Then the response should not have sent any data */
     public function responseShouldNotHaveAnyData()
     {
         $response = $this->getResponse();
-        Assert::assertSame(0, $response->getSize());
+        Assert::same($response->getSize(), 0);
     }
 
     /** @Then the response should contain :data */
     public function responseShouldContain(string $data)
     {
         $response = $this->getResponse();
-        Assert::assertContains($data, (string) $response->getBody());
+        Assert::contains((string) $response->getBody(), $data);
     }
 
     /** @Then the response should not contain :data */
     public function responseShouldNotContain(string $data)
     {
         $response = $this->getResponse();
-        Assert::assertNotContains($data, (string) $response->getBody());
+        Assert::notContains((string) $response->getBody(), $data);
     }
 
     /** @Then the response should be :data */
     public function responseShouldBe(string $data)
     {
         $response = $this->getResponse();
-        Assert::assertEquals($data, (string) $response->getBody());
+        Assert::eq((string) $response->getBody(), $data);
     }
 
     /** @Then the response should not be :data */
     public function responseShouldNotBe(string $data)
     {
         $response = $this->getResponse();
-        Assert::assertNotEquals($data, (string) $response->getBody());
+        Assert::NotEq((string) $response->getBody(), $data);
     }
 
     /**

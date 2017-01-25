@@ -3,10 +3,10 @@ namespace Behapi\Context;
 
 use stdClass;
 
-use PHPUnit_Framework_Assert as Assert;
-
 use Behapi\Extension\Context\ApiTrait;
 use Behapi\Extension\Context\ApiInterface;
+
+use Webmozart\Assert\Assert;
 
 class Json extends AbstractJson implements ApiInterface
 {
@@ -20,8 +20,9 @@ class Json extends AbstractJson implements ApiInterface
 
     public function responseIsValidjson()
     {
-        Assert::assertSame('application/json', $this->getResponse()->getHeaderLine('Content-Type'), 'The response should have a valid content-type');
+        Assert::same($this->getResponse()->getHeaderLine('Content-Type'), 'application/json', 'The response should have a valid content-type (expected %2$s, got %1$s)');
 
         parent::responseIsValidjson();
     }
 }
+
