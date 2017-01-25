@@ -5,6 +5,8 @@ use Behat\Testwork\ServiceContainer\Extension;
 use Behat\Testwork\ServiceContainer\ExtensionManager;
 use Behat\Testwork\Cli\ServiceContainer\CliExtension;
 
+use Behat\Behat\HelperContainer\ServiceContainer\HelperContainerExtension;
+
 use Symfony\Component\Config\Definition\Builder\ArrayNodeDefinition;
 
 use Symfony\Component\DependencyInjection\Reference;
@@ -105,9 +107,8 @@ class Behapi implements Extension
         $this->loadDebug($container, $config);
 
         $this->loadHttp($container, $config['base_url']);
-        unset($config['base_url']);
-
         $this->loadSubscribers($container);
+        $this->loadContainer($container, $config);
 
         $this->loadInitializers($container, $config);
     }
@@ -202,6 +203,26 @@ class Behapi implements Extension
                 ->addArgument($config['twig'])
                 ->addTag('context.initializer')
             ;
+        }
+    }
+
+    private function loadContainer(ContainerBuilder $container, array $config): void
+    {
+        $definition = $container->register('behapi.container', Container::class);
+
+        $definition
+            ->addArgument(new Reference('behapi.history'))
+            ->addArgument(new Reference('behapi.debug'))
+            ->addArgument($config['base_url'])
+            ->addArgument($config['twig'])
+        ;
+
+        $definition->addTag(HelperContainerExtension::HELPER_CONTAINER_TAG);
+
+        if (method_exists($definition, 'setShared')) { // Symfony 2.8
+            $definition->setShared(false);
+        } else {
+            $definition->setScope(ContainerBuilder::SCOPE_PROTOTYPE);
         }
     }
 }

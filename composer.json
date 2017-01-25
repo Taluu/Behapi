@@ -37,7 +37,7 @@
     },
 
     "require-dev": {
-        "behat/behat": "^3.1",
+        "behat/behat": "^3.3",
         "php-http/message": "^1.0",
         "php-http/mock-client": "^0.3"
     }
