@@ -26,7 +26,7 @@ trait ApiTrait
     private $history;
 
     /** {@inheritDoc} */
-    public function initializeApi(HttpClient $client, StreamFactory $streamFactory, MessageFactory $messageFactory, LastHistory $history)
+    public function initializeApi(HttpClient $client, StreamFactory $streamFactory, MessageFactory $messageFactory, LastHistory $history): void
     {
         $this->client = $client;
         $this->streamFactory = $streamFactory;
