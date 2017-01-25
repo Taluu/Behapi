@@ -14,8 +14,7 @@
 
     "autoload": {
         "psr-4": {
-            "Behapi\\Context\\": "context/",
-            "Behapi\\Extension\\": "extension/"
+            "Behapi\\": "src/"
         }
     },
 
