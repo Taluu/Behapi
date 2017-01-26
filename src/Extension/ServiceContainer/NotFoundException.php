@@ -4,7 +4,7 @@ namespace Behapi\Extension\ServiceContainer;
 use Throwable;
 use InvalidArgumentException;
 
-use Psr\Container\NotFoundExceptionInterface;
+use Interop\Container\Exception\NotFoundException as NotFoundExceptionInterface;
 
 class NotFoundException extends InvalidArgumentException implements NotFoundExceptionInterface
 {

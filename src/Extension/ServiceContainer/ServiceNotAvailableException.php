@@ -4,9 +4,9 @@ namespace Behapi\Extension\ServiceContainer;
 use Throwable;
 use InvalidArgumentException;
 
-use Psr\Container\ContainerExceptionInterface;
+use Interop\Container\Exception\ContainerException;
 
-class ServiceNotAvailableException extends InvalidArgumentException implements ContainerExceptionInterface
+class ServiceNotAvailableException extends InvalidArgumentException implements ContainerException
 {
     private $id;
 
