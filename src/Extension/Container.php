@@ -72,7 +72,7 @@ class Container implements ContainerInterface
     /** {@inheritDoc} */
     public function get($id)
     {
-        if (isset($this->services[$id])) {
+        if (array_key_exists($id, $this->services)) {
             return $this->services[$id];
         }
 
@@ -125,11 +125,10 @@ class Container implements ContainerInterface
         return $this->services['http.stream_factory'] = StreamFactoryDiscovery::find();
     }
 
-    private function getTwigService(): Twig_Environment
+    private function getTwigService(): ?Twig_Environment
     {
         if (!class_exists(Twig_Environment::class)) {
-            $class = Twig_Environment::class;
-            throw new ServiceNotAvailableException($id, "{$class} is missing. You should require twig/twig in your composer.json");
+            return $this->services['twig'] = null;
         }
 
         $options = [

@@ -33,7 +33,7 @@ class Rest implements ApiInterface, Context, TwigInterface
     /** @var mixed[] Query args to add */
     private $query;
 
-    public function __construct(HttpClient $client, StreamFactory $streamFactory, MessageFactory $messageFactory, LastHistory $history, Twig_Environment $twig)
+    public function __construct(HttpClient $client, StreamFactory $streamFactory, MessageFactory $messageFactory, LastHistory $history, Twig_Environment $twig = null)
     {
         $this->client = $client;
         $this->history = $history;
