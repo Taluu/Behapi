@@ -104,21 +104,8 @@ class Behapi implements Extension
     /** {@inheritDoc} */
     public function load(ContainerBuilder $container, array $config)
     {
-        $container->register('behapi.history', LastHistory::class);
-
-        $this->loadDebug($container, $config);
-        $this->loadSubscribers($container);
-        $this->loadContainer($container, $config);
-    }
-
-    /** {@inheritDoc} */
-    public function process(ContainerBuilder $container)
-    {
-    }
-
-    private function loadDebug(ContainerBuilder $container, array $config): void
-    {
         $container->register('behapi.debug', Debug::class);
+        $container->register('behapi.history', LastHistory::class);
 
         $container->register('behapi.controller.debug', DebugController::class)
             ->addArgument(new Reference('output.manager'))
@@ -126,14 +113,18 @@ class Behapi implements Extension
             ->addArgument($config['debug_formatter'])
             ->addTag(CliExtension::CONTROLLER_TAG, ['priority' => 10])
         ;
-    }
 
-    private function loadSubscribers(ContainerBuilder $container): void
-    {
         $container->register('behapi.subscriber.cleaner', Cleaner::class)
             ->addArgument(new Reference('behapi.history'))
             ->addTag('event_dispatcher.subscriber')
         ;
+
+        $this->loadContainer($container, $config);
+    }
+
+    /** {@inheritDoc} */
+    public function process(ContainerBuilder $container)
+    {
     }
 
     private function loadContainer(ContainerBuilder $container, array $config): void
