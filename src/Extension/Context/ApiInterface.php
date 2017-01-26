@@ -25,8 +25,5 @@ interface ApiInterface
      * @throws RuntimeException No request sent, no response received
      */
     public function getResponse(): ResponseInterface;
-
-    /** Setup this context */
-    public function initializeApi(HttpClient $client, StreamFactory $streamFactory, MessageFactory $messageFactory, LastHistory $history): void;
 }
 

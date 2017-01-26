@@ -11,9 +11,10 @@ use Behat\Testwork\Tester\Result\TestResult;
 use Behat\Behat\Hook\Scope\AfterScenarioScope;
 
 use Behapi\Extension\Context\ApiTrait;
-use Behapi\Extension\Context\DebugTrait;
 use Behapi\Extension\Context\ApiInterface;
-use Behapi\Extension\Context\DebugInterface;
+
+use Behapi\Extension\Tools\Debug;
+use Behapi\Extension\Tools\LastHistory;
 
 /**
  * Debug rest
@@ -23,10 +24,18 @@ use Behapi\Extension\Context\DebugInterface;
  *
  * @author Baptiste Clavié <clavie.b@gmail.com>
  */
-class DebugRest implements Context, ApiInterface, DebugInterface
+class DebugRest implements Context, ApiInterface
 {
     use ApiTrait;
-    use DebugTrait;
+
+    /** @var Debug */
+    private $debug;
+
+    public function __construct(Debug $debug, LastHistory $history)
+    {
+        $this->debug = $debug;
+        $this->history = $history;
+    }
 
     /** @AfterScenario @api */
     public function debugAfter(AfterScenarioScope $scope)
@@ -53,10 +62,8 @@ class DebugRest implements Context, ApiInterface, DebugInterface
 
     private function debug(): void
     {
-        $history = $this->getHistory();
-
-        $request = $history->getLastRequest();
-        $response = $history->getLastResponse();
+        $request = $this->history->getLastRequest();
+        $response = $this->history->getLastResponse();
 
         if (!$request instanceof RequestInterface) {
             return;

@@ -109,8 +109,6 @@ class Behapi implements Extension
         $this->loadHttp($container, $config['base_url']);
         $this->loadSubscribers($container);
         $this->loadContainer($container, $config);
-
-        $this->loadInitializers($container, $config);
     }
 
     /** {@inheritDoc} */
@@ -180,30 +178,6 @@ class Behapi implements Extension
             ->register('behapi.http.stream_factory', MessageFactory::class)
             ->setFactory([StreamFactoryDiscovery::class, 'find'])
         ;
-    }
-
-    private function loadInitializers(ContainerBuilder $container, array $config): void
-    {
-        $container->register('behapi.initializer.debug', DebugInitializer::class)
-            ->addArgument(new Reference('behapi.debug'))
-            ->addTag('context.initializer')
-        ;
-
-        $container->register('behapi.initializer.api', Api::class)
-            ->addArgument(new Reference('behapi.http.client'))
-            ->addArgument(new Reference('behapi.http.stream_factory'))
-            ->addArgument(new Reference('behapi.http.message_factory'))
-            ->addArgument(new Reference('behapi.history'))
-            ->addTag('context.initializer')
-        ;
-
-        if (class_exists(Twig_Environment::class)) {
-            $container->register('behapi.initializer.twig', TwigInitializer::class)
-                ->addArgument(new Reference('behapi.debug'))
-                ->addArgument($config['twig'])
-                ->addTag('context.initializer')
-            ;
-        }
     }
 
     private function loadContainer(ContainerBuilder $container, array $config): void

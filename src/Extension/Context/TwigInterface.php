@@ -5,7 +5,12 @@ use Twig_Environment;
 
 interface TwigInterface
 {
-    public function initializeTwig(Twig_Environment $twig): void;
-
+    /**
+     * Renders a string using Twig
+     *
+     * @param string $string String to process
+     * @param array $context context to give to twig to render the string
+     */
     public function renderString(string $string, array $context = []): string;
 }
+
