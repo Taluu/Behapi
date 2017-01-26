@@ -38,7 +38,7 @@ class Rest implements ApiInterface, Context, TwigInterface
         $this->client = $client;
         $this->history = $history;
         $this->streamFactory = $streamFactory;
-        $this->messageFactory = $messagefactory;
+        $this->messageFactory = $messageFactory;
 
         $this->twig = $twig;
     }
