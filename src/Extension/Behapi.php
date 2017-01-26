@@ -104,9 +104,9 @@ class Behapi implements Extension
     /** {@inheritDoc} */
     public function load(ContainerBuilder $container, array $config)
     {
-        $this->loadDebug($container, $config);
+        $container->register('behapi.history', LastHistory::class);
 
-        $this->loadHttp($container, $config['base_url']);
+        $this->loadDebug($container, $config);
         $this->loadSubscribers($container);
         $this->loadContainer($container, $config);
     }
@@ -133,50 +133,6 @@ class Behapi implements Extension
         $container->register('behapi.subscriber.cleaner', Cleaner::class)
             ->addArgument(new Reference('behapi.history'))
             ->addTag('event_dispatcher.subscriber')
-        ;
-    }
-
-    private function loadHttp(ContainerBuilder $container, string $baseUrl): void
-    {
-        $container->register('behapi.history', LastHistory::class);
-
-        // instantiate a "void" uri factory, so we can get the UriInterface for
-        // the BaseUri plugin
-        $uriFactory = UriFactoryDiscovery::find();
-
-        $uri = new Definition(UriInterface::class);
-        $uri->setFactory([get_class($uriFactory), 'createUri']);
-        $uri->addArgument($baseUrl);
-
-        // plugins
-        $plugins = [
-            // history
-            new Definition(HistoryPlugin::class, [new Reference('behapi.history')]),
-
-            // content-length
-            new Definition(ContentLengthPlugin::class),
-
-            // BaseUri
-            new Definition(BaseUriPlugin::class, [$uri])
-        ];
-
-        $client = new Definition(HttpClient::class);
-        $client->setFactory([HttpClientDiscovery::class, 'find']);
-
-        $container
-            ->register('behapi.http.client', PluginClient::class)
-            ->addArgument($client)
-            ->addArgument($plugins)
-        ;
-
-        $container
-            ->register('behapi.http.message_factory', MessageFactory::class)
-            ->setFactory([MessageFactoryDiscovery::class, 'find'])
-        ;
-
-        $container
-            ->register('behapi.http.stream_factory', MessageFactory::class)
-            ->setFactory([StreamFactoryDiscovery::class, 'find'])
         ;
     }
 
