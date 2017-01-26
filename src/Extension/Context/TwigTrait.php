@@ -8,11 +8,6 @@ trait TwigTrait
     /** @var  Twig_Environment */
     private $twig;
 
-    public function initializeTwig(Twig_Environment $twig): void
-    {
-        $this->twig = $twig;
-    }
-
     public function renderString(string $string, array $context = []): string
     {
         if (null === $this->twig) {

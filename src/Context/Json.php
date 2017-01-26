@@ -6,11 +6,18 @@ use stdClass;
 use Behapi\Extension\Context\ApiTrait;
 use Behapi\Extension\Context\ApiInterface;
 
+use Behapi\Extension\Tools\LastHistory;
+
 use Webmozart\Assert\Assert;
 
 class Json extends AbstractJson implements ApiInterface
 {
     use ApiTrait;
+
+    public function __construct(LastHistory $history)
+    {
+        $this->history = $history;
+    }
 
     /** {@inheritDoc} */
     protected function getJson(): stdClass

@@ -8,12 +8,19 @@ use Psr\Http\Message\RequestInterface;
 use Behat\Behat\Context\Context;
 use Behat\Gherkin\Node\TableNode;
 
+use Http\Client\HttpClient;
+use Http\Message\StreamFactory;
+use Http\Message\MessageFactory;
+
+use Twig_Environment;
+
 use Behapi\Extension\Context\ApiTrait;
 use Behapi\Extension\Context\ApiInterface;
 use Behapi\Extension\Context\TwigInterface;
 use Behapi\Extension\Context\TwigTrait;
 
 use Behapi\Extension\Tools\Assert;
+use Behapi\Extension\Tools\LastHistory;
 
 class Rest implements ApiInterface, Context, TwigInterface
 {
@@ -26,18 +33,25 @@ class Rest implements ApiInterface, Context, TwigInterface
     /** @var mixed[] Query args to add */
     private $query;
 
+    public function __construct(HttpClient $client, StreamFactory $streamFactory, MessageFactory $messageFactory, LastHistory $history, Twig_Environment $twig)
+    {
+        $this->client = $client;
+        $this->history = $history;
+        $this->streamFactory = $streamFactory;
+        $this->messageFactory = $messagefactory;
+
+        $this->twig = $twig;
+    }
+
     /** @When /^I create a "(?P<method>GET|POST|PATCH|PUT|DELETE)" request to "(?P<url>.+?)"$/ */
     public function createARequest(string $method, string $url)
     {
         $url = trim($url);
 
-        $history = $this->getHistory();
-        $factory = $this->getMessageFactory();
-
-        $history->reset();
+        $this->history->reset();
 
         $this->query = [];
-        $this->request = $factory->createRequest(strtoupper($method), $url);
+        $this->request = $this->messagefactory->createRequest(strtoupper($method), $url);
 
         // let's set a default content-type
         $this->setContentType($this->getDefaultContentType());
@@ -85,12 +99,10 @@ class Rest implements ApiInterface, Context, TwigInterface
     /** @When I set the following body: */
     public function setTheBody(string $body)
     {
-        $request = $this->getRequest();
-        $factory = $this->getStreamFactory();
-
         $body = $this->renderString($body);
-        $stream = $factory->createStream($body);
+        $stream = $this->streamfactory->createStream($body);
 
+        $request = $this->getRequest();
         $this->request = $request->withBody($stream);
     }
 
@@ -116,7 +128,6 @@ class Rest implements ApiInterface, Context, TwigInterface
     /** @When I send the request */
     public function sendRequest()
     {
-        $client = $this->getClient();
         $request = $this->getRequest();
 
         if (!empty($this->query)) {
@@ -132,7 +143,7 @@ class Rest implements ApiInterface, Context, TwigInterface
             $request = $request->withUri($uri);
         }
 
-        $client->sendRequest($request);
+        $this->client->sendRequest($request);
     }
 
     /** @Then the status code should be :expected */
@@ -227,6 +238,7 @@ class Rest implements ApiInterface, Context, TwigInterface
     {
         $this->query = [];
         $this->request = null;
+        $this->history->reset();
     }
 
     /**

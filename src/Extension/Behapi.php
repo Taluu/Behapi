@@ -5,6 +5,8 @@ use Behat\Testwork\ServiceContainer\Extension;
 use Behat\Testwork\ServiceContainer\ExtensionManager;
 use Behat\Testwork\Cli\ServiceContainer\CliExtension;
 
+use Behat\Behat\HelperContainer\ServiceContainer\HelperContainerExtension;
+
 use Symfony\Component\Config\Definition\Builder\ArrayNodeDefinition;
 
 use Symfony\Component\DependencyInjection\Reference;
@@ -102,24 +104,8 @@ class Behapi implements Extension
     /** {@inheritDoc} */
     public function load(ContainerBuilder $container, array $config)
     {
-        $this->loadDebug($container, $config);
-
-        $this->loadHttp($container, $config['base_url']);
-        unset($config['base_url']);
-
-        $this->loadSubscribers($container);
-
-        $this->loadInitializers($container, $config);
-    }
-
-    /** {@inheritDoc} */
-    public function process(ContainerBuilder $container)
-    {
-    }
-
-    private function loadDebug(ContainerBuilder $container, array $config): void
-    {
         $container->register('behapi.debug', Debug::class);
+        $container->register('behapi.history', LastHistory::class);
 
         $container->register('behapi.controller.debug', DebugController::class)
             ->addArgument(new Reference('output.manager'))
@@ -127,81 +113,37 @@ class Behapi implements Extension
             ->addArgument($config['debug_formatter'])
             ->addTag(CliExtension::CONTROLLER_TAG, ['priority' => 10])
         ;
-    }
 
-    private function loadSubscribers(ContainerBuilder $container): void
-    {
         $container->register('behapi.subscriber.cleaner', Cleaner::class)
             ->addArgument(new Reference('behapi.history'))
             ->addTag('event_dispatcher.subscriber')
         ;
+
+        $this->loadContainer($container, $config);
     }
 
-    private function loadHttp(ContainerBuilder $container, string $baseUrl): void
+    /** {@inheritDoc} */
+    public function process(ContainerBuilder $container)
     {
-        $container->register('behapi.history', LastHistory::class);
-
-        // instantiate a "void" uri factory, so we can get the UriInterface for
-        // the BaseUri plugin
-        $uriFactory = UriFactoryDiscovery::find();
-
-        $uri = new Definition(UriInterface::class);
-        $uri->setFactory([get_class($uriFactory), 'createUri']);
-        $uri->addArgument($baseUrl);
-
-        // plugins
-        $plugins = [
-            // history
-            new Definition(HistoryPlugin::class, [new Reference('behapi.history')]),
-
-            // content-length
-            new Definition(ContentLengthPlugin::class),
-
-            // BaseUri
-            new Definition(BaseUriPlugin::class, [$uri])
-        ];
-
-        $client = new Definition(HttpClient::class);
-        $client->setFactory([HttpClientDiscovery::class, 'find']);
-
-        $container
-            ->register('behapi.http.client', PluginClient::class)
-            ->addArgument($client)
-            ->addArgument($plugins)
-        ;
-
-        $container
-            ->register('behapi.http.message_factory', MessageFactory::class)
-            ->setFactory([MessageFactoryDiscovery::class, 'find'])
-        ;
-
-        $container
-            ->register('behapi.http.stream_factory', MessageFactory::class)
-            ->setFactory([StreamFactoryDiscovery::class, 'find'])
-        ;
     }
 
-    private function loadInitializers(ContainerBuilder $container, array $config): void
+    private function loadContainer(ContainerBuilder $container, array $config): void
     {
-        $container->register('behapi.initializer.debug', DebugInitializer::class)
-            ->addArgument(new Reference('behapi.debug'))
-            ->addTag('context.initializer')
-        ;
+        $definition = $container->register('behapi.container', Container::class);
 
-        $container->register('behapi.initializer.api', Api::class)
-            ->addArgument(new Reference('behapi.http.client'))
-            ->addArgument(new Reference('behapi.http.stream_factory'))
-            ->addArgument(new Reference('behapi.http.message_factory'))
+        $definition
             ->addArgument(new Reference('behapi.history'))
-            ->addTag('context.initializer')
+            ->addArgument(new Reference('behapi.debug'))
+            ->addArgument($config['base_url'])
+            ->addArgument($config['twig'])
         ;
 
-        if (class_exists(Twig_Environment::class)) {
-            $container->register('behapi.initializer.twig', TwigInitializer::class)
-                ->addArgument(new Reference('behapi.debug'))
-                ->addArgument($config['twig'])
-                ->addTag('context.initializer')
-            ;
+        $definition->addTag(HelperContainerExtension::HELPER_CONTAINER_TAG);
+
+        if (method_exists($definition, 'setShared')) { // Symfony 2.8
+            $definition->setShared(false);
+        } else {
+            $definition->setScope(ContainerBuilder::SCOPE_PROTOTYPE);
         }
     }
 }
