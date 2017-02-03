@@ -1,0 +1,15 @@
+{
+    "version": "1.0",
+    "name": "taluu/behapi",
+
+    "bindings": {
+        "1d075139-139f-4e8f-90cb-25ecb47584f5": {
+            "_class": "Puli\\Discovery\\Binding\\ClassBinding",
+            "class": "Behapi\\Extension\\Behapi",
+            "type": "behat/extension",
+            "parameters": {
+                "name": "behapi"
+            }
+        }
+    }
+}
