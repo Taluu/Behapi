@@ -51,7 +51,7 @@ class Rest implements ApiInterface, Context, TwigInterface
         $this->history->reset();
 
         $this->query = [];
-        $this->request = $this->messagefactory->createRequest(strtoupper($method), $url);
+        $this->request = $this->messageFactory->createRequest(strtoupper($method), $url);
 
         // let's set a default content-type
         $this->setContentType($this->getDefaultContentType());
