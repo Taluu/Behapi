@@ -28,8 +28,7 @@ trait ApiTrait
     /** {@inheritDoc} */
     public function getResponse(): ResponseInterface
     {
-        $history = $this->getHistory();
-        $response = $history->getLastResponse();
+        $response = $this->history->getLastResponse();
 
         if (!$response instanceof ResponseInterface) {
             throw new RuntimeException('No response');
@@ -38,4 +37,3 @@ trait ApiTrait
         return $response;
     }
 }
-
