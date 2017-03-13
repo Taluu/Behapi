@@ -7,7 +7,9 @@ this extension work.
 
 Installing this extension is pretty easy, and there are multiple ways to do
 that ; but the one exposed here is the best (this is pretty subjective), which
-is via Composer. You just need to require `taluu/behapi`, and it's done !
+is via Composer. You just need to require `taluu/behapi` and an implementation 
+of a http/client (providing `php-http/client-implementation ^1.0`)  and it's 
+done !
 
 Howto
 -----
