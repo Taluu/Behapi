@@ -29,7 +29,10 @@
         "php-http/discovery": "^1.0",
         "php-http/client-common": "^1.4",
         "php-http/message-factory": "^1.0",
-        "php-http/client-implementation": "^1.0"
+        
+        "php-http/client-implementation": "^1.0",
+        "php-http/message-implementation": "^1.0",
+        "php-http/message-factory-implementation": "^1.0"
     },
 
     "suggest": {
