@@ -100,7 +100,7 @@ class Rest implements ApiInterface, Context, TwigInterface
     public function setTheBody(string $body)
     {
         $body = $this->renderString($body);
-        $stream = $this->streamfactory->createStream($body);
+        $stream = $this->streamFactory->createStream($body);
 
         $request = $this->getRequest();
         $this->request = $request->withBody($stream);
