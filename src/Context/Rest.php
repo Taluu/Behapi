@@ -51,7 +51,7 @@ class Rest implements ApiInterface, Context, TwigInterface
         $this->history->reset();
 
         $this->query = [];
-        $this->request = $this->messagefactory->createRequest(strtoupper($method), $url);
+        $this->request = $this->messageFactory->createRequest(strtoupper($method), $url);
 
         // let's set a default content-type
         $this->setContentType($this->getDefaultContentType());
@@ -100,7 +100,7 @@ class Rest implements ApiInterface, Context, TwigInterface
     public function setTheBody(string $body)
     {
         $body = $this->renderString($body);
-        $stream = $this->streamfactory->createStream($body);
+        $stream = $this->streamFactory->createStream($body);
 
         $request = $this->getRequest();
         $this->request = $request->withBody($stream);
