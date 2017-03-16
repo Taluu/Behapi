@@ -16,6 +16,7 @@ class Json extends AbstractJson implements ApiInterface
 
     public function __construct(LastHistory $history)
     {
+        parent::__construct();
         $this->history = $history;
     }
 
