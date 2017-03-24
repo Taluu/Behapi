@@ -238,7 +238,7 @@ class Rest implements ApiInterface, Context, TwigInterface
     {
         $this->query = [];
         $this->request = null;
-        $this->history->reset();
+        // the history is resetted in its own event listener
     }
 
     /**
