@@ -39,11 +39,6 @@ use Behapi\Extension\Tools\LastHistory;
 use Behapi\Extension\Cli\DebugController;
 use Behapi\Extension\EventListener\Cleaner;
 
-use Behapi\Extension\Initializer\Api;
-use Behapi\Extension\Initializer\TwigInitializer;
-use Behapi\Extension\Initializer\RestAuthentication;
-use Behapi\Extension\Initializer\Debug as DebugInitializer;
-
 /**
  * Extension which feeds the dependencies of behapi's features
  *
