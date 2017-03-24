@@ -28,7 +28,7 @@ The `base_url` is the only requirement in the config for this extension to work.
 There are other configurations keys, such as which formatter to use in a debug
 environment (`debug_formatter`), and the possibility to use and configure some
 twig options **if you have twig installed** ; You may use the
-`--config-reference` flaf when invoking behat to have more information on the
+`--config-reference` flag when invoking behat to have more information on the
 available configuration.
 
 After having installed the extension, you can then use the provided contexts
