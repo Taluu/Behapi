@@ -15,7 +15,7 @@ class LastHistory implements Journal
     private $lastRequest = null;
 
     /** @var ResponseInterface */
-    private $lastResponse = [];
+    private $lastResponse = null;
 
     /** {@inheritDoc} */
     public function addSuccess(RequestInterface $request, ResponseInterface $response)
