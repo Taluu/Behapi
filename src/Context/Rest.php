@@ -43,7 +43,7 @@ class Rest implements ApiInterface, Context, TwigInterface
         $this->twig = $twig;
     }
 
-    /** @When /^I create a "(?P<method>GET|POST|PATCH|PUT|DELETE)" request to "(?P<url>.+?)"$/ */
+    /** @When /^I create a "(?P<method>GET|POST|PATCH|PUT|DELETE|OPTIONS|HEAD)" request to "(?P<url>.+?)"$/ */
     public function createARequest(string $method, string $url)
     {
         $url = trim($url);
