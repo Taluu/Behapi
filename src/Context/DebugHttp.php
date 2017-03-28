@@ -1,17 +1,13 @@
 <?php
 namespace Behapi\Context;
 
-use RuntimeException;
-
 use Psr\Http\Message\RequestInterface;
 use Psr\Http\Message\ResponseInterface;
 
-use Behat\Behat\Context\Context;
 use Behat\Testwork\Tester\Result\TestResult;
-use Behat\Behat\Hook\Scope\AfterScenarioScope;
 
-use Behapi\Extension\Context\ApiTrait;
-use Behapi\Extension\Context\ApiInterface;
+use Behat\Behat\Context\Context;
+use Behat\Behat\Hook\Scope\AfterScenarioScope;
 
 use Behapi\Extension\Tools\Debug;
 use Behapi\Extension\Tools\LastHistory;
@@ -24,9 +20,10 @@ use Behapi\Extension\Tools\LastHistory;
  *
  * @author Baptiste Clavié <clavie.b@gmail.com>
  */
-class DebugRest implements Context, ApiInterface
+class DebugRest implements Context
 {
-    use ApiTrait;
+    /** @var LastHistory */
+    private $history;
 
     /** @var Debug */
     private $debug;
