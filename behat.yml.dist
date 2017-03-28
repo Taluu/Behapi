@@ -15,7 +15,7 @@ default:
         - Behapi\Context\Json:
           - "@http.history"
 
-        - Behapi\Context\DebugRest:
+        - Behapi\Context\DebugHttp:
           - "@debug"
           - "@http.history"
 
