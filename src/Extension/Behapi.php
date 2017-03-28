@@ -38,6 +38,7 @@ use Behapi\Extension\Tools\LastHistory;
 
 use Behapi\Extension\Cli\DebugController;
 use Behapi\Extension\EventListener\Cleaner;
+use Behapi\Extension\EventListener\DebugHttp;
 
 /**
  * Extension which feeds the dependencies of behapi's features
@@ -109,6 +110,12 @@ class Behapi implements Extension
             ->addTag(CliExtension::CONTROLLER_TAG, ['priority' => 10])
         ;
 
+        $container->register('behapi.subscriber.debug', DebugHttp::class)
+            ->addArgument(new Reference('behapi.debug'))
+            ->addArgument(new Reference('behapi.history'))
+            ->addTag('event_dispatcher.subscriber')
+        ;
+
         $container->register('behapi.subscriber.cleaner', Cleaner::class)
             ->addArgument(new Reference('behapi.history'))
             ->addTag('event_dispatcher.subscriber')
@@ -142,4 +149,3 @@ class Behapi implements Extension
         }
     }
 }
-

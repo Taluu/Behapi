@@ -1,13 +1,20 @@
 <?php
-namespace Behapi\Context;
+namespace Behapi\Extension\EventListener;
 
 use Psr\Http\Message\RequestInterface;
 use Psr\Http\Message\ResponseInterface;
 
-use Behat\Testwork\Tester\Result\TestResult;
+use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 
-use Behat\Behat\Context\Context;
-use Behat\Behat\Hook\Scope\AfterScenarioScope;
+use Behat\Testwork\Tester\Result\TestResult;
+use Behat\Testwork\EventDispatcher\Event\AfterTested;
+
+use Behat\Behat\EventDispatcher\Event\OutlineTested;
+use Behat\Behat\EventDispatcher\Event\ScenarioTested;
+use Behat\Behat\EventDispatcher\Event\BackgroundTested;
+use Behat\Behat\EventDispatcher\Event\GherkinNodeTested;
+
+use Behat\Gherkin\Node\TaggedNodeInterface;
 
 use Behapi\Extension\Tools\Debug;
 use Behapi\Extension\Tools\LastHistory;
@@ -20,7 +27,7 @@ use Behapi\Extension\Tools\LastHistory;
  *
  * @author Baptiste Clavié <clavie.b@gmail.com>
  */
-class DebugRest implements Context
+class DebugHttp implements EventSubscriberInterface
 {
     /** @var LastHistory */
     private $history;
@@ -34,14 +41,29 @@ class DebugRest implements Context
         $this->history = $history;
     }
 
-    /** @AfterScenario @http */
-    public function debugAfter(AfterScenarioScope $scope)
+    /** {@inheritDoc} */
+    public static function getSubscribedEvents()
     {
-        if (null === $this->debug) {
+        return [
+            OutlineTested::AFTER => 'debugAfter',
+            ScenarioTested::AFTER => 'debugAfter',
+            BackgroundTested::AFTER => 'debugAfter',
+        ];
+    }
+
+    public function debugAfter(GherkinNodeTested $event): void
+    {
+        if (!$event instanceof AfterTested) {
             return;
         }
 
-        if ($scope->getScenario()->hasTag('debug')) {
+        // no http tag... still no chocolates
+        if (!$this->hasTag($event, 'http')) {
+            return;
+        }
+
+        // force debug ?
+        if ($this->hasTag($event, 'debug')) {
             $this->debug();
             return;
         }
@@ -50,7 +72,7 @@ class DebugRest implements Context
             return;
         }
 
-        if (TestResult::FAILED !== $scope->getTestResult()->getResultCode()) {
+        if (TestResult::FAILED !== $event->getTestResult()->getResultCode()) {
             return;
         }
 
@@ -74,6 +96,7 @@ class DebugRest implements Context
 
         echo "\n";
         echo (string) $response->getBody();
+        echo "\n";
     }
 
     /**
@@ -95,5 +118,26 @@ class DebugRest implements Context
 
         return $debug;
     }
-}
 
+    private function hasTag(GherkinNodeTested $event, string $tag): bool
+    {
+        $node = $event->getNode();
+
+        // no tags, no chocolates
+        if (!$node instanceof TaggedNodeInterface) {
+            return false;
+        }
+
+        if ($node->hasTag($tag)) {
+            return true;
+        }
+
+        if (!method_exists($event, 'getFeature')) {
+            return false;
+        }
+
+        $feature = $event->getFeature();
+
+        return $feature->hasTag($tag);
+    }
+}

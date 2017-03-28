@@ -15,10 +15,6 @@ default:
         - Behapi\Context\Json:
           - "@http.history"
 
-        - Behapi\Context\DebugHttp:
-          - "@debug"
-          - "@http.history"
-
   extensions:
     Behapi\Extension\Behapi:
       debug_formatter: pretty
