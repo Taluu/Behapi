@@ -37,18 +37,6 @@ class HttpHistory implements Journal, IteratorAggregate
         $this->tuples[] = $tuple;
     }
 
-    public function getLastRequest(): ?RequestInterface
-    {
-        if (1 < count($this->tuples)) {
-            return null;
-        }
-
-        $tuple = end($this->tuples);
-        reset($this->tuples);
-
-        return $tuple[0];
-    }
-
     public function getLastResponse(): ?ResponseInterface
     {
         if (1 > count($this->tuples)) {
