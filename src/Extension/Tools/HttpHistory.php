@@ -1,6 +1,10 @@
 <?php
 namespace Behapi\Extension\Tools;
 
+use Iterator;
+use ArrayIterator;
+use IteratorAggregate;
+
 use Psr\Http\Message\MessageInterface;
 use Psr\Http\Message\RequestInterface;
 use Psr\Http\Message\ResponseInterface;
@@ -10,7 +14,7 @@ use Http\Client\Common\Plugin\Journal;
 use Http\Client\Exception;
 use Http\Client\Exception\HttpException;
 
-class HttpHistory implements Journal
+class HttpHistory implements Journal, IteratorAggregate
 {
     /** @var MessageInterface[][] Array of tuples of RequestInterface and ?ResponseInterface */
     private $tuples = [];
@@ -55,6 +59,11 @@ class HttpHistory implements Journal
         reset($this->tuples);
 
         return $tuple[1];
+    }
+
+    public function getIterator(): Iterator
+    {
+        return new ArrayIterator($this->tuples);
     }
 
     public function reset(): void
