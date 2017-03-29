@@ -23,7 +23,7 @@ use Http\Client\Common\Plugin\HistoryPlugin;
 use Http\Client\Common\Plugin\ContentLengthPlugin;
 
 use Behapi\Extension\Tools\Debug;
-use Behapi\Extension\Tools\LastHistory;
+use Behapi\Extension\Tools\HttpHistory;
 
 use Behapi\Extension\ServiceContainer\NotFoundException;
 use Behapi\Extension\ServiceContainer\ServiceNotAvailableException;
@@ -42,10 +42,10 @@ class Container implements ContainerInterface
     /** @var Debug Debug status */
     private $debug;
 
-    /** @var LastHistory Last request / response made */
+    /** @var HttpHistory Last request / response made */
     private $history;
 
-    public function __construct(LastHistory $history, Debug $debug, string $baseUrl, array $twigConfig = [])
+    public function __construct(HttpHistory $history, Debug $debug, string $baseUrl, array $twigConfig = [])
     {
         $this->debug = $debug;
         $this->history = $history;

@@ -10,7 +10,7 @@ use Http\Client\Common\Plugin\Journal;
 use Http\Client\Exception;
 use Http\Client\Exception\HttpException;
 
-class LastHistory implements Journal
+class HttpHistory implements Journal
 {
     /** @var MessageInterface[][] Array of tuples of RequestInterface and ?ResponseInterface */
     private $tuples = [];

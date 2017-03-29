@@ -6,7 +6,7 @@ use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 use Behat\Behat\EventDispatcher\Event\OutlineTested;
 use Behat\Behat\EventDispatcher\Event\ScenarioTested;
 
-use Behapi\Extension\Tools\LastHistory;
+use Behapi\Extension\Tools\HttpHistory;
 
 /**
  * Listener that cleans everything once a Scenario was finished
@@ -15,10 +15,10 @@ use Behapi\Extension\Tools\LastHistory;
  */
 class Cleaner implements EventSubscriberInterface
 {
-    /** @var LastHistory */
+    /** @var HttpHistory */
     private $history;
 
-    public function __construct(LastHistory $history)
+    public function __construct(HttpHistory $history)
     {
         $this->history = $history;
     }

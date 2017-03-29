@@ -34,7 +34,7 @@ use Http\Client\Common\Plugin\HistoryPlugin;
 use Http\Client\Common\Plugin\ContentLengthPlugin;
 
 use Behapi\Extension\Tools\Debug;
-use Behapi\Extension\Tools\LastHistory;
+use Behapi\Extension\Tools\HttpHistory;
 
 use Behapi\Extension\Cli\DebugController;
 use Behapi\Extension\EventListener\Cleaner;
@@ -101,7 +101,7 @@ class Behapi implements Extension
     public function load(ContainerBuilder $container, array $config)
     {
         $container->register('behapi.debug', Debug::class);
-        $container->register('behapi.history', LastHistory::class);
+        $container->register('behapi.history', HttpHistory::class);
 
         $container->register('behapi.controller.debug', DebugController::class)
             ->addArgument(new Reference('output.manager'))

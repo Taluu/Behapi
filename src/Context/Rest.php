@@ -20,7 +20,7 @@ use Behapi\Extension\Context\TwigInterface;
 use Behapi\Extension\Context\TwigTrait;
 
 use Behapi\Extension\Tools\Assert;
-use Behapi\Extension\Tools\LastHistory;
+use Behapi\Extension\Tools\HttpHistory;
 
 class Rest implements ApiInterface, Context, TwigInterface
 {
@@ -33,7 +33,7 @@ class Rest implements ApiInterface, Context, TwigInterface
     /** @var mixed[] Query args to add */
     private $query;
 
-    public function __construct(HttpClient $client, StreamFactory $streamFactory, MessageFactory $messageFactory, LastHistory $history, Twig_Environment $twig = null)
+    public function __construct(HttpClient $client, StreamFactory $streamFactory, MessageFactory $messageFactory, HttpHistory $history, Twig_Environment $twig = null)
     {
         $this->client = $client;
         $this->history = $history;

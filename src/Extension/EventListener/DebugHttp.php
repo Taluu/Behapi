@@ -17,7 +17,7 @@ use Behat\Behat\EventDispatcher\Event\GherkinNodeTested;
 use Behat\Gherkin\Node\TaggedNodeInterface;
 
 use Behapi\Extension\Tools\Debug;
-use Behapi\Extension\Tools\LastHistory;
+use Behapi\Extension\Tools\HttpHistory;
 
 /**
  * Debug http
@@ -29,13 +29,13 @@ use Behapi\Extension\Tools\LastHistory;
  */
 class DebugHttp implements EventSubscriberInterface
 {
-    /** @var LastHistory */
+    /** @var HttpHistory */
     private $history;
 
     /** @var Debug */
     private $debug;
 
-    public function __construct(Debug $debug, LastHistory $history)
+    public function __construct(Debug $debug, HttpHistory $history)
     {
         $this->debug = $debug;
         $this->history = $history;
