@@ -48,8 +48,6 @@ class Rest implements ApiInterface, Context, TwigInterface
     {
         $url = trim($url);
 
-        $this->history->reset();
-
         $this->query = [];
         $this->request = $this->messageFactory->createRequest(strtoupper($method), $url);
 
