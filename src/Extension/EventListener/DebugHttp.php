@@ -62,28 +62,48 @@ class DebugHttp implements EventSubscriberInterface
             return;
         }
 
-        // force debug ?
-        if ($this->hasTag($event, 'debug')) {
-            $this->debug();
-            return;
+        $history = $this->history;
+
+        // debug only if tag is present (all debug) or only on test failures
+        if (!$this->hasTag($event, 'debug')) {
+            $history = $this->history;
+
+            if (false === $this->debug->getStatus()) {
+                return;
+            }
+
+            $result = $event->getTestResult();
+
+            if (TestResult::FAILED !== $result->getResultCode()) {
+                return;
+            }
+
+            if (is_iterable($result)) {
+                $history = [];
+                $values = iterator_to_array($this->history);
+
+                foreach ($result as $key => $testResult) {
+                    if (TestResult::FAILED !== $testResult->getResultCode()) {
+                        continue;
+                    }
+
+                    $history[] = $values[$key];
+                }
+            }
         }
 
-        if (false === $this->debug->getStatus()) {
-            return;
-        }
-
-        if (TestResult::FAILED !== $event->getTestResult()->getResultCode()) {
-            return;
-        }
-
-        $this->debug();
+        $this->debug($history);
     }
 
-    private function debug(): void
+    private function debug(iterable $historyTuples): void
     {
-        $request = $this->history->getLastRequest();
-        $response = $this->history->getLastResponse();
+        foreach ($historyTuples as $tuple) {
+            $this->doDebug($tuple[0], $tuple[1]);
+        }
+    }
 
+    private function doDebug(?RequestInterface $request, ?ResponseInterface $response): void
+    {
         if (!$request instanceof RequestInterface) {
             return;
         }
