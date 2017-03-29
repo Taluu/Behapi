@@ -27,8 +27,8 @@ class Cleaner implements EventSubscriberInterface
     public static function getSubscribedEvents()
     {
         return [
-            OutlineTested::AFTER => 'clear',
-            ScenarioTested::AFTER => 'clear'
+            OutlineTested::AFTER => ['clear', -99],
+            ScenarioTested::AFTER => ['clear', -99]
         ];
     }
 
