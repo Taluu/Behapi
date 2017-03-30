@@ -7,6 +7,7 @@ use Psr\Http\Message\ResponseInterface;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 
 use Behat\Testwork\Tester\Result\TestResult;
+use Behat\Testwork\Tester\Result\TestResults;
 use Behat\Testwork\EventDispatcher\Event\AfterTested;
 
 use Behat\Behat\EventDispatcher\Event\OutlineTested;
@@ -78,9 +79,11 @@ class DebugHttp implements EventSubscriberInterface
             return;
         }
 
-        if (!is_iterable($result)) {
-            $this->debug($this->history);
-            return;
+        // all ->getTestResult() returns actually TestResults even for simple
+        // scenarios. So we have to ensure that if we are not testing against
+        // OutlineTested, we need to wrap the result in an array
+        if ($result instanceof TestResults && !$event instanceof OutlineTested) {
+            $result = [$result];
         }
 
         $history = [];
