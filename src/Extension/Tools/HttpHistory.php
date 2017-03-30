@@ -16,25 +16,40 @@ use Http\Client\Exception\HttpException;
 
 class HttpHistory implements Journal, IteratorAggregate
 {
-    /** @var MessageInterface[][] Array of tuples of RequestInterface and ?ResponseInterface */
+    /** @var MessageInterface[][] Array of array of tuples of RequestInterface and ?ResponseInterface */
     private $tuples = [];
+
+    public function start()
+    {
+        $this->tuples[] = [];
+    }
 
     /** {@inheritDoc} */
     public function addSuccess(RequestInterface $request, ResponseInterface $response)
     {
-        $this->tuples[] = [$request, $response];
+        end($this->tuples);
+        $key = key($this->tuples);
+
+        $this->tuples[$key][] = [$request, $response];
+
+        reset($this->tuples);
     }
 
     /** {@inheritDoc} */
     public function addFailure(RequestInterface $request, Exception $exception)
     {
+        end($this->tuples);
+        $key = key($this->tuples);
+
         $tuple = [$request, null];
 
         if ($exception instanceof HttpException) {
             $tuple[1] = $exception->getResponse();
         }
 
-        $this->tuples[] = $tuple;
+        $this->tuples[$key][] = $tuple;
+
+        reset($this->tuples);
     }
 
     public function getLastResponse(): ?ResponseInterface
@@ -45,6 +60,8 @@ class HttpHistory implements Journal, IteratorAggregate
 
         $tuple = end($this->tuples);
         reset($this->tuples);
+
+        $tuple = end($tuple);
 
         return $tuple[1];
     }

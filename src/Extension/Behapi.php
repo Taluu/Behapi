@@ -34,11 +34,11 @@ use Http\Client\Common\Plugin\HistoryPlugin;
 use Http\Client\Common\Plugin\ContentLengthPlugin;
 
 use Behapi\Extension\Tools\Debug;
-use Behapi\Extension\Tools\HttpHistory;
+use Behapi\Extension\Tools\HttpHistory as History;
 
 use Behapi\Extension\Cli\DebugController;
-use Behapi\Extension\EventListener\Cleaner;
 use Behapi\Extension\EventListener\DebugHttp;
+use Behapi\Extension\EventListener\HttpHistory;
 
 /**
  * Extension which feeds the dependencies of behapi's features
@@ -101,7 +101,7 @@ class Behapi implements Extension
     public function load(ContainerBuilder $container, array $config)
     {
         $container->register('behapi.debug', Debug::class);
-        $container->register('behapi.history', HttpHistory::class);
+        $container->register('behapi.history', History::class);
 
         $container->register('behapi.controller.debug', DebugController::class)
             ->addArgument(new Reference('output.manager'))
@@ -116,7 +116,7 @@ class Behapi implements Extension
             ->addTag('event_dispatcher.subscriber')
         ;
 
-        $container->register('behapi.subscriber.cleaner', Cleaner::class)
+        $container->register('behapi.subscriber.http_history', HttpHistory::class)
             ->addArgument(new Reference('behapi.history'))
             ->addTag('event_dispatcher.subscriber')
         ;
