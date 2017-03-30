@@ -63,8 +63,31 @@ class Behapi implements Extension
                     ->cannotBeEmpty()
                 ->end()
 
-                ->scalarNode('debug_formatter')
-                    ->defaultValue('pretty')
+                ->arrayNode('debug')
+                    ->addDefaultsIfNotSet()
+                    ->children()
+                        ->scalarNode('formatter')
+                            ->defaultValue('pretty')
+                        ->end()
+
+                        ->arrayNode('headers')
+                            ->info('Headers to print in DebugHttp listener')
+                            ->addDefaultsIfNotSet()
+                            ->children()
+                                ->arrayNode('request')
+                                    ->info('Request headers to print in DebugHttp listener')
+                                    ->defaultValue(['Content-Type'])
+                                    ->prototype('scalar')->end()
+                                ->end()
+
+                                ->arrayNode('response')
+                                    ->info('Response headers to print in DebugHttp listener')
+                                    ->defaultValue(['Content-Type'])
+                                    ->prototype('scalar')->end()
+                                ->end()
+                            ->end()
+                        ->end()
+                    ->end()
                 ->end()
 
                 ->arrayNode('twig')
@@ -100,13 +123,17 @@ class Behapi implements Extension
     /** {@inheritDoc} */
     public function load(ContainerBuilder $container, array $config)
     {
-        $container->register('behapi.debug', Debug::class);
+        $container->register('behapi.debug', Debug::class)
+            ->addArgument($config['debug']['headers']['request'])
+            ->addArgument($config['debug']['headers']['response'])
+        ;
+
         $container->register('behapi.history', History::class);
 
         $container->register('behapi.controller.debug', DebugController::class)
             ->addArgument(new Reference('output.manager'))
             ->addArgument(new Reference('behapi.debug'))
-            ->addArgument($config['debug_formatter'])
+            ->addArgument($config['debug']['formatter'])
             ->addTag(CliExtension::CONTROLLER_TAG, ['priority' => 10])
         ;
 

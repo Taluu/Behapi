@@ -17,6 +17,14 @@ default:
 
   extensions:
     Behapi\Extension\Behapi:
-      debug_formatter: pretty
+      debug:
+        formatter: pretty
+        headers:
+          request:
+            - Content-Type
+
+          response:
+            - Content-Type
+
       base_url: 'http://localhost/app_dev.php'
 

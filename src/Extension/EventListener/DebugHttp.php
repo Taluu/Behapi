@@ -30,6 +30,10 @@ use Behapi\Extension\Tools\HttpHistory;
  */
 class DebugHttp implements EventSubscriberInterface
 {
+    // 1 - key
+    // 2 - value
+    const TEMPLATE = "\033[36m| \033[1m%s : \033[0;36m%s\033[0m\n";
+
     /** @var HttpHistory */
     private $history;
 
@@ -120,38 +124,27 @@ class DebugHttp implements EventSubscriberInterface
             return;
         }
 
-        $debug = $this->getDebug($request, $response);
+        printf(self::TEMPLATE, 'Request', "{$request->getMethod()} {$request->getUri()}");
 
-        foreach ($debug as $key => $value) {
-            echo "\033[36m| \033[1m$key : \033[0;36m$value\033[0m\n";
-        }
-
-        if ($response instanceof ResponseInterface) {
-            echo "\n";
-            echo (string) $response->getBody();
+        foreach ($this->debug->getRequestHeaders() as $header) {
+            printf(self::TEMPLATE, "Request {$header}", $request->getHeaderLine($header));
         }
 
         echo "\n";
-    }
 
-    /**
-     * Get the interesting header informations to display
-     *
-     * @return iterable
-     */
-    protected function getDebug(RequestInterface $request, ?ResponseInterface $response): iterable
-    {
-        $debug = [
-            'Request' => "{$request->getMethod()} {$request->getUri()}",
-            'Request Content-Type' => $request->getHeaderLine('Content-Type'),
-        ];
-
-        if ($response instanceof ResponseInterface) {
-            $debug['Response status'] = "{$response->getStatusCode()} {$response->getReasonPhrase()}";
-            $debug['Response Content-Type'] = $response->getHeaderLine('Content-Type');
+        if (!$response instanceof ResponseInterface) {
+            return;
         }
 
-        return $debug;
+        printf(self::TEMPLATE, 'Response status', "{$response->getStatusCode()} {$response->getReasonPhrase()}");
+
+        foreach ($this->debug->getResponseHeaders() as $header) {
+            printf(self::TEMPLATE, "Response {$header}", $response->getHeaderLine($header));
+        }
+
+        echo "\n";
+        echo (string) $response->getBody();
+        echo "\n";
     }
 
     private function hasTag(GherkinNodeTested $event, string $tag): bool
