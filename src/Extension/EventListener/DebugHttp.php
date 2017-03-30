@@ -65,7 +65,8 @@ class DebugHttp implements EventSubscriberInterface
 
         // debug only if tag is present (all debug) or only on test failures
         if ($this->hasTag($event, 'debug')) {
-            $this->debug($this->history);
+            list($request, $response) = current($this->history);
+            $this->debug($request, $response);
             return;
         }
 
@@ -86,7 +87,6 @@ class DebugHttp implements EventSubscriberInterface
             $result = [$result];
         }
 
-        $history = [];
         $values = iterator_to_array($this->history);
 
         foreach ($result as $key => $testResult) {
@@ -94,20 +94,12 @@ class DebugHttp implements EventSubscriberInterface
                 continue;
             }
 
-            $history[] = $values[$key];
-        }
-
-        $this->debug($history);
-    }
-
-    private function debug(iterable $historyTuples): void
-    {
-        foreach ($historyTuples as $tuple) {
-            $this->doDebug($tuple[0], $tuple[1]);
+            list($request, $response) = $values[$key];
+            $this->debug($request, $response);
         }
     }
 
-    private function doDebug(?RequestInterface $request, ?ResponseInterface $response): void
+    private function debug(?RequestInterface $request, ?ResponseInterface $response): void
     {
         if (!$request instanceof RequestInterface) {
             return;
