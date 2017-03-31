@@ -34,13 +34,13 @@ final class DebugController implements Controller
     public function configure(Command $command)
     {
         $command
-            ->addOption('api-debug', null, InputOption::VALUE_NONE, 'Activates the debug mode');
+            ->addOption('behapi-debug', null, InputOption::VALUE_NONE, 'Activates the debug mode for behapi');
     }
 
     /** {@inheritDoc} */
     public function execute(InputInterface $input, OutputInterface $output)
     {
-        $this->debug->setStatus($input->getOption('api-debug'));
+        $this->debug->setStatus($input->getOption('behapi-debug'));
 
         if (true === $this->debug->getStatus()) {
             // disable all formatters, enable only the pretty one

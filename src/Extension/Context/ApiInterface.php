@@ -9,7 +9,7 @@ use Http\Client\HttpClient;
 use Http\Message\StreamFactory;
 use Http\Message\MessageFactory;
 
-use Behapi\Extension\Tools\LastHistory;
+use Behapi\Extension\Tools\HttpHistory;
 
 /**
  * Base context interface that all api contexts must implement

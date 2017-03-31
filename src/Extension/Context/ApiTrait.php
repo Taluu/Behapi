@@ -9,7 +9,7 @@ use Http\Client\HttpClient;
 use Http\Message\StreamFactory;
 use Http\Message\MessageFactory;
 
-use Behapi\Extension\Tools\LastHistory;
+use Behapi\Extension\Tools\HttpHistory;
 
 trait ApiTrait
 {
@@ -22,7 +22,7 @@ trait ApiTrait
     /** @var MessageFactory */
     private $messageFactory;
 
-    /** @var LastHistory */
+    /** @var HttpHistory */
     private $history;
 
     /** {@inheritDoc} */

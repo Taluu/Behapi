@@ -6,7 +6,7 @@ use stdClass;
 use Behapi\Extension\Context\ApiTrait;
 use Behapi\Extension\Context\ApiInterface;
 
-use Behapi\Extension\Tools\LastHistory;
+use Behapi\Extension\Tools\HttpHistory;
 
 use Webmozart\Assert\Assert;
 
@@ -14,7 +14,7 @@ class Json extends AbstractJson implements ApiInterface
 {
     use ApiTrait;
 
-    public function __construct(LastHistory $history)
+    public function __construct(HttpHistory $history)
     {
         parent::__construct();
         $this->history = $history;

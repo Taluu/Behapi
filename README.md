@@ -32,10 +32,9 @@ twig options **if you have twig installed** ; You may use the
 available configuration.
 
 After having installed the extension, you can then use the provided contexts
-such as the `Behapi\Context\Rest` for the rest operations, or the `DebugRest`
-context for debugging rest operations. In order to use them, you need to use
-behapi's container (`@behapi.container`, see example in the `behat.yml.dist`
-file), or a container capable of using behapi's container.
+such as the `Behapi\Context\Rest` for the rest operations. In order to use
+them, you need to use behapi's container (`@behapi.container`, see example in
+the `behat.yml.dist` file), or a container capable of using behapi's container.
 
 Some services are provided to be injected in contexts, which are the following:
 
@@ -56,7 +55,7 @@ on the `php-http` client.
 
 If you need to play with the request being built, or the response created when
 the request is sent, you need to inject the `@http.history`, which is an
-instance of `Behapi\Extension\Tools\LastHistory`. It is automatically reseted
+instance of `Behapi\Extension\Tools\HttpHistory`. It is automatically reseted
 between scenarios.
 
 A documentation will be made (soon hopefully) with more details.
