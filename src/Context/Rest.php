@@ -15,14 +15,12 @@ use Http\Message\MessageFactory;
 use Twig_Environment;
 
 use Behapi\Extension\Context\ApiTrait;
-use Behapi\Extension\Context\ApiInterface;
-use Behapi\Extension\Context\TwigInterface;
 use Behapi\Extension\Context\TwigTrait;
 
 use Behapi\Extension\Tools\Assert;
 use Behapi\Extension\Tools\HttpHistory;
 
-class Rest implements ApiInterface, Context, TwigInterface
+class Rest implements Context
 {
     use ApiTrait;
     use TwigTrait;
@@ -264,4 +262,3 @@ class Rest implements ApiInterface, Context, TwigInterface
         return 'application/json';
     }
 }
-

@@ -4,13 +4,11 @@ namespace Behapi\Context;
 use stdClass;
 
 use Behapi\Extension\Context\ApiTrait;
-use Behapi\Extension\Context\ApiInterface;
-
 use Behapi\Extension\Tools\HttpHistory;
 
 use Webmozart\Assert\Assert;
 
-class Json extends AbstractJson implements ApiInterface
+class Json extends AbstractJson
 {
     use ApiTrait;
 
@@ -33,4 +31,3 @@ class Json extends AbstractJson implements ApiInterface
         parent::responseIsValidjson();
     }
 }
-
