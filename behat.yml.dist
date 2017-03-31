@@ -26,5 +26,4 @@ default:
           response:
             - Content-Type
 
-      base_url: 'http://localhost/app_dev.php'
-
+      base_url: 'http://localhost'

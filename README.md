@@ -20,16 +20,16 @@ use it for any configurations actually) :
 default:
   extensions:
     Behapi\Extension\Behapi:
-      base_url: 'http://localhost/app_dev.php'
+      base_url: 'http://localhost'
 ```
 
 The `base_url` is the only requirement in the config for this extension to work.
 
 There are other configurations keys, such as which formatter to use in a debug
-environment (`debug_formatter`), and the possibility to use and configure some
-twig options **if you have twig installed** ; You may use the
-`--config-reference` flag when invoking behat to have more information on the
-available configuration.
+environment, which headers you want to output in request or response while
+debugging, and the possibility to use and configure some twig options **if you
+have twig installed** ; Use the `--config-reference` flag when invoking behat
+to have more information on the available configuration.
 
 After having installed the extension, you can then use the provided contexts
 such as the `Behapi\Context\Rest` for the rest operations. In order to use
@@ -39,10 +39,10 @@ the `behat.yml.dist` file), or a container capable of using behapi's container.
 Some services are provided to be injected in contexts, which are the following:
 
 - `@http.client`, which is the http client
-- `@http.history`, which is a sort of a container with the last request done
-  and last response received
+- `@http.history`, which is a sort of a container with the last requests done
+  and last responses received
 - `@debug`, which is the status of the debug flag (activated through the
-  `--api-debug` flag on the `behat` command)
+  `--behapi-debug` flag on the `behat` command).
 - `@http.message_factory`, which is the message factory (see psr 7)
 - `@http.stream_factory`, which is the stream factory (see psr 7)
 - `@twig`, which is the `Twig_Environment`, if twig is installed (`null`
@@ -56,7 +56,7 @@ on the `php-http` client.
 If you need to play with the request being built, or the response created when
 the request is sent, you need to inject the `@http.history`, which is an
 instance of `Behapi\Extension\Tools\HttpHistory`. It is automatically reseted
-between scenarios.
+between scenarios (or scenarios outlines)
 
 A documentation will be made (soon hopefully) with more details.
 
@@ -70,5 +70,5 @@ Thanks
 ------
 This extension was made while I was working at @Wisembly, and heavily used for
 writing our features and integration tests. Special thanks goes to @lunika,
-@rgazelot and @krichprollsch, who helped conceived this extension, and helped me
-making this, and also pushed me to open-source it.
+@rgazelot and @krichprollsch, who helped conceived this extension, and also
+pushed me to open-source it.
