@@ -53,6 +53,19 @@ class Http implements Context
         $this->setContentType($this->getDefaultContentType());
     }
 
+    /**
+     * @When /^I send a "(?P<method>GET|POST|PATCH|PUT|DELETE|OPTIONS|HEAD)" request to "(?P<url>.+?)"$/
+     *
+     * -------
+     *
+     * Shortcut for `When I create a X request to Then send the request`
+     */
+    public function sendARequest($method, $url)
+    {
+        $this->createARequest($method, $url);
+        $this->sendRequest();
+    }
+
     /** @When I add/set the value :value to the parameter :parameter */
     public function addAParameter(string $parameter, string $value)
     {
