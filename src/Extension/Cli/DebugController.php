@@ -18,7 +18,7 @@ final class DebugController implements Controller
     private $debug;
 
     /** @var OutputManager */
-    private $outputManager;
+    private $manager;
 
     /** @var string Formatter's name to use on debug occasions */
     private $formatter;

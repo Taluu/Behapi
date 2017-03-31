@@ -18,7 +18,7 @@ use Behat\Behat\EventDispatcher\Event\GherkinNodeTested;
 use Behat\Gherkin\Node\TaggedNodeInterface;
 
 use Behapi\Extension\Tools\Debug;
-use Behapi\Extension\Tools\HttpHistory;
+use Behapi\Extension\Tools\HttpHistory as History;
 
 /**
  * Debug http
@@ -34,13 +34,13 @@ class DebugHttp implements EventSubscriberInterface
     // 2 - value
     const TEMPLATE = "\033[36m| \033[1m%s : \033[0;36m%s\033[0m\n";
 
-    /** @var HttpHistory */
+    /** @var History */
     private $history;
 
     /** @var Debug */
     private $debug;
 
-    public function __construct(Debug $debug, HttpHistory $history)
+    public function __construct(Debug $debug, History $history)
     {
         $this->debug = $debug;
         $this->history = $history;

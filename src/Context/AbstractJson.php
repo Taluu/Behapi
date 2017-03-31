@@ -3,6 +3,8 @@ namespace Behapi\Context;
 
 use stdClass;
 use Datetime;
+
+use Throwable;
 use InvalidArgumentException;
 
 use Behat\Behat\Context\Context;
@@ -60,7 +62,7 @@ abstract class AbstractJson implements Context
     }
 
     /** @Then :path should be accessible in the latest json response */
-    public function pathShouldBeReadable(string $path, $default = null)
+    public function pathShouldBeReadable(string $path)
     {
         Assert::true($this->accessor->isReadable($this->getJson(), $path), "The path $path should be a valid path");
     }
@@ -156,7 +158,7 @@ abstract class AbstractJson implements Context
     {
         try {
             new Datetime($this->getValue($path));
-        } catch (Exception $e) {
+        } catch (Throwable $t) {
             throw new InvalidArgumentException("$path does not contain a valid date");
         }
     }
