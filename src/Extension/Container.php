@@ -132,8 +132,8 @@ class Container implements ContainerInterface
 
         $options = [
             'debug' => $this->debug->getStatus(),
-            'cache' => isset($this->config['cache']) ? $this->config['cache'] : false,
-            'autoescape' => isset($this->config['autoescape']) ? $this->config['autoescape'] : false
+            'cache' => $this->config['cache'] ?? false,
+            'autoescape' => $this->config['autoescape'] ?? false
         ];
 
         return $this->services['twig'] = new Twig_Environment(new Twig_Loader_Array, $options);
