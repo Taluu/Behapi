@@ -20,7 +20,7 @@ use Behapi\Extension\Context\TwigTrait;
 use Behapi\Extension\Tools\Assert;
 use Behapi\Extension\Tools\HttpHistory;
 
-class Rest implements Context
+class Http implements Context
 {
     use ApiTrait;
     use TwigTrait;

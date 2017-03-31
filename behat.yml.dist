@@ -5,7 +5,7 @@ default:
       services: "@behapi.container"
 
       contexts:
-        - Behapi\Context\Rest:
+        - Behapi\Context\Http:
           - "@http.client"
           - "@http.stream_factory"
           - "@http.message_factory"

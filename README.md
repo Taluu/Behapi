@@ -1,14 +1,14 @@
 Behapi
 ======
-Behat extension to help write describe features related to Rest APIs (and more)
+Behat extension to help write describe features related to HTTP APIs.
 
 PHP 7.1 and Behat 3.3, and a discoverable php-http client are required to make
 this extension work.
 
 Installing this extension is pretty easy, and there are multiple ways to do
 that ; but the one exposed here is the best (this is pretty subjective), which
-is via Composer. You just need to require `taluu/behapi` and an implementation 
-of a http/client (providing `php-http/client-implementation ^1.0`)  and it's 
+is via Composer. You just need to require `taluu/behapi` and an implementation
+of a http/client (providing `php-http/client-implementation ^1.0`)  and it's
 done !
 
 Howto
@@ -32,7 +32,7 @@ have twig installed** ; Use the `--config-reference` flag when invoking behat
 to have more information on the available configuration.
 
 After having installed the extension, you can then use the provided contexts
-such as the `Behapi\Context\Rest` for the rest operations. In order to use
+such as the `Behapi\Context\Http` for the http api operations. In order to use
 them, you need to use behapi's container (`@behapi.container`, see example in
 the `behat.yml.dist` file), or a container capable of using behapi's container.
 
