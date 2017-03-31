@@ -189,15 +189,17 @@ class Rest implements ApiInterface, Context, TwigInterface
     /** @Then the response should have sent some data */
     public function responseShouldHaveSentSomeData()
     {
-        $response = $this->getResponse();
-        Assert::greaterThan($response->getSize(), 0);
+        $body = $this->getResponse()->getBody();
+
+        Assert::notNull($body->getSize());
+        Assert::greaterThan($body->getSize(), 0);
     }
 
     /** @Then the response should not have sent any data */
     public function responseShouldNotHaveAnyData()
     {
-        $response = $this->getResponse();
-        Assert::same($response->getSize(), 0);
+        $body = $this->getResponse()->getBody();
+        Assert::nullOrSame($response->getSize(), 0);
     }
 
     /** @Then the response should contain :data */
