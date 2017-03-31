@@ -199,7 +199,7 @@ class Rest implements ApiInterface, Context, TwigInterface
     public function responseShouldNotHaveAnyData()
     {
         $body = $this->getResponse()->getBody();
-        Assert::nullOrSame($response->getSize(), 0);
+        Assert::nullOrSame($body->getSize(), 0);
     }
 
     /** @Then the response should contain :data */
