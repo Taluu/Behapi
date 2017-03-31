@@ -25,7 +25,6 @@ trait ApiTrait
     /** @var HttpHistory */
     private $history;
 
-    /** {@inheritDoc} */
     public function getResponse(): ResponseInterface
     {
         $response = $this->history->getLastResponse();
