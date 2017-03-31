@@ -10,28 +10,7 @@ use Behat\Behat\HelperContainer\ServiceContainer\HelperContainerExtension;
 use Symfony\Component\Config\Definition\Builder\ArrayNodeDefinition;
 
 use Symfony\Component\DependencyInjection\Reference;
-use Symfony\Component\DependencyInjection\Definition;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
-
-use Twig_Environment;
-
-use Psr\Http\Message\UriInterface;
-
-use Http\Client\HttpClient;
-
-use Http\Message\UriFactory;
-use Http\Message\StreamFactory;
-use Http\Message\MessageFactory;
-
-use Http\Discovery\HttpClientDiscovery;
-use Http\Discovery\UriFactoryDiscovery;
-use Http\Discovery\StreamFactoryDiscovery;
-use Http\Discovery\MessageFactoryDiscovery;
-
-use Http\Client\Common\PluginClient;
-use Http\Client\Common\Plugin\BaseUriPlugin;
-use Http\Client\Common\Plugin\HistoryPlugin;
-use Http\Client\Common\Plugin\ContentLengthPlugin;
 
 use Behapi\Extension\Tools\Debug;
 use Behapi\Extension\Tools\HttpHistory as History;
