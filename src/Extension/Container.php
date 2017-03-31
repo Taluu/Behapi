@@ -42,7 +42,7 @@ class Container implements ContainerInterface
     /** @var Debug Debug status */
     private $debug;
 
-    /** @var HttpHistory Last request / response made */
+    /** @var HttpHistory Latest requests / responses made */
     private $history;
 
     public function __construct(HttpHistory $history, Debug $debug, string $baseUrl, array $twigConfig = [])
@@ -58,8 +58,10 @@ class Container implements ContainerInterface
     public function has($id)
     {
         static $services = [
-            'debug',
-            'http.history', 'http.client', 'http.message_factory', 'http.stream_factory'
+            'http.client',
+            'http.history',
+            'http.stream_factory',
+            'http.message_factory',
         ];
 
         if (class_exists(Twig_Environment::class)) {
@@ -77,9 +79,6 @@ class Container implements ContainerInterface
         }
 
         switch($id) {
-            case 'debug':
-                return $this->debug;
-
             case 'http.history':
                 return $this->history;
 
@@ -140,4 +139,3 @@ class Container implements ContainerInterface
         return $this->services['twig'] = new Twig_Environment(new Twig_Loader_Array, $options);
     }
 }
-

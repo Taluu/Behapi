@@ -41,8 +41,6 @@ Some services are provided to be injected in contexts, which are the following:
 - `@http.client`, which is the http client
 - `@http.history`, which is a sort of a container with the last requests done
   and last responses received
-- `@debug`, which is the status of the debug flag (activated through the
-  `--behapi-debug` flag on the `behat` command).
 - `@http.message_factory`, which is the message factory (see psr 7)
 - `@http.stream_factory`, which is the stream factory (see psr 7)
 - `@twig`, which is the `Twig_Environment`, if twig is installed (`null`
