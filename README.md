@@ -70,3 +70,8 @@ This extension was made while I was working at @Wisembly, and heavily used for
 writing our features and integration tests. Special thanks goes to @lunika,
 @rgazelot and @krichprollsch, who helped conceived this extension, and also
 pushed me to open-source it.
+
+Badges
+------
+[![Scrutinizer Code Quality](https://scrutinizer-ci.com/g/Taluu/Behapi/badges/quality-score.png?b=master)](https://scrutinizer-ci.com/g/Taluu/Behapi/?branch=master)
+[![Build Status](https://scrutinizer-ci.com/g/Taluu/Behapi/badges/build.png?b=master)](https://scrutinizer-ci.com/g/Taluu/Behapi/build-status/master)
