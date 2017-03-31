@@ -78,7 +78,7 @@ class Container implements ContainerInterface
             return $this->services[$id];
         }
 
-        switch($id) {
+        switch ($id) {
             case 'http.history':
                 return $this->history;
 
