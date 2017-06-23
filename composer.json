@@ -25,11 +25,15 @@
         "symfony/property-access": "^3.1",
 
         "psr/http-message": "^1.0",
+        "psr/http-message-implementation": "^1.0",
+
         "php-http/httplug": "^1.0",
         "php-http/discovery": "^1.0",
         "php-http/client-common": "^1.4",
         "php-http/message-factory": "^1.0",
-        "php-http/client-implementation": "^1.0"
+
+        "php-http/client-implementation": "^1.0",
+        "php-http/message-factory-implementation": "^1.0"
     },
 
     "suggest": {
@@ -41,6 +45,9 @@
 
     "require-dev": {
         "behat/behat": "^3.3",
+
+        "nyholm/psr7": "^0.2",
+
         "php-http/message": "^1.0",
         "php-http/mock-client": "^0.3"
     }
