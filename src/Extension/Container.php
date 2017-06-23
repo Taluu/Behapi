@@ -86,10 +86,10 @@ class Container implements ContainerInterface
                 return $this->getHttpClient();
 
             case 'http.message_factory':
-                return $this->getHttpMessageFactory();
+                return $this->services['http.message_factory'] = MessageFactoryDiscovery::find();
 
             case 'http.stream_factory':
-                return $this->getHttpStreamFactory();
+                return $this->services['http.stream_factory'] = StreamFactoryDiscovery::find();
 
             case 'twig':
                 return $this->getTwigService();
@@ -112,16 +112,6 @@ class Container implements ContainerInterface
         $http = HttpClientDiscovery::find();
 
         return $this->services['http.client'] = new PluginClient($http, $plugins);
-    }
-
-    private function getHttpMessageFactory(): MessageFactory
-    {
-        return $this->services['http.message_factory'] = MessageFactoryDiscovery::find();
-    }
-
-    private function getHttpStreamFactory(): StreamFactory
-    {
-        return $this->services['http.stream_factory'] = StreamFactoryDiscovery::find();
     }
 
     private function getTwigService(): ?Twig_Environment
