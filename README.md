@@ -10,7 +10,7 @@ that ; but the one exposed here is the best (this is pretty subjective), which
 is via Composer. You just need to require `taluu/behapi` and an implementation
 of a http/client (providing `php-http/client-implementation ^1.0`,
 `php-http/message-factory-implementation ^1.0` and
-`php-http/message-implementation ^1.0`)  and it's done !
+`psr/http-message-implementation ^1.0`), and it's done !
 
 Howto
 -----
