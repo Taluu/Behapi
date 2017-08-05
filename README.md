@@ -20,7 +20,7 @@ use it for any configurations actually) :
 ```yaml
 default:
   extensions:
-    Behapi\Extension\Behapi:
+    Behapi\Behapi:
       base_url: 'http://localhost'
 ```
 
@@ -54,8 +54,8 @@ on the `php-http` client.
 
 If you need to play with the request being built, or the response created when
 the request is sent, you need to inject the `@http.history`, which is an
-instance of `Behapi\Extension\Tools\HttpHistory`. It is automatically reseted
-between scenarios (or scenarios outlines)
+instance of `Behapi\Tools\HttpHistory`. It is automatically reseted between
+scenarios (or scenarios outlines)
 
 A documentation will be made (soon hopefully) with more details.
 

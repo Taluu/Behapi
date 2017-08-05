@@ -14,11 +14,11 @@ use Http\Message\MessageFactory;
 
 use Twig_Environment;
 
-use Behapi\Extension\Context\ApiTrait;
-use Behapi\Extension\Context\TwigTrait;
+use Behapi\Context\ApiTrait;
+use Behapi\Context\TwigTrait;
 
-use Behapi\Extension\Tools\Assert;
-use Behapi\Extension\Tools\HttpHistory;
+use Behapi\Tools\Assert;
+use Behapi\Tools\HttpHistory;
 
 class Http implements Context
 {

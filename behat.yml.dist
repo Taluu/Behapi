@@ -16,7 +16,7 @@ default:
           - "@http.history"
 
   extensions:
-    Behapi\Extension\Behapi:
+    Behapi\Behapi:
       debug:
         formatter: pretty
         headers:

@@ -1,5 +1,5 @@
 <?php
-namespace Behapi\Extension\EventListener;
+namespace Behapi\EventListener;
 
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 
@@ -7,7 +7,7 @@ use Behat\Behat\EventDispatcher\Event\OutlineTested;
 use Behat\Behat\EventDispatcher\Event\ScenarioTested;
 use Behat\Behat\EventDispatcher\Event\BackgroundTested;
 
-use Behapi\Extension\Tools\HttpHistory as History;
+use Behapi\Tools\HttpHistory as History;
 
 /**
  * Starts a new "section" in the HttpHistory object when a scenario-like is

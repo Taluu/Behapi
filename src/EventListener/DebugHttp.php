@@ -1,5 +1,5 @@
 <?php
-namespace Behapi\Extension\EventListener;
+namespace Behapi\EventListener;
 
 use Psr\Http\Message\RequestInterface;
 use Psr\Http\Message\ResponseInterface;
@@ -17,8 +17,8 @@ use Behat\Behat\EventDispatcher\Event\GherkinNodeTested;
 
 use Behat\Gherkin\Node\TaggedNodeInterface;
 
-use Behapi\Extension\Tools\Debug;
-use Behapi\Extension\Tools\HttpHistory as History;
+use Behapi\Tools\Debug;
+use Behapi\Tools\HttpHistory as History;
 
 /**
  * Debug http

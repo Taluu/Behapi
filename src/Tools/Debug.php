@@ -1,5 +1,5 @@
 <?php
-namespace Behapi\Extension\Tools;
+namespace Behapi\Tools;
 
 /**
  * Object containing the debug configuration (status, headers)

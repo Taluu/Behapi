@@ -13,7 +13,7 @@ use Behat\Gherkin\Node\PyStringNode;
 use Symfony\Component\PropertyAccess\PropertyAccess;
 use Symfony\Component\PropertyAccess\PropertyAccessor;
 
-use Behapi\Extension\Tools\Assert;
+use Behapi\Tools\Assert;
 
 abstract class AbstractJson implements Context
 {

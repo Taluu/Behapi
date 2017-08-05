@@ -1,5 +1,5 @@
 <?php
-namespace Behapi\Extension\ServiceContainer;
+namespace Behapi\ServiceContainer;
 
 use Throwable;
 use InvalidArgumentException;
