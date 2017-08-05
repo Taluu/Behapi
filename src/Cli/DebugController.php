@@ -1,5 +1,5 @@
 <?php
-namespace Behapi\Extension\Cli;
+namespace Behapi\Cli;
 
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Output\OutputInterface;
@@ -10,7 +10,7 @@ use Symfony\Component\Console\Input\InputInterface;
 use Behat\Testwork\Cli\Controller;
 use Behat\Testwork\Output\OutputManager;
 
-use Behapi\Extension\Tools\Debug;
+use Behapi\Tools\Debug;
 
 final class DebugController implements Controller
 {

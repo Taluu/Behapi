@@ -3,8 +3,8 @@ namespace Behapi\Context;
 
 use stdClass;
 
-use Behapi\Extension\Context\ApiTrait;
-use Behapi\Extension\Tools\HttpHistory;
+use Behapi\Context\ApiTrait;
+use Behapi\Tools\HttpHistory;
 
 use Webmozart\Assert\Assert;
 

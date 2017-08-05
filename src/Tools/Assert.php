@@ -1,5 +1,5 @@
 <?php
-namespace Behapi\Extension\Tools;
+namespace Behapi\Tools;
 
 use Webmozart\Assert\Assert as webmozart;
 

@@ -1,5 +1,5 @@
 <?php
-namespace Behapi\Extension;
+namespace Behapi;
 
 use Behat\Testwork\ServiceContainer\Extension;
 use Behat\Testwork\ServiceContainer\ExtensionManager;
@@ -12,12 +12,12 @@ use Symfony\Component\Config\Definition\Builder\ArrayNodeDefinition;
 use Symfony\Component\DependencyInjection\Reference;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 
-use Behapi\Extension\Tools\Debug;
-use Behapi\Extension\Tools\HttpHistory as History;
+use Behapi\Tools\Debug;
+use Behapi\Tools\HttpHistory as History;
 
-use Behapi\Extension\Cli\DebugController;
-use Behapi\Extension\EventListener\DebugHttp;
-use Behapi\Extension\EventListener\HttpHistory;
+use Behapi\Cli\DebugController;
+use Behapi\EventListener\DebugHttp;
+use Behapi\EventListener\HttpHistory;
 
 /**
  * Extension which feeds the dependencies of behapi's features

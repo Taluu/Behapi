@@ -1,5 +1,5 @@
 <?php
-namespace Behapi\Extension\Context;
+namespace Behapi\Context;
 
 use Twig_Environment;
 

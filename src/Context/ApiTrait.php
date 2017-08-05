@@ -1,5 +1,5 @@
 <?php
-namespace Behapi\Extension\Context;
+namespace Behapi\Context;
 
 use RuntimeException;
 
@@ -9,7 +9,7 @@ use Http\Client\HttpClient;
 use Http\Message\StreamFactory;
 use Http\Message\MessageFactory;
 
-use Behapi\Extension\Tools\HttpHistory;
+use Behapi\Tools\HttpHistory;
 
 trait ApiTrait
 {

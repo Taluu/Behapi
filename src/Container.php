@@ -1,5 +1,5 @@
 <?php
-namespace Behapi\Extension;
+namespace Behapi;
 
 use Twig_Environment;
 use Twig_Loader_Array;
@@ -22,11 +22,11 @@ use Http\Client\Common\Plugin\BaseUriPlugin;
 use Http\Client\Common\Plugin\HistoryPlugin;
 use Http\Client\Common\Plugin\ContentLengthPlugin;
 
-use Behapi\Extension\Tools\Debug;
-use Behapi\Extension\Tools\HttpHistory;
+use Behapi\Tools\Debug;
+use Behapi\Tools\HttpHistory;
 
-use Behapi\Extension\ServiceContainer\NotFoundException;
-use Behapi\Extension\ServiceContainer\ServiceNotAvailableException;
+use Behapi\ServiceContainer\NotFoundException;
+use Behapi\ServiceContainer\ServiceNotAvailableException;
 
 class Container implements ContainerInterface
 {
