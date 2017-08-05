@@ -217,6 +217,18 @@ abstract class AbstractJson implements Context
         Assert::lessThanEq(count($value), $count);
     }
 
+    /** @Then in the json, :path should match :pattern */
+    public function theJsonPathShouldMatch(string $path, string $pattern)
+    {
+        Assert::regex($this->getValue($path), $pattern);
+    }
+
+    /** @Then in the json, :path should not match :pattern */
+    public function theJsonPathShouldNotMatch(string $path, string $pattern)
+    {
+        Assert::notRegex($this->getValue($path), $pattern);
+    }
+
     /** @Then in the json, the root should be an array */
     public function rootShouldBeAnArray()
     {
