@@ -67,10 +67,12 @@ etiquette (atomic commits, ...) and proper conduct too, and it should be fine !
 
 Thanks
 ------
-This extension was made while I was working at @Wisembly, and heavily used for
-writing our features and integration tests. Special thanks goes to @lunika,
-@rgazelot and @krichprollsch, who helped conceived this extension, and also
-pushed me to open-source it.
+This extension was made while I was working at
+[@Wisembly](https://github.com/Wisembly), and heavily used for writing our
+features and integration tests. Special thanks goes to
+[@lunika](https://github.com/lunika), [@rgazelot](https://github.com/rgazelot)
+and [@krichprollsch](https://github.com/krichprollsch), who helped conceived
+this extension, and also pushed me to open-source it.
 
 Badges
 ------
