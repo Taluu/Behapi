@@ -88,7 +88,7 @@ abstract class AbstractJson implements Context
     /** @Then in the json, :path should be: */
     public function theJsonPathShouldBePyString(string $path, PyStringNode $expected)
     {
-        Assert::same($this->getValue($path)->getRaw(), $expected);
+        Assert::same($this->getValue($path), $expected->getRaw());
     }
 
     /** @Then /^in the json, "(?P<path>(?:[^"]|\\")*)" should be (?P<expected>true|false)$/ */
