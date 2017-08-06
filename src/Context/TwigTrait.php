@@ -25,4 +25,3 @@ trait TwigTrait
         return $this->twig->load($key)->render($context);
     }
 }
-

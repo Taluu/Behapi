@@ -22,4 +22,3 @@ class NotFoundException extends InvalidArgumentException implements NotFoundExce
         return $this->id;
     }
 }
-
