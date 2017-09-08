@@ -58,52 +58,41 @@ class Container implements ContainerInterface
     public function has($id)
     {
         static $services = [
-            'http.client',
             HttpClient::class,
-
-            'http.history',
             HttpHistory::class,
-
-            'http.stream_factory',
             StreamFactory::class,
-
-            'http.message_factory',
             MessageFactory::class,
         ];
 
         if (class_exists(Twig_Environment::class)) {
-            $services[] = 'twig';
             $services[] = Twig_Environment::class;
         }
 
-        return in_array($id, $services);
+        return in_array($this->resolveAlias($id), $services);
     }
 
     /** {@inheritDoc} */
     public function get($id)
     {
+        $id = $this->resolveAlias($id);
+
         if (array_key_exists($id, $this->services)) {
             return $this->services[$id];
         }
 
         switch ($id) {
-            case 'http.history':
             case HttpHistory::class:
                 return $this->history;
 
-            case 'http.client':
             case HttpClient::class:
                 return $this->getHttpClient();
 
             case MessageFactory::class:
-            case 'http.message_factory':
-                return $this->services[MessageFactory::class] = $this->services['http.message_factory'] = MessageFactoryDiscovery::find();
+                return $this->services[MessageFactory::class] = MessageFactoryDiscovery::find();
 
             case StreamFactory::class:
-            case 'http.stream_factory':
-                return $this->services[StreamFactory::class] = $this->services['http.stream_factory'] = StreamFactoryDiscovery::find();
+                return $this->services[StreamFactory::class] = StreamFactoryDiscovery::find();
 
-            case 'twig':
             case Twig_Environment::class:
                 return $this->getTwigService();
         }
@@ -124,22 +113,40 @@ class Container implements ContainerInterface
 
         $http = HttpClientDiscovery::find();
 
-        return $this->services[HttpClient::class] = $this->services['http.client'] = new PluginClient($http, $plugins);
+        return $this->services[HttpClient::class] = new PluginClient($http, $plugins);
     }
 
     private function getTwigService(): ?Twig_Environment
     {
         if (!class_exists(Twig_Environment::class)) {
-            return $this->services['twig'] = null;
             return $this->services[Twig_Environment::class] = null;
         }
 
         $options = [
             'debug' => $this->debug->getStatus(),
             'cache' => $this->twigConfig['cache'] ?? false,
-            'autoescape' => $this->twigConfig['autoescape'] ?? false
+            'autoescape' => $this->twigConfig['autoescape'] ?? false,
         ];
 
-        return $this->services[Twig_Environment::class] = $this->services['twig'] = new Twig_Environment(new Twig_Loader_Array, $options);
+        return $this->services[Twig_Environment::class] = new Twig_Environment(new Twig_Loader_Array, $options);
+    }
+
+    private function resolveAlias(string $id): string
+    {
+        static $aliases = [
+            'twig' => Twig_Environment::class,
+            'http.client' => HttpClient::class,
+            'http.history' => HttpHistory::class,
+            'http.stream_factory' => StreamFactory::class,
+            'http.message_factory' => MessageFactory::class,
+        ];
+
+        if (isset($aliases[$id])) {
+            @trigger_error("Using {$id} is deprecated and will be removed, use {$aliases[$id]} instead", E_USER_DEPRECATED);
+
+            return $aliases[$id];
+        }
+
+        return $id;
     }
 }
