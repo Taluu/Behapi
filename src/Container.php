@@ -30,7 +30,7 @@ use Behapi\ServiceContainer\ServiceNotAvailableException;
 
 class Container implements ContainerInterface
 {
-    /** @var object[] Instanciated services */
+    /** @var object[] Instantiated services */
     private $services = [];
 
     /** @var string BaseURL for api requests */
@@ -85,7 +85,7 @@ class Container implements ContainerInterface
                 return $this->history;
 
             case HttpClient::class:
-                return $this->getHttpClient();
+                return $this->services[HttpClient::class] = $this->getHttpClient();
 
             case MessageFactory::class:
                 return $this->services[MessageFactory::class] = MessageFactoryDiscovery::find();
@@ -94,7 +94,7 @@ class Container implements ContainerInterface
                 return $this->services[StreamFactory::class] = StreamFactoryDiscovery::find();
 
             case Twig_Environment::class:
-                return $this->getTwigService();
+                return $this->services[Twig_Environment::class] = $this->getTwigService();
         }
 
         throw new NotFoundException($id);
@@ -113,13 +113,13 @@ class Container implements ContainerInterface
 
         $http = HttpClientDiscovery::find();
 
-        return $this->services[HttpClient::class] = new PluginClient($http, $plugins);
+        return new PluginClient($http, $plugins);
     }
 
     private function getTwigService(): ?Twig_Environment
     {
         if (!class_exists(Twig_Environment::class)) {
-            return $this->services[Twig_Environment::class] = null;
+            return null;
         }
 
         $options = [
@@ -128,7 +128,7 @@ class Container implements ContainerInterface
             'autoescape' => $this->twigConfig['autoescape'] ?? false,
         ];
 
-        return $this->services[Twig_Environment::class] = new Twig_Environment(new Twig_Loader_Array, $options);
+        return new Twig_Environment(new Twig_Loader_Array, $options);
     }
 
     private function resolveAlias(string $id): string
