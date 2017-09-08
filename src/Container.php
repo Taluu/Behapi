@@ -59,13 +59,21 @@ class Container implements ContainerInterface
     {
         static $services = [
             'http.client',
+            HttpClient::class,
+
             'http.history',
+            HttpHistory::class,
+
             'http.stream_factory',
+            StreamFactory::class,
+
             'http.message_factory',
+            MessageFactory::class,
         ];
 
         if (class_exists(Twig_Environment::class)) {
             $services[] = 'twig';
+            $services[] = Twig_Environment::class;
         }
 
         return in_array($id, $services);
@@ -80,18 +88,23 @@ class Container implements ContainerInterface
 
         switch ($id) {
             case 'http.history':
+            case HttpHistory::class:
                 return $this->history;
 
             case 'http.client':
+            case HttpClient::class:
                 return $this->getHttpClient();
 
+            case MessageFactory::class:
             case 'http.message_factory':
-                return $this->services['http.message_factory'] = MessageFactoryDiscovery::find();
+                return $this->services[MessageFactory::class] = $this->services['http.message_factory'] = MessageFactoryDiscovery::find();
 
+            case StreamFactory::class:
             case 'http.stream_factory':
-                return $this->services['http.stream_factory'] = StreamFactoryDiscovery::find();
+                return $this->services[StreamFactory::class] = $this->services['http.stream_factory'] = StreamFactoryDiscovery::find();
 
             case 'twig':
+            case Twig_Environment::class:
                 return $this->getTwigService();
         }
 
@@ -111,13 +124,14 @@ class Container implements ContainerInterface
 
         $http = HttpClientDiscovery::find();
 
-        return $this->services['http.client'] = new PluginClient($http, $plugins);
+        return $this->services[HttpClient::class] = $this->services['http.client'] = new PluginClient($http, $plugins);
     }
 
     private function getTwigService(): ?Twig_Environment
     {
         if (!class_exists(Twig_Environment::class)) {
             return $this->services['twig'] = null;
+            return $this->services[Twig_Environment::class] = null;
         }
 
         $options = [
@@ -126,6 +140,6 @@ class Container implements ContainerInterface
             'autoescape' => $this->twigConfig['autoescape'] ?? false
         ];
 
-        return $this->services['twig'] = new Twig_Environment(new Twig_Loader_Array, $options);
+        return $this->services[Twig_Environment::class] = $this->services['twig'] = new Twig_Environment(new Twig_Loader_Array, $options);
     }
 }
