@@ -4,10 +4,8 @@ namespace Behapi;
 use Twig_Environment;
 use Twig_Loader_Array;
 
-use Psr\Http\Message\UriInterface;
 use Interop\Container\ContainerInterface;
 
-use Http\Message\UriFactory;
 use Http\Message\StreamFactory;
 use Http\Message\MessageFactory;
 
