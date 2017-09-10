@@ -52,6 +52,8 @@
 
         "nyholm/psr7": "^0.2",
 
+        "twig/twig": "^2.0",
+
         "php-http/message": "^1.0",
         "php-http/mock-client": "^0.3"
     }
