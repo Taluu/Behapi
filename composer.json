@@ -40,6 +40,10 @@
         "twig/twig": "In order to use the Twig template in some contexts"
     },
 
+    "conflict": {
+        "twig/twig": "< 1.2"
+    },
+
     "prefer-stable": true,
     "minimum-stability": "dev",
 
@@ -47,6 +51,8 @@
         "behat/behat": "^3.3",
 
         "nyholm/psr7": "^0.2",
+
+        "twig/twig": "^2.0",
 
         "php-http/message": "^1.0",
         "php-http/mock-client": "^0.3"
