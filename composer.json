@@ -40,6 +40,10 @@
         "twig/twig": "In order to use the Twig template in some contexts"
     },
 
+    "conflict": {
+        "twig/twig": "< 1.2"
+    },
+
     "prefer-stable": true,
     "minimum-stability": "dev",
 
