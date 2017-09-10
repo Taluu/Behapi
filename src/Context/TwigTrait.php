@@ -14,7 +14,7 @@ trait TwigTrait
             return $string;
         }
 
-        $key = sprintf('__behapi_tpl__%s', hash('sha256', $string));
+        $key = sprintf('__behapi_tpl__%s', sha1($string));
 
         // this is assuming that the loader is Twig_Loader_Array
         // as this was privately set in the initializer, it should be OK
