@@ -4,10 +4,8 @@ namespace Behapi;
 use Twig_Environment;
 use Twig_Loader_Array;
 
-use Psr\Http\Message\UriInterface;
 use Interop\Container\ContainerInterface;
 
-use Http\Message\UriFactory;
 use Http\Message\StreamFactory;
 use Http\Message\MessageFactory;
 
@@ -30,7 +28,7 @@ use Behapi\ServiceContainer\ServiceNotAvailableException;
 
 class Container implements ContainerInterface
 {
-    /** @var object[] Instanciated services */
+    /** @var object[] Instantiated services */
     private $services = [];
 
     /** @var string BaseURL for api requests */
@@ -58,41 +56,43 @@ class Container implements ContainerInterface
     public function has($id)
     {
         static $services = [
-            'http.client',
-            'http.history',
-            'http.stream_factory',
-            'http.message_factory',
+            HttpClient::class,
+            HttpHistory::class,
+            StreamFactory::class,
+            MessageFactory::class,
         ];
 
         if (class_exists(Twig_Environment::class)) {
-            $services[] = 'twig';
+            $services[] = Twig_Environment::class;
         }
 
-        return in_array($id, $services);
+        return in_array($this->resolveAlias($id), $services);
     }
 
     /** {@inheritDoc} */
     public function get($id)
     {
+        $id = $this->resolveAlias($id);
+
         if (array_key_exists($id, $this->services)) {
             return $this->services[$id];
         }
 
         switch ($id) {
-            case 'http.history':
+            case HttpHistory::class:
                 return $this->history;
 
-            case 'http.client':
-                return $this->getHttpClient();
+            case HttpClient::class:
+                return $this->services[HttpClient::class] = $this->getHttpClient();
 
-            case 'http.message_factory':
-                return $this->services['http.message_factory'] = MessageFactoryDiscovery::find();
+            case MessageFactory::class:
+                return $this->services[MessageFactory::class] = MessageFactoryDiscovery::find();
 
-            case 'http.stream_factory':
-                return $this->services['http.stream_factory'] = StreamFactoryDiscovery::find();
+            case StreamFactory::class:
+                return $this->services[StreamFactory::class] = StreamFactoryDiscovery::find();
 
-            case 'twig':
-                return $this->getTwigService();
+            case Twig_Environment::class:
+                return $this->services[Twig_Environment::class] = $this->getTwigService();
         }
 
         throw new NotFoundException($id);
@@ -111,21 +111,40 @@ class Container implements ContainerInterface
 
         $http = HttpClientDiscovery::find();
 
-        return $this->services['http.client'] = new PluginClient($http, $plugins);
+        return new PluginClient($http, $plugins);
     }
 
     private function getTwigService(): ?Twig_Environment
     {
         if (!class_exists(Twig_Environment::class)) {
-            return $this->services['twig'] = null;
+            return null;
         }
 
         $options = [
             'debug' => $this->debug->getStatus(),
             'cache' => $this->twigConfig['cache'] ?? false,
-            'autoescape' => $this->twigConfig['autoescape'] ?? false
+            'autoescape' => $this->twigConfig['autoescape'] ?? false,
         ];
 
-        return $this->services['twig'] = new Twig_Environment(new Twig_Loader_Array, $options);
+        return new Twig_Environment(new Twig_Loader_Array, $options);
+    }
+
+    private function resolveAlias(string $id): string
+    {
+        static $aliases = [
+            'twig' => Twig_Environment::class,
+            'http.client' => HttpClient::class,
+            'http.history' => HttpHistory::class,
+            'http.stream_factory' => StreamFactory::class,
+            'http.message_factory' => MessageFactory::class,
+        ];
+
+        if (isset($aliases[$id])) {
+            @trigger_error("Using {$id} is deprecated and will be removed, use {$aliases[$id]} instead", E_USER_DEPRECATED);
+
+            return $aliases[$id];
+        }
+
+        return $id;
     }
 }
