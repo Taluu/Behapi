@@ -53,8 +53,8 @@ source, or extend (or use) the `Behapi\Context\Json` context, which is dependant
 on the `php-http` client.
 
 If you need to play with the request being built, or the response created when
-the request is sent, you need to inject the `@http.history`, which is an
-instance of `Behapi\Tools\HttpHistory`. It is automatically reseted between
+the request is sent, you need to inject the `@Behapi\Tools\HttpHistory`, which
+is an instance of `Behapi\Tools\HttpHistory`. It is automatically reseted between
 scenarios (or scenarios outlines)
 
 A documentation will be made (soon hopefully) with more details.
