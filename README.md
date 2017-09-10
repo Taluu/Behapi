@@ -39,13 +39,13 @@ the `behat.yml.dist` file), or a container capable of using behapi's container.
 
 Some services are provided to be injected in contexts, which are the following:
 
-- `@http.client`, which is the http client
-- `@http.history`, which is a sort of a container with the last requests done
-  and last responses received
-- `@http.message_factory`, which is the message factory (see psr 7)
-- `@http.stream_factory`, which is the stream factory (see psr 7)
-- `@twig`, which is the `Twig_Environment`, if twig is installed (`null`
-  otherwise)
+- `@Http\Client\HttpClient`, which is the http client
+- `@Behapi\Tools\HttpHistory`, which is a sort of a container with the last
+  requests done and last responses received
+- `@Http\Message\MessageFactory`, which is the message factory (see psr 7)
+- `@Http\Message\StreamFactory`, which is the stream factory (see psr 7)
+- `@Twig_Environment`, which is the `Twig_Environment`, if twig is installed
+  (`null` otherwise)
 
 In order to use (and customize) the `Json` context, you actually need to either
 extend `Behapi\Context\AbstractJson` if you want to use something else for the
