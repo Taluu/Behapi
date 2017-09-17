@@ -156,13 +156,8 @@ class Behapi implements Extension
             ->addArgument($config['twig'])
         ;
 
-        $definition->addTag(HelperContainerExtension::HELPER_CONTAINER_TAG);
-
-        if (method_exists($definition, 'setShared')) { // Symfony 2.8
-            $definition->setShared(false);
-        } else {
-            $definition->setScope(ContainerBuilder::SCOPE_PROTOTYPE);
-        }
+        $definition->setPublic(true);
+        $definition->addTag(HelperContainerException::HELPER_CONTAINER_TAG);
 
         $container->setAlias('behapi.container', Container::class);
     }
