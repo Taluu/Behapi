@@ -11,7 +11,7 @@ use Coduo\PHPMatcher\Factory\SimpleFactory;
  */
 class BehapiFactory extends SimpleFactory
 {
-    /** @var JsonMatcher */
+    /** @var Matcher\JsonMatcher */
     private $matcher;
 
     /** {@inheritDoc} */
