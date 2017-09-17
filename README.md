@@ -47,15 +47,18 @@ Some services are provided to be injected in contexts, which are the following:
 - `@Twig_Environment`, which is the `Twig_Environment`, if twig is installed
   (`null` otherwise)
 
+*Note:* If you are using Behat 3.4 (you should !), you don't really need to
+bother with the services names, as they are compatible with behat 3.4's
+auto-wiring feature. :}
+
 In order to use (and customize) the `Json` context, you actually need to either
 extend `Behapi\Context\AbstractJson` if you want to use something else for the
 source, or extend (or use) the `Behapi\Context\Json` context, which is dependant
 on the `php-http` client.
 
 If you need to play with the request being built, or the response created when
-the request is sent, you need to inject the `@Behapi\Tools\HttpHistory`, which
-is an instance of `Behapi\Tools\HttpHistory`. It is automatically reseted between
-scenarios (or scenarios outlines)
+the request is sent, you need to inject the `@Behapi\Tools\HttpHistory`. It is
+automatically reseted between scenarios (and scenarios outlines)
 
 A documentation will be made (soon hopefully) with more details.
 

@@ -5,15 +5,8 @@ default:
       services: "@behapi.container"
 
       contexts:
-        - Behapi\Context\Http:
-          - "@http.client"
-          - "@http.stream_factory"
-          - "@http.message_factory"
-          - "@http.history"
-          - "@twig"
-
-        - Behapi\Context\Json:
-          - "@http.history"
+        - Behapi\Context\Http: ~
+        - Behapi\Context\Json: ~
 
   extensions:
     Behapi\Behapi:
