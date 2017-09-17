@@ -105,25 +105,35 @@ class Behapi implements Extension
         $container->register(Debug::class, Debug::class)
             ->addArgument($config['debug']['headers']['request'])
             ->addArgument($config['debug']['headers']['response'])
+
+            ->setPublic(false)
         ;
 
-        $container->register(History::class, History::class);
+        $container->register(History::class, History::class)
+            ->setPublic(false)
+        ;
 
         $container->register(DebugController::class, DebugController::class)
             ->addArgument(new Reference('output.manager'))
             ->addArgument(new Reference(Debug::class))
             ->addArgument($config['debug']['formatter'])
+
+            ->setPublic(false)
             ->addTag(CliExtension::CONTROLLER_TAG, ['priority' => 10])
         ;
 
         $container->register(DebugHttp::class, DebugHttp::class)
             ->addArgument(new Reference(Debug::class))
             ->addArgument(new Reference(History::class))
+
+            ->setPublic(false)
             ->addTag('event_dispatcher.subscriber')
         ;
 
         $container->register(HttpHistory::class, HttpHistory::class)
             ->addArgument(new Reference(History::class))
+
+            ->setPublic(false)
             ->addTag('event_dispatcher.subscriber')
         ;
 
