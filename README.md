@@ -34,7 +34,7 @@ to have more information on the available configuration.
 
 After having installed the extension, you can then use the provided contexts
 such as the `Behapi\Context\Http` for the http api operations. In order to use
-them, you need to use behapi's container (`@behapi.container`, see example in
+them, you need to use behapi's container (`@Behapi\Container`, see example in
 the `behat.yml.dist` file), or a container capable of using behapi's container.
 
 Some services are provided to be injected in contexts, which are the following:

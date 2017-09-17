@@ -102,28 +102,28 @@ class Behapi implements Extension
     /** {@inheritDoc} */
     public function load(ContainerBuilder $container, array $config)
     {
-        $container->register('behapi.debug', Debug::class)
+        $container->register(Debug::class, Debug::class)
             ->addArgument($config['debug']['headers']['request'])
             ->addArgument($config['debug']['headers']['response'])
         ;
 
-        $container->register('behapi.history', History::class);
+        $container->register(History::class, History::class);
 
-        $container->register('behapi.controller.debug', DebugController::class)
+        $container->register(DebugController::class, DebugController::class)
             ->addArgument(new Reference('output.manager'))
-            ->addArgument(new Reference('behapi.debug'))
+            ->addArgument(new Reference(Debug::class))
             ->addArgument($config['debug']['formatter'])
             ->addTag(CliExtension::CONTROLLER_TAG, ['priority' => 10])
         ;
 
-        $container->register('behapi.subscriber.debug', DebugHttp::class)
-            ->addArgument(new Reference('behapi.debug'))
-            ->addArgument(new Reference('behapi.history'))
+        $container->register(DebugHttp::class, DebugHttp::class)
+            ->addArgument(new Reference(Debug::class))
+            ->addArgument(new Reference(History::class))
             ->addTag('event_dispatcher.subscriber')
         ;
 
-        $container->register('behapi.subscriber.http_history', HttpHistory::class)
-            ->addArgument(new Reference('behapi.history'))
+        $container->register(HttpHistory::class, HttpHistory::class)
+            ->addArgument(new Reference(History::class))
             ->addTag('event_dispatcher.subscriber')
         ;
 
@@ -137,11 +137,11 @@ class Behapi implements Extension
 
     private function loadContainer(ContainerBuilder $container, array $config): void
     {
-        $definition = $container->register('behapi.container', Container::class);
+        $definition = $container->register(Container::class, Container::class);
 
         $definition
-            ->addArgument(new Reference('behapi.history'))
-            ->addArgument(new Reference('behapi.debug'))
+            ->addArgument(new Reference(History::class))
+            ->addArgument(new Reference(Debug::class))
             ->addArgument($config['base_url'])
             ->addArgument($config['twig'])
         ;
@@ -153,5 +153,7 @@ class Behapi implements Extension
         } else {
             $definition->setScope(ContainerBuilder::SCOPE_PROTOTYPE);
         }
+
+        $container->setAlias('behapi.container', Container::class);
     }
 }

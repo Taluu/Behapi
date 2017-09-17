@@ -2,7 +2,7 @@ default:
   suites:
     main:
       paths: [%paths.base%/features/specs]
-      services: "@behapi.container"
+      services: "@Behapi\Container"
 
       contexts:
         - Behapi\Context\Http: ~
