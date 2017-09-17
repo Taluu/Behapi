@@ -102,28 +102,38 @@ class Behapi implements Extension
     /** {@inheritDoc} */
     public function load(ContainerBuilder $container, array $config)
     {
-        $container->register('behapi.debug', Debug::class)
+        $container->register(Debug::class, Debug::class)
             ->addArgument($config['debug']['headers']['request'])
             ->addArgument($config['debug']['headers']['response'])
+
+            ->setPublic(false)
         ;
 
-        $container->register('behapi.history', History::class);
+        $container->register(History::class, History::class)
+            ->setPublic(false)
+        ;
 
-        $container->register('behapi.controller.debug', DebugController::class)
+        $container->register(DebugController::class, DebugController::class)
             ->addArgument(new Reference('output.manager'))
-            ->addArgument(new Reference('behapi.debug'))
+            ->addArgument(new Reference(Debug::class))
             ->addArgument($config['debug']['formatter'])
+
+            ->setPublic(false)
             ->addTag(CliExtension::CONTROLLER_TAG, ['priority' => 10])
         ;
 
-        $container->register('behapi.subscriber.debug', DebugHttp::class)
-            ->addArgument(new Reference('behapi.debug'))
-            ->addArgument(new Reference('behapi.history'))
+        $container->register(DebugHttp::class, DebugHttp::class)
+            ->addArgument(new Reference(Debug::class))
+            ->addArgument(new Reference(History::class))
+
+            ->setPublic(false)
             ->addTag('event_dispatcher.subscriber')
         ;
 
-        $container->register('behapi.subscriber.http_history', HttpHistory::class)
-            ->addArgument(new Reference('behapi.history'))
+        $container->register(HttpHistory::class, HttpHistory::class)
+            ->addArgument(new Reference(History::class))
+
+            ->setPublic(false)
             ->addTag('event_dispatcher.subscriber')
         ;
 
@@ -137,21 +147,18 @@ class Behapi implements Extension
 
     private function loadContainer(ContainerBuilder $container, array $config): void
     {
-        $definition = $container->register('behapi.container', Container::class);
+        $definition = $container->register(Container::class, Container::class);
 
         $definition
-            ->addArgument(new Reference('behapi.history'))
-            ->addArgument(new Reference('behapi.debug'))
+            ->addArgument(new Reference(History::class))
+            ->addArgument(new Reference(Debug::class))
             ->addArgument($config['base_url'])
             ->addArgument($config['twig'])
         ;
 
-        $definition->addTag(HelperContainerExtension::HELPER_CONTAINER_TAG);
+        $definition->setPublic(true);
+        $definition->addTag(HelperContainerException::HELPER_CONTAINER_TAG);
 
-        if (method_exists($definition, 'setShared')) { // Symfony 2.8
-            $definition->setShared(false);
-        } else {
-            $definition->setScope(ContainerBuilder::SCOPE_PROTOTYPE);
-        }
+        $container->setAlias('behapi.container', Container::class);
     }
 }
