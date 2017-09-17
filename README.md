@@ -52,9 +52,10 @@ bother with the services names, as they are compatible with behat 3.4's
 auto-wiring feature. :}
 
 In order to use (and customize) the `Json` context, you actually need to either
-extend `Behapi\Context\AbstractJson` if you want to use something else for the
-source, or extend (or use) the `Behapi\Context\Json` context, which is dependant
-on the `php-http` client.
+extend `Behapi\Context\AbstractJson` or `Behapi\Context\Json`. If you want to
+use something else for the source (as the `Json` context is dependant on
+[php-http](https://github.com/php-http/)), extend (or use) the
+`Behapi\Context\AbstractJson` class.
 
 If you need to play with the request being built, or the response created when
 the request is sent, you need to inject the `@Behapi\Tools\HttpHistory`. It is
