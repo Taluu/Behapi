@@ -24,6 +24,7 @@ class JsonMatcher implements Context
 
     public function __construct(HttpHistory $history)
     {
+        $this->history = $history;
         $this->factory = new BehapiFactory;
         $this->accessor = PropertyAccess::createPropertyAccessor();
     }
@@ -87,13 +88,19 @@ class JsonMatcher implements Context
         );
     }
 
-    private function getJson(): string
+    private function getJson(): ?stdClass
     {
         return json_decode((string) $this->getResponse()->getBody());
     }
 
     private function getValue(string $path)
     {
-        return $this->accessor->getValue($this->getJson(), $path);
+        $json = $this->getJson();
+
+        if (null === $json) {
+            throw new InvalidArgumentException('Expected a Json valid content, got none');
+        }
+
+        return $this->accessor->getValue($json, $path);
     }
 }
