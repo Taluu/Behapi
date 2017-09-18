@@ -6,6 +6,8 @@ use Twig_Loader_Array;
 
 use Psr\Container\ContainerInterface;
 
+use Behat\Behat\HelperContainer\Exception\ServiceNotFoundException;
+
 use Http\Message\StreamFactory;
 use Http\Message\MessageFactory;
 
@@ -22,9 +24,6 @@ use Http\Client\Common\Plugin\ContentLengthPlugin;
 
 use Behapi\Tools\Debug;
 use Behapi\Tools\HttpHistory;
-
-use Behapi\ServiceContainer\NotFoundException;
-use Behapi\ServiceContainer\ServiceNotAvailableException;
 
 class Container implements ContainerInterface
 {
@@ -87,7 +86,7 @@ class Container implements ContainerInterface
                 return $this->services[$id] = $this->getTwigService();
         }
 
-        throw new NotFoundException($id);
+        throw new ServiceNotFoundException("Service {$id} is not available", $id);
     }
 
     private function getHttpClient(): HttpClient
