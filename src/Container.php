@@ -40,13 +40,10 @@ class Container implements ContainerInterface
     /** @var Debug Debug status */
     private $debug;
 
-    /** @var HttpHistory Latest requests / responses made */
-    private $history;
-
     public function __construct(HttpHistory $history, Debug $debug, string $baseUrl, array $twigConfig = [])
     {
         $this->debug = $debug;
-        $this->history = $history;
+        $this->services[HttpHistory::class] = $history;
 
         $this->baseUrl = $baseUrl;
         $this->twigConfig = $twigConfig;
@@ -77,9 +74,6 @@ class Container implements ContainerInterface
         }
 
         switch ($id) {
-            case HttpHistory::class:
-                return $this->history;
-
             case HttpClient::class:
                 return $this->services[HttpClient::class] = $this->getHttpClient();
 
@@ -104,7 +98,7 @@ class Container implements ContainerInterface
         $plugins = [
             new ContentLengthPlugin,
             new BaseUriPlugin($baseUri),
-            new HistoryPlugin($this->history)
+            new HistoryPlugin($this->services[HttpHistory::class])
         ];
 
         $http = HttpClientDiscovery::find();
