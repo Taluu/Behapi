@@ -66,14 +66,12 @@ class Container implements ContainerInterface
             $services[] = Twig_Environment::class;
         }
 
-        return in_array($this->resolveAlias($id), $services);
+        return in_array($id, $services);
     }
 
     /** {@inheritDoc} */
     public function get($id)
     {
-        $id = $this->resolveAlias($id);
-
         if (array_key_exists($id, $this->services)) {
             return $this->services[$id];
         }
@@ -127,24 +125,5 @@ class Container implements ContainerInterface
         ];
 
         return new Twig_Environment(new Twig_Loader_Array, $options);
-    }
-
-    private function resolveAlias(string $id): string
-    {
-        static $aliases = [
-            'twig' => Twig_Environment::class,
-            'http.client' => HttpClient::class,
-            'http.history' => HttpHistory::class,
-            'http.stream_factory' => StreamFactory::class,
-            'http.message_factory' => MessageFactory::class,
-        ];
-
-        if (isset($aliases[$id])) {
-            @trigger_error("Using {$id} is deprecated and will be removed, use {$aliases[$id]} instead", E_USER_DEPRECATED);
-
-            return $aliases[$id];
-        }
-
-        return $id;
     }
 }
