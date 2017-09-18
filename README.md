@@ -2,7 +2,7 @@ Behapi
 ======
 Behat extension to help write describe features related to HTTP APIs.
 
-PHP 7.1 and Behat 3.3, and a discoverable php-http client are required to make
+PHP 7.1, Behat 3.4, and a discoverable php-http client are required to make
 this extension work.
 
 Installing this extension is pretty easy, and there are multiple ways to do
@@ -47,9 +47,8 @@ Some services are provided to be injected in contexts, which are the following:
 - `@Twig_Environment`, which is the `Twig_Environment`, if twig is installed
   (`null` otherwise)
 
-*Note:* If you are using Behat 3.4 (you should !), you don't really need to
-bother with the services names, as they are compatible with behat 3.4's
-auto-wiring feature. :}
+*Note:* Since Behat 3.4 and Behapi 0.4, you don't really need to bother with the
+services names, as they are compatible with behat 3.4's auto-wiring feature. :}
 
 In order to use (and customize) the `Json` context, you actually need to either
 extend `Behapi\Context\AbstractJson` or `Behapi\Context\Json`. If you want to

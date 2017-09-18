@@ -42,14 +42,15 @@
     },
 
     "conflict": {
-        "twig/twig": "< 1.2"
+        "twig/twig": "< 1.2",
+        "behat/behat": "< 3.4"
     },
 
     "prefer-stable": true,
     "minimum-stability": "dev",
 
     "require-dev": {
-        "behat/behat": "^3.3",
+        "behat/behat": "^3.4",
 
         "nyholm/psr7": "^0.2",
         "coduo/php-matcher": "^2.3 || ^3.0",
