@@ -75,16 +75,16 @@ class Container implements ContainerInterface
 
         switch ($id) {
             case HttpClient::class:
-                return $this->services[HttpClient::class] = $this->getHttpClient();
+                return $this->services[$id] = $this->getHttpClient();
 
             case MessageFactory::class:
-                return $this->services[MessageFactory::class] = MessageFactoryDiscovery::find();
+                return $this->services[$id] = MessageFactoryDiscovery::find();
 
             case StreamFactory::class:
-                return $this->services[StreamFactory::class] = StreamFactoryDiscovery::find();
+                return $this->services[$id] = StreamFactoryDiscovery::find();
 
             case Twig_Environment::class:
-                return $this->services[Twig_Environment::class] = $this->getTwigService();
+                return $this->services[$id] = $this->getTwigService();
         }
 
         throw new NotFoundException($id);
