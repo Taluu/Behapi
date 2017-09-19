@@ -24,7 +24,7 @@ use Behapi\EventListener\HttpHistory;
  *
  * @author Baptiste Clavié <clavie.b@gmail.com>
  */
-class Behapi implements Extension
+final class Behapi implements Extension
 {
     /** {@inheritDoc} */
     public function getConfigKey()

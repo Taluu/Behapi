@@ -15,7 +15,7 @@ use Behapi\Tools\HttpHistory as History;
  *
  * @author Baptiste Clavié <clavie.b@gmail.com>
  */
-class HttpHistory implements EventSubscriberInterface
+final class HttpHistory implements EventSubscriberInterface
 {
     /** @var History */
     private $history;

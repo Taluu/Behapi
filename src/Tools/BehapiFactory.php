@@ -9,7 +9,7 @@ use Coduo\PHPMatcher\Factory\SimpleFactory;
  *
  * @author Baptiste Clavié <clavie.b@gmail.com>
  */
-class BehapiFactory extends SimpleFactory
+final class BehapiFactory extends SimpleFactory
 {
     /** @var Matcher\JsonMatcher */
     private $matcher;

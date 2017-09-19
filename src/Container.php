@@ -25,7 +25,7 @@ use Http\Client\Common\Plugin\ContentLengthPlugin;
 use Behapi\Tools\Debug;
 use Behapi\Tools\HttpHistory;
 
-class Container implements ContainerInterface
+final class Container implements ContainerInterface
 {
     /** @var object[] Instantiated services */
     private $services = [];

@@ -11,7 +11,7 @@ use Webmozart\Assert\Assert as webmozart;
  * @method static void nullOrNotContains($value, $subString, $message = '')
  * @method static void allContains($values, $subString, $message = '')
  */
-class Assert extends webmozart
+final class Assert extends webmozart
 {
     public static function notContains($value, $subString, $message = '')
     {

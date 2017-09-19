@@ -6,7 +6,7 @@ namespace Behapi\Tools;
  *
  * @author Baptiste Clavié <clavie.b@gmail.com>
  */
-class Debug
+final class Debug
 {
     /** @var bool */
     private $status = false;

@@ -14,7 +14,7 @@ use Http\Client\Common\Plugin\Journal;
 use Http\Client\Exception;
 use Http\Client\Exception\HttpException;
 
-class HttpHistory implements Journal, IteratorAggregate
+final class HttpHistory implements Journal, IteratorAggregate
 {
     /** @var MessageInterface[][] Array of array of tuples of RequestInterface and ?ResponseInterface */
     private $tuples = [];

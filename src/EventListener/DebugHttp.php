@@ -28,7 +28,7 @@ use Behapi\Tools\HttpHistory as History;
  *
  * @author Baptiste Clavié <clavie.b@gmail.com>
  */
-class DebugHttp implements EventSubscriberInterface
+final class DebugHttp implements EventSubscriberInterface
 {
     // 1 - key
     // 2 - value
