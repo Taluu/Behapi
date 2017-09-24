@@ -30,7 +30,7 @@ abstract class AbstractJson implements Context
      *
      * @return stdClass decoded json into an object
      */
-    abstract protected function getJson(): stdClass;
+    abstract protected function getJson();
 
     /**
      * Get the value for a path

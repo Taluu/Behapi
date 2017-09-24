@@ -19,7 +19,7 @@ class Json extends AbstractJson
     }
 
     /** {@inheritDoc} */
-    protected function getJson(): stdClass
+    protected function getJson()
     {
         return json_decode((string) $this->getResponse()->getBody());
     }
