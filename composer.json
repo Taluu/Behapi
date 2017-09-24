@@ -43,7 +43,8 @@
 
     "conflict": {
         "twig/twig": "< 1.2",
-        "behat/behat": "< 3.4"
+        "behat/behat": "< 3.4",
+        "symfony/dependency-injection": "< 2.8"
     },
 
     "prefer-stable": true,
