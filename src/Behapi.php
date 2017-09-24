@@ -157,6 +157,6 @@ final class Behapi implements Extension
         ;
 
         $definition->setPublic(true);
-        $definition->addTag(HelperContainerException::HELPER_CONTAINER_TAG);
+        $definition->addTag(HelperContainerExtension::HELPER_CONTAINER_TAG);
     }
 }
