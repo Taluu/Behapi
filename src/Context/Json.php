@@ -2,6 +2,7 @@
 namespace Behapi\Context;
 
 use stdClass;
+use InvalidArgumentException;
 
 use Behapi\Context\ApiTrait;
 use Behapi\Tools\HttpHistory;
@@ -21,7 +22,11 @@ class Json extends AbstractJson
     /** {@inheritDoc} */
     protected function getJson()
     {
-        return json_decode((string) $this->getResponse()->getBody());
+        $this->responseIsValidjson();
+
+        $decoded = json_decode((string) $this->getResponse()->getBody());
+
+        Assert::same(JSON_ERROR_NONE, json_last_error(), sprintf('The response is not a valid json (%s)', json_last_error_msg()));
     }
 
     public function responseIsValidjson()
