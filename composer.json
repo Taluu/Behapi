@@ -37,7 +37,6 @@
     },
 
     "suggest": {
-        "twig/twig": "In order to use the Twig template in some contexts",
         "coduo/php-matcher": "In order to use the PHP Matcher context"
     },
 
@@ -55,8 +54,6 @@
 
         "nyholm/psr7": "^0.2",
         "coduo/php-matcher": "^2.3 || ^3.0",
-
-        "twig/twig": "^2.0",
 
         "php-http/message": "^1.0",
         "php-http/mock-client": "^0.3"

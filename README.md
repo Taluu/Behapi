@@ -28,9 +28,8 @@ The `base_url` is the only requirement in the config for this extension to work.
 
 There are other configurations keys, such as which formatter to use in a debug
 environment, which headers you want to output in request or response while
-debugging, and the possibility to use and configure some twig options **if you
-have twig installed** ; Use the `--config-reference` flag when invoking behat
-to have more information on the available configuration.
+debugging ; Use the `--config-reference` flag when invoking behat to have more
+information on the available configuration.
 
 After having installed the extension, you can then use the provided contexts
 such as the `Behapi\Context\Http` for the http api operations. In order to use
@@ -44,8 +43,6 @@ Some services are provided to be injected in contexts, which are the following:
   requests done and last responses received
 - `@Http\Message\MessageFactory`, which is the message factory (see psr 7)
 - `@Http\Message\StreamFactory`, which is the stream factory (see psr 7)
-- `@Twig_Environment`, which is the `Twig_Environment`, if twig is installed
-  (`null` otherwise)
 
 *Note:* Since Behat 3.4 and Behapi 0.4, you don't really need to bother with the
 services names, as they are compatible with behat 3.4's auto-wiring feature. :}

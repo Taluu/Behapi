@@ -68,27 +68,6 @@ final class Behapi implements Extension
                         ->end()
                     ->end()
                 ->end()
-
-                ->arrayNode('twig')
-                    ->addDefaultsIfNotSet()
-                    ->children()
-                        ->scalarNode('cache')
-                            ->defaultNull()
-                            ->beforeNormalization()
-                                ->ifEmpty()
-                                ->thenUnset()
-                            ->end()
-                            ->validate()
-                            ->ifTrue(function ($v) { return !is_dir($v); })
-                                ->thenInvalid('Directory does not exist')
-                            ->end()
-                        ->end()
-                        ->enumNode('autoescape')
-                            ->values([false, 'html', 'js', 'name'])
-                            ->defaultFalse()
-                        ->end()
-                    ->end()
-                ->end()
             ->end()
         ->end();
 
@@ -153,7 +132,6 @@ final class Behapi implements Extension
             ->addArgument(new Reference(History::class))
             ->addArgument(new Reference(Debug::class))
             ->addArgument($config['base_url'])
-            ->addArgument($config['twig'])
         ;
 
         $definition->setPublic(true);
