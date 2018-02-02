@@ -22,8 +22,6 @@ class Json extends AbstractJson
     /** {@inheritDoc} */
     protected function getJson()
     {
-        $this->responseIsValidjson();
-
         $decoded = json_decode((string) $this->getResponse()->getBody());
 
         Assert::same(JSON_ERROR_NONE, json_last_error(), sprintf('The response is not a valid json (%s)', json_last_error_msg()));
