@@ -12,10 +12,7 @@ use Http\Client\HttpClient;
 use Http\Message\StreamFactory;
 use Http\Message\MessageFactory;
 
-use Twig_Environment;
-
 use Behapi\Context\ApiTrait;
-use Behapi\Context\TwigTrait;
 
 use Behapi\Tools\Assert;
 use Behapi\Tools\HttpHistory;
@@ -23,7 +20,6 @@ use Behapi\Tools\HttpHistory;
 class Http implements Context
 {
     use ApiTrait;
-    use TwigTrait;
 
     /** @var RequestInterface */
     private $request;
@@ -31,14 +27,12 @@ class Http implements Context
     /** @var mixed[] Query args to add */
     private $query;
 
-    public function __construct(HttpClient $client, StreamFactory $streamFactory, MessageFactory $messageFactory, HttpHistory $history, Twig_Environment $twig = null)
+    public function __construct(HttpClient $client, StreamFactory $streamFactory, MessageFactory $messageFactory, HttpHistory $history)
     {
         $this->client = $client;
         $this->history = $history;
         $this->streamFactory = $streamFactory;
         $this->messageFactory = $messageFactory;
-
-        $this->twig = $twig;
     }
 
     /** @When /^I create a "(?P<method>GET|POST|PATCH|PUT|DELETE|OPTIONS|HEAD)" request to "(?P<url>.+?)"$/ */
@@ -90,10 +84,6 @@ class Http implements Context
         $this->query = [];
 
         foreach ($parameters->getRowsHash() as $parameter => $value) {
-            if (is_string($value)) {
-                $value = $this->renderString($value);
-            }
-
             $this->addAParameter($parameter, $value);
         }
     }
@@ -108,7 +98,6 @@ class Http implements Context
     /** @When I set the following body: */
     public function setTheBody(string $body)
     {
-        $body = $this->renderString($body);
         $stream = $this->streamFactory->createStream($body);
 
         $request = $this->getRequest();

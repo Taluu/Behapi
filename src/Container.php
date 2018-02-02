@@ -1,9 +1,6 @@
 <?php
 namespace Behapi;
 
-use Twig_Environment;
-use Twig_Loader_Array;
-
 use Psr\Container\ContainerInterface;
 
 use Behat\Behat\HelperContainer\Exception\ServiceNotFoundException;
@@ -33,19 +30,15 @@ final class Container implements ContainerInterface
     /** @var string BaseURL for api requests */
     private $baseUrl;
 
-    /** @var mixed[] Twig configuration (if needed) */
-    private $twigConfig = [];
-
     /** @var Debug Debug status */
     private $debug;
 
-    public function __construct(HttpHistory $history, Debug $debug, string $baseUrl, array $twigConfig = [])
+    public function __construct(HttpHistory $history, Debug $debug, string $baseUrl)
     {
         $this->debug = $debug;
         $this->services[HttpHistory::class] = $history;
 
         $this->baseUrl = $baseUrl;
-        $this->twigConfig = $twigConfig;
     }
 
     /** {@inheritDoc} */
@@ -57,10 +50,6 @@ final class Container implements ContainerInterface
             StreamFactory::class,
             MessageFactory::class,
         ];
-
-        if (class_exists(Twig_Environment::class)) {
-            $services[] = Twig_Environment::class;
-        }
 
         return in_array($id, $services);
     }
@@ -81,9 +70,6 @@ final class Container implements ContainerInterface
 
             case StreamFactory::class:
                 return $this->services[$id] = StreamFactoryDiscovery::find();
-
-            case Twig_Environment::class:
-                return $this->services[$id] = $this->getTwigService();
         }
 
         throw new ServiceNotFoundException("Service {$id} is not available", $id);
@@ -103,20 +89,5 @@ final class Container implements ContainerInterface
         $http = HttpClientDiscovery::find();
 
         return new PluginClient($http, $plugins);
-    }
-
-    private function getTwigService(): ?Twig_Environment
-    {
-        if (!class_exists(Twig_Environment::class)) {
-            return null;
-        }
-
-        $options = [
-            'debug' => $this->debug->getStatus(),
-            'cache' => $this->twigConfig['cache'] ?? false,
-            'autoescape' => $this->twigConfig['autoescape'] ?? false,
-        ];
-
-        return new Twig_Environment(new Twig_Loader_Array, $options);
     }
 }
