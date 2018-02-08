@@ -3,6 +3,8 @@ namespace Behapi\EventListener;
 
 final class Events
 {
+    const REQUEST_PRE_SENDING = 'request.pre_sending';
+
     private function __construct()
     {
     }

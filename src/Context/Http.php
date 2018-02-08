@@ -16,6 +16,9 @@ use Http\Message\MessageFactory;
 
 use Behapi\Context\ApiTrait;
 
+use Behapi\EventListener\Events;
+use Behapi\EventListener\RequestEvent;
+
 use Behapi\Tools\Assert;
 use Behapi\Tools\HttpHistory;
 
@@ -147,6 +150,7 @@ class Http implements Context
             $request = $request->withUri($uri);
         }
 
+        $this->dispatcher->dispatch(Events::REQUEST_PRE_SENDING, new RequestEvent($request));
         $this->client->sendRequest($request);
     }
 
