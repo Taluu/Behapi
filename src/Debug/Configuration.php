@@ -1,12 +1,12 @@
-<?php
-namespace Behapi\Tools;
+<?php declare(strict_types=1);
+namespace Behapi\Debug;
 
 /**
  * Object containing the debug configuration (status, headers)
  *
  * @author Baptiste Clavié <clavie.b@gmail.com>
  */
-final class Debug
+final class Configuration
 {
     /** @var bool */
     private $status = false;

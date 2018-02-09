@@ -1,5 +1,5 @@
-<?php
-namespace Behapi\Cli;
+<?php declare(strict_types=1);
+namespace Behapi\Debug;
 
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Output\OutputInterface;
@@ -10,12 +10,10 @@ use Symfony\Component\Console\Input\InputInterface;
 use Behat\Testwork\Cli\Controller;
 use Behat\Testwork\Output\OutputManager;
 
-use Behapi\Tools\Debug;
-
-final class DebugController implements Controller
+final class CliController implements Controller
 {
-    /** @var Debug */
-    private $debug;
+    /** @var Configuration */
+    private $configuration;
 
     /** @var OutputManager */
     private $manager;
@@ -23,11 +21,11 @@ final class DebugController implements Controller
     /** @var string Formatter's name to use on debug occasions */
     private $formatter;
 
-    public function __construct(OutputManager $manager, Debug $debug, string $formatter = 'pretty')
+    public function __construct(OutputManager $manager, Configuration $configuration, string $formatter = 'pretty')
     {
-        $this->debug = $debug;
         $this->manager = $manager;
         $this->formatter = $formatter;
+        $this->configuration = $configuration;
     }
 
     /** {@inheritDoc} */
@@ -40,9 +38,9 @@ final class DebugController implements Controller
     /** {@inheritDoc} */
     public function execute(InputInterface $input, OutputInterface $output)
     {
-        $this->debug->setStatus($input->getOption('behapi-debug'));
+        $this->configuration->setStatus($input->getOption('behapi-debug'));
 
-        if (true === $this->debug->getStatus()) {
+        if (true === $this->configuration->getStatus()) {
             // disable all formatters, enable only the pretty one
             $this->manager->disableAllFormatters();
             $this->manager->enableFormatter($this->formatter);

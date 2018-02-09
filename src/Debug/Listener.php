@@ -1,5 +1,5 @@
-<?php
-namespace Behapi\EventListener;
+<?php declare(strict_types=1);
+namespace Behapi\Debug;
 
 use Psr\Http\Message\RequestInterface;
 use Psr\Http\Message\ResponseInterface;
@@ -17,7 +17,6 @@ use Behat\Behat\EventDispatcher\Event\GherkinNodeTested;
 
 use Behat\Gherkin\Node\TaggedNodeInterface;
 
-use Behapi\Tools\Debug;
 use Behapi\Tools\HttpHistory as History;
 
 /**
@@ -28,22 +27,22 @@ use Behapi\Tools\HttpHistory as History;
  *
  * @author Baptiste Clavié <clavie.b@gmail.com>
  */
-final class DebugHttp implements EventSubscriberInterface
+final class Listener implements EventSubscriberInterface
 {
     // 1 - key
     // 2 - value
-    const TEMPLATE = "\033[36m| \033[1m%s : \033[0;36m%s\033[0m\n";
+    private const TEMPLATE = "\033[36m| \033[1m%s : \033[0;36m%s\033[0m\n";
 
     /** @var History */
     private $history;
 
-    /** @var Debug */
-    private $debug;
+    /** @var Configuration */
+    private $configuration;
 
-    public function __construct(Debug $debug, History $history)
+    public function __construct(Configuration $configuration, History $history)
     {
-        $this->debug = $debug;
         $this->history = $history;
+        $this->configuration = $configuration;
     }
 
     /** {@inheritDoc} */
@@ -80,7 +79,7 @@ final class DebugHttp implements EventSubscriberInterface
             return;
         }
 
-        if (false === $this->debug->getStatus()) {
+        if (false === $this->configuration->getStatus()) {
             return;
         }
 
@@ -126,7 +125,7 @@ final class DebugHttp implements EventSubscriberInterface
 
         printf(self::TEMPLATE, 'Request', "{$request->getMethod()} {$request->getUri()}");
 
-        foreach ($this->debug->getRequestHeaders() as $header) {
+        foreach ($this->configuration->getRequestHeaders() as $header) {
             printf(self::TEMPLATE, "Request {$header}", $request->getHeaderLine($header));
         }
 
@@ -138,7 +137,7 @@ final class DebugHttp implements EventSubscriberInterface
 
         printf(self::TEMPLATE, 'Response status', "{$response->getStatusCode()} {$response->getReasonPhrase()}");
 
-        foreach ($this->debug->getResponseHeaders() as $header) {
+        foreach ($this->configuration->getResponseHeaders() as $header) {
             printf(self::TEMPLATE, "Response {$header}", $response->getHeaderLine($header));
         }
 

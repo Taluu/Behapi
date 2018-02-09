@@ -12,12 +12,9 @@ use Symfony\Component\Config\Definition\Builder\ArrayNodeDefinition;
 use Symfony\Component\DependencyInjection\Reference;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 
-use Behapi\Tools\Debug;
-use Behapi\Tools\HttpHistory as History;
-
-use Behapi\Cli\DebugController;
-use Behapi\EventListener\DebugHttp;
+use Behapi\Debug;
 use Behapi\EventListener\HttpHistory;
+use Behapi\Tools\HttpHistory as History;
 
 /**
  * Extension which feeds the dependencies of behapi's features
@@ -50,17 +47,17 @@ final class Behapi implements Extension
                         ->end()
 
                         ->arrayNode('headers')
-                            ->info('Headers to print in DebugHttp listener')
+                            ->info('Headers to print in Debug Http listener')
                             ->addDefaultsIfNotSet()
                             ->children()
                                 ->arrayNode('request')
-                                    ->info('Request headers to print in DebugHttp listener')
+                                    ->info('Request headers to print in Debug Http listener')
                                     ->defaultValue(['Content-Type'])
                                     ->prototype('scalar')->end()
                                 ->end()
 
                                 ->arrayNode('response')
-                                    ->info('Response headers to print in DebugHttp listener')
+                                    ->info('Response headers to print in Debug Http listener')
                                     ->defaultValue(['Content-Type'])
                                     ->prototype('scalar')->end()
                                 ->end()
@@ -81,7 +78,7 @@ final class Behapi implements Extension
     /** {@inheritDoc} */
     public function load(ContainerBuilder $container, array $config)
     {
-        $container->register(Debug::class, Debug::class)
+        $container->register(Debug\Configuration::class, Debug\Configuration::class)
             ->addArgument($config['debug']['headers']['request'])
             ->addArgument($config['debug']['headers']['response'])
 
@@ -92,17 +89,17 @@ final class Behapi implements Extension
             ->setPublic(false)
         ;
 
-        $container->register(DebugController::class, DebugController::class)
+        $container->register(Debug\CliController::class, Debug\CliController::class)
             ->addArgument(new Reference('output.manager'))
-            ->addArgument(new Reference(Debug::class))
+            ->addArgument(new Reference(Debug\Configuration::class))
             ->addArgument($config['debug']['formatter'])
 
             ->setPublic(false)
             ->addTag(CliExtension::CONTROLLER_TAG, ['priority' => 10])
         ;
 
-        $container->register(DebugHttp::class, DebugHttp::class)
-            ->addArgument(new Reference(Debug::class))
+        $container->register(Debug\Listener::class, Debug\Listener::class)
+            ->addArgument(new Reference(Debug\Configuration::class))
             ->addArgument(new Reference(History::class))
 
             ->setPublic(false)
@@ -130,7 +127,7 @@ final class Behapi implements Extension
 
         $definition
             ->addArgument(new Reference(History::class))
-            ->addArgument(new Reference(Debug::class))
+            ->addArgument(new Reference(Debug\Configuration::class))
             ->addArgument($config['base_url'])
         ;
 
