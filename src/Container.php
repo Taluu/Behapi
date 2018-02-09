@@ -48,7 +48,6 @@ final class Container implements ContainerInterface
             StreamFactory::class,
             MessageFactory::class,
             PluginClientBuilder::class,
-            EventDispatcherInterface::class,
         ];
 
         return in_array($id, $services);
@@ -70,9 +69,6 @@ final class Container implements ContainerInterface
 
             case StreamFactory::class:
                 return $this->services[$id] = StreamFactoryDiscovery::find();
-
-            case EventDispatcherInterface::class:
-                return $this->services[$id] = new EventDispatcher;
         }
 
         throw new ServiceNotFoundException("Service {$id} is not available", $id);

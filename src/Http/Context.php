@@ -8,8 +8,6 @@ use Psr\Http\Message\RequestInterface;
 use Behat\Gherkin\Node\TableNode;
 use Behat\Behat\Context\Context as BehatContext;
 
-use Symfony\Component\EventDispatcher\EventDispatcherInterface;
-
 use Http\Client\HttpClient;
 use Http\Message\StreamFactory;
 use Http\Message\MessageFactory;
@@ -45,17 +43,13 @@ class Context implements BehatContext
     /** @var mixed[] Query args to add */
     private $query;
 
-    /** @var EventDispatcherInterface */
-    private $dispatcher;
-
     /** @var HttpClient|HttpAsyncClient */
     private $client;
 
-    public function __construct(PluginClientBuilder $builder, StreamFactory $streamFactory, MessageFactory $messageFactory, HttpHistory $history, EventDispatcherInterface $dispatcher)
+    public function __construct(PluginClientBuilder $builder, StreamFactory $streamFactory, MessageFactory $messageFactory, HttpHistory $history)
     {
         $this->builder = $builder;
         $this->history = $history;
-        $this->dispatcher = $dispatcher;
         $this->streamFactory = $streamFactory;
         $this->messageFactory = $messageFactory;
 
@@ -168,10 +162,8 @@ class Context implements BehatContext
             $request = $request->withUri($uri);
         }
 
-        $this->dispatcher->dispatch(Events::REQUEST_PRE_SENDING, $event = new RequestEvent($request));
-
         $client = $this->builder->createClient($this->client);
-        $client->sendRequest($event->getRequest());
+        $client->sendRequest($request);
     }
 
     /** @Then the status code should be :expected */
