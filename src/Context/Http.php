@@ -150,8 +150,8 @@ class Http implements Context
             $request = $request->withUri($uri);
         }
 
-        $this->dispatcher->dispatch(Events::REQUEST_PRE_SENDING, new RequestEvent($request));
-        $this->client->sendRequest($request);
+        $this->dispatcher->dispatch(Events::REQUEST_PRE_SENDING, $event = new RequestEvent($request));
+        $this->client->sendRequest($event->getRequest());
     }
 
     /** @Then the status code should be :expected */

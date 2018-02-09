@@ -19,4 +19,9 @@ final class RequestEvent extends Event
     {
         return $this->request;
     }
+
+    public function setRequest(RequestInterface $request): void
+    {
+        $this->request = $request;
+    }
 }
