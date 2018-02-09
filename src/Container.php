@@ -22,7 +22,6 @@ use Http\Client\Common\Plugin\BaseUriPlugin;
 use Http\Client\Common\Plugin\HistoryPlugin;
 use Http\Client\Common\Plugin\ContentLengthPlugin;
 
-use Behapi\Debug;
 use Behapi\Tools\HttpHistory;
 
 final class Container implements ContainerInterface
@@ -33,15 +32,10 @@ final class Container implements ContainerInterface
     /** @var string BaseURL for api requests */
     private $baseUrl;
 
-    /** @var Debug\Configuration Debug configuration */
-    private $debug;
-
-    public function __construct(HttpHistory $history, Debug\Configuration $debug, string $baseUrl)
+    public function __construct(HttpHistory $history, string $baseUrl)
     {
-        $this->debug = $debug;
-        $this->services[HttpHistory::class] = $history;
-
         $this->baseUrl = $baseUrl;
+        $this->services[HttpHistory::class] = $history;
     }
 
     /** {@inheritDoc} */

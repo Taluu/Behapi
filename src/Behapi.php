@@ -127,7 +127,6 @@ final class Behapi implements Extension
 
         $definition
             ->addArgument(new Reference(History::class))
-            ->addArgument(new Reference(Debug\Configuration::class))
             ->addArgument($config['base_url'])
         ;
 
