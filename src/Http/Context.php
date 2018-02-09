@@ -10,9 +10,9 @@ use Behat\Behat\Context\Context as BehatContext;
 
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 
-use Http\Client\HttpClient;
 use Http\Message\StreamFactory;
 use Http\Message\MessageFactory;
+use Http\Discovery\HttpClientDiscovery;
 
 use Webmozart\Assert\Assert;
 
@@ -38,9 +38,9 @@ class Context implements BehatContext
     /** @var EventDispatcherInterface */
     private $dispatcher;
 
-    public function __construct(HttpClient $client, StreamFactory $streamFactory, MessageFactory $messageFactory, HttpHistory $history, EventDispatcherInterface $dispatcher)
+    public function __construct(PluginClientBuilder $builder, StreamFactory $streamFactory, MessageFactory $messageFactory, HttpHistory $history, EventDispatcherInterface $dispatcher)
     {
-        $this->client = $client;
+        $this->builder = $builder;
         $this->history = $history;
         $this->dispatcher = $dispatcher;
         $this->streamFactory = $streamFactory;
@@ -154,7 +154,9 @@ class Context implements BehatContext
         }
 
         $this->dispatcher->dispatch(Events::REQUEST_PRE_SENDING, $event = new RequestEvent($request));
-        $this->client->sendRequest($event->getRequest());
+
+        $client = $this->builder->createClient(HttpClientDiscovery::find());
+        $client->sendRequest($event->getRequest());
     }
 
     /** @Then the status code should be :expected */

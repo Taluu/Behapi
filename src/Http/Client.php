@@ -13,8 +13,8 @@ use Behapi\HttpHistory\History as HttpHistory;
 
 trait Client
 {
-    /** @var HttpClient */
-    private $client;
+    /** @var PluginClientBuilder */
+    private $builder;
 
     /** @var StreamFactory */
     private $streamFactory;

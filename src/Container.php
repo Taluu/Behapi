@@ -11,12 +11,10 @@ use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 use Http\Message\StreamFactory;
 use Http\Message\MessageFactory;
 
-use Http\Discovery\HttpClientDiscovery;
 use Http\Discovery\UriFactoryDiscovery;
 use Http\Discovery\StreamFactoryDiscovery;
 use Http\Discovery\MessageFactoryDiscovery;
 
-use Http\Client\HttpClient;
 use Http\Client\Common\PluginClient;
 use Http\Client\Common\Plugin\BaseUriPlugin;
 use Http\Client\Common\Plugin\HistoryPlugin;
@@ -46,7 +44,6 @@ final class Container implements ContainerInterface
     public function has($id)
     {
         static $services = [
-            HttpClient::class,
             HttpHistory::class,
             StreamFactory::class,
             MessageFactory::class,
@@ -67,9 +64,6 @@ final class Container implements ContainerInterface
         switch ($id) {
             case PluginClientBuilder::class:
                 return $this->services[$id] = $this->getPluginClientBuilder();
-
-            case HttpClient::class:
-                return $this->services[$id] = $this->getHttpClient();
 
             case MessageFactory::class:
                 return $this->services[$id] = MessageFactoryDiscovery::find();
@@ -95,13 +89,5 @@ final class Container implements ContainerInterface
         $builder->addPlugin(new HistoryPlugin($this->services[HttpHistory::class]));
 
         return $builder;
-    }
-
-    private function getHttpClient(): HttpClient
-    {
-        $http = HttpClientDiscovery::find();
-        $builder = $this->get(PluginClientBuilder::class);
-
-        return $builder->createClient($http);
     }
 }
