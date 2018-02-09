@@ -21,8 +21,8 @@ use it for any configurations actually) :
 default:
   suites:
     main:
-      paths: [%paths.base%/features/specs]
-      services: "@Behapi\Container"
+      paths: ['%paths.base%/features']
+      services: '@Behapi\Container'
       autowire: true
 
       contexts:
