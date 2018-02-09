@@ -74,8 +74,8 @@ If you need to play with the request being built, or the response created when
 the request is sent, you need to inject the `@Behapi\Tools\HttpHistory`. It is
 automatically reseted between scenarios (and scenarios outlines)
 
-If you have installed [phpmatcher](https://github.com/coduo/php-matcher/), a
-`JsonMatcher` is available.
+If you have installed [phpmatcher](https://github.com/coduo/php-matcher/), the
+Behapi\Context\`JsonMatcher` matcher is available.
 
 A documentation will be made (soon hopefully) with more details.
 
