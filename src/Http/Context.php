@@ -14,6 +14,8 @@ use Http\Client\HttpClient;
 use Http\Message\StreamFactory;
 use Http\Message\MessageFactory;
 
+use Webmozart\Assert\Assert;
+
 use Behapi\EventListener\Events;
 use Behapi\EventListener\RequestEvent;
 
