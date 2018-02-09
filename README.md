@@ -65,8 +65,8 @@ Some services are provided to be injected in contexts, which are the following:
 compatible with behat's auto-wiring feature. 
 
 In order to use (and customize) the `Json` context, you actually need to either
-extend `Behapi\Context\AbstractJson` or `Behapi\Context\Json`. If you want to
-use something else for the source (as the `Json` context is dependant on
+extend `Behapi\Context\AbstractJson` or use `Behapi\Context\Json`. If you want
+to use something else for the source (as the `Json` context is dependant on
 [php-http](https://github.com/php-http/)), extend the
 `Behapi\Context\AbstractJson` class.
 
