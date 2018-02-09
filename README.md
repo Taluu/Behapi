@@ -43,6 +43,7 @@ Some services are provided to be injected in contexts, which are the following:
   requests done and last responses received
 - `@Http\Message\MessageFactory`
 - `@Http\Message\StreamFactory`
+- `@Symfony\Component\EventDispatcher\EventDispatcherInterface`
 
 *Note:* Since Behat 3.4 and Behapi 0.4, you don't really need to bother with the
 services names, as they are compatible with behat 3.4's auto-wiring feature. :}
