@@ -32,7 +32,7 @@ default:
         - here
 
         # examples :
-        - Behapi\Context\Http: ~
+        - Behapi\Http\Context: ~
         - Behapi\Json\Context: ~
 
   extensions:
@@ -48,7 +48,7 @@ debugging ; Use the `--config-reference` flag when invoking behat to have more
 information on the available configuration.
 
 After having installed the extension, you can then use the provided contexts
-such as the `Behapi\Context\Http` for the http api operations. In order to use
+such as the `Behapi\Http\Context` for the http api operations. In order to use
 them, you need to use behapi's container (`@Behapi\Container`), or a container
 capable of using behapi's container.
 

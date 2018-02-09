@@ -1,11 +1,11 @@
 <?php declare(strict_types=1);
-namespace Behapi\Context;
+namespace Behapi\Http;
 
 use RuntimeException;
 
 use Psr\Http\Message\RequestInterface;
 
-use Behat\Behat\Context\Context;
+use Behat\Behat\Context\Context as BehatContext;
 use Behat\Gherkin\Node\TableNode;
 
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
@@ -14,21 +14,18 @@ use Http\Client\HttpClient;
 use Http\Message\StreamFactory;
 use Http\Message\MessageFactory;
 
-use Behapi\Context\ApiTrait;
-
 use Behapi\EventListener\Events;
 use Behapi\EventListener\RequestEvent;
 
-use Behapi\Tools\Assert;
 use Behapi\HttpHistory\History as HttpHistory;
 
 use function trim;
 use function is_array;
 use function http_build_query;
 
-class Http implements Context
+class Context implements BehatContext
 {
-    use ApiTrait;
+    use Client;
 
     /** @var RequestInterface */
     private $request;

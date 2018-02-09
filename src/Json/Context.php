@@ -6,7 +6,7 @@ use InvalidArgumentException;
 
 use Webmozart\Assert\Assert;
 
-use Behapi\Context\ApiTrait;
+use Behapi\Http\Client;
 use Behapi\HttpHistory\History as HttpHistory;
 
 use function sprintf;
@@ -19,7 +19,7 @@ use const JSON_ERROR_NONE;
 
 class Context extends AbstractContext
 {
-    use ApiTrait;
+    use Client;
 
     public function __construct(HttpHistory $history)
     {
