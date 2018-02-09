@@ -10,7 +10,7 @@ use Symfony\Component\PropertyAccess\PropertyAccess;
 use Symfony\Component\PropertyAccess\PropertyAccessor;
 
 use Behapi\Http\Client;
-use Behapi\HttpHistory as HttpHistory;
+use Behapi\HttpHistory\History as HttpHistory;
 
 use function sprintf;
 use function json_encode;
@@ -20,7 +20,7 @@ class JsonContext implements Context
 {
     use Client;
 
-    /** @var BehapiFactory */
+    /** @var MatcherFactory */
     private $factory;
 
     /** @var PropertyAccessor */
