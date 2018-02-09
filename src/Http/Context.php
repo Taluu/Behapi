@@ -5,8 +5,8 @@ use RuntimeException;
 
 use Psr\Http\Message\RequestInterface;
 
-use Behat\Behat\Context\Context as BehatContext;
 use Behat\Gherkin\Node\TableNode;
+use Behat\Behat\Context\Context as BehatContext;
 
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 

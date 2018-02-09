@@ -7,8 +7,8 @@ use Datetime;
 use Throwable;
 use InvalidArgumentException;
 
-use Behat\Behat\Context\Context;
 use Behat\Gherkin\Node\PyStringNode;
+use Behat\Behat\Context\Context as BehatContext;
 
 use Symfony\Component\PropertyAccess\PropertyAccess;
 use Symfony\Component\PropertyAccess\PropertyAccessor;
@@ -21,7 +21,7 @@ use function json_last_error;
 use const JSON_ERROR_NONE;
 use const PREG_OFFSET_CAPTURE;
 
-abstract class AbstractContext implements Context
+abstract class AbstractContext implements BehatContext
 {
     /** @var PropertyAccessor */
     private $accessor;
