@@ -5,6 +5,9 @@ use Psr\Container\ContainerInterface;
 
 use Behat\Behat\HelperContainer\Exception\ServiceNotFoundException;
 
+use Symfony\Component\EventDispatcher\EventDispatcher;
+use Symfony\Component\EventDispatcher\EventDispatcherInterface;
+
 use Http\Message\StreamFactory;
 use Http\Message\MessageFactory;
 
@@ -49,6 +52,7 @@ final class Container implements ContainerInterface
             HttpHistory::class,
             StreamFactory::class,
             MessageFactory::class,
+            EventDispatcherInterface::class,
         ];
 
         return in_array($id, $services);
@@ -70,6 +74,9 @@ final class Container implements ContainerInterface
 
             case StreamFactory::class:
                 return $this->services[$id] = StreamFactoryDiscovery::find();
+
+            case EventDispatcherInterface::class:
+                return $this->services[$id] = new EventDispatcher;
         }
 
         throw new ServiceNotFoundException("Service {$id} is not available", $id);

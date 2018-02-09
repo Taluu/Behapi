@@ -8,11 +8,16 @@ use Psr\Http\Message\RequestInterface;
 use Behat\Behat\Context\Context;
 use Behat\Gherkin\Node\TableNode;
 
+use Symfony\Component\EventDispatcher\EventDispatcherInterface;
+
 use Http\Client\HttpClient;
 use Http\Message\StreamFactory;
 use Http\Message\MessageFactory;
 
 use Behapi\Context\ApiTrait;
+
+use Behapi\EventListener\Events;
+use Behapi\EventListener\RequestEvent;
 
 use Behapi\Tools\Assert;
 use Behapi\Tools\HttpHistory;
@@ -27,10 +32,14 @@ class Http implements Context
     /** @var mixed[] Query args to add */
     private $query;
 
-    public function __construct(HttpClient $client, StreamFactory $streamFactory, MessageFactory $messageFactory, HttpHistory $history)
+    /** @var EventDispatcherInterface */
+    private $dispatcher;
+
+    public function __construct(HttpClient $client, StreamFactory $streamFactory, MessageFactory $messageFactory, HttpHistory $history, EventDispatcherInterface $dispatcher)
     {
         $this->client = $client;
         $this->history = $history;
+        $this->dispatcher = $dispatcher;
         $this->streamFactory = $streamFactory;
         $this->messageFactory = $messageFactory;
     }
@@ -141,6 +150,7 @@ class Http implements Context
             $request = $request->withUri($uri);
         }
 
+        $this->dispatcher->dispatch(Events::REQUEST_PRE_SENDING, new RequestEvent($request));
         $this->client->sendRequest($request);
     }
 
