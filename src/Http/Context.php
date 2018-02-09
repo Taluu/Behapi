@@ -10,6 +10,7 @@ use Behat\Behat\Context\Context as BehatContext;
 
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 
+use Http\Client\HttpClient;
 use Http\Message\StreamFactory;
 use Http\Message\MessageFactory;
 use Http\Discovery\HttpClientDiscovery;
@@ -47,6 +48,9 @@ class Context implements BehatContext
     /** @var EventDispatcherInterface */
     private $dispatcher;
 
+    /** @var HttpClient|HttpAsyncClient */
+    private $client;
+
     public function __construct(PluginClientBuilder $builder, StreamFactory $streamFactory, MessageFactory $messageFactory, HttpHistory $history, EventDispatcherInterface $dispatcher)
     {
         $this->builder = $builder;
@@ -54,6 +58,8 @@ class Context implements BehatContext
         $this->dispatcher = $dispatcher;
         $this->streamFactory = $streamFactory;
         $this->messageFactory = $messageFactory;
+
+        $this->client = HttpClientDiscovery::find();
     }
 
     /** @When /^I create a "(?P<method>GET|POST|PATCH|PUT|DELETE|OPTIONS|HEAD)" request to "(?P<url>.+?)"$/ */
@@ -164,7 +170,7 @@ class Context implements BehatContext
 
         $this->dispatcher->dispatch(Events::REQUEST_PRE_SENDING, $event = new RequestEvent($request));
 
-        $client = $this->builder->createClient(HttpClientDiscovery::find());
+        $client = $this->builder->createClient($this->client);
         $client->sendRequest($event->getRequest());
     }
 

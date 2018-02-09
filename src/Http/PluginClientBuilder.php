@@ -9,17 +9,25 @@ final class PluginClientBuilder
     /** @var Plugin[] */
     private $plugins;
 
+    /** @var ?PluginClient */
+    private $client;
+
     public function addPlugin(Plugin $plugin): void
     {
         $this->plugins[] = $plugin;
+        $this->client = null;
     }
 
     public function createClient($client, array $options = []): PluginClient
     {
-        return new PluginClient(
-            $client,
-            $this->plugins,
-            $options
-        );
+        if (null === $this->client) {
+            $this->client = new PluginClient(
+                $client,
+                $this->plugins,
+                $options
+            );
+        }
+
+        return $this->client;
     }
 }
