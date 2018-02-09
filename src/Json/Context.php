@@ -1,17 +1,25 @@
-<?php
-namespace Behapi\Context;
+<?php declare(strict_types=1);
+namespace Behapi\Json;
 
 use stdClass;
 use InvalidArgumentException;
 
-use Behapi\Context\ApiTrait;
-use Behapi\Tools\HttpHistory;
-
 use Webmozart\Assert\Assert;
 
-class Json extends AbstractJson
+use Behapi\Http\Client;
+use Behapi\HttpHistory\History as HttpHistory;
+
+use function sprintf;
+
+use function json_decode;
+use function json_last_error;
+use function json_last_error_msg;
+
+use const JSON_ERROR_NONE;
+
+class Context extends AbstractContext
 {
-    use ApiTrait;
+    use Client;
 
     public function __construct(HttpHistory $history)
     {

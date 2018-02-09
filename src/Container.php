@@ -1,4 +1,4 @@
-<?php
+<?php declare(strict_types=1);
 namespace Behapi;
 
 use Psr\Container\ContainerInterface;
@@ -22,8 +22,10 @@ use Http\Client\Common\Plugin\BaseUriPlugin;
 use Http\Client\Common\Plugin\HistoryPlugin;
 use Http\Client\Common\Plugin\ContentLengthPlugin;
 
-use Behapi\Tools\Debug;
-use Behapi\Tools\HttpHistory;
+use Behapi\HttpHistory\History as HttpHistory;
+
+use function in_array;
+use function array_key_exists;
 
 final class Container implements ContainerInterface
 {
@@ -33,15 +35,10 @@ final class Container implements ContainerInterface
     /** @var string BaseURL for api requests */
     private $baseUrl;
 
-    /** @var Debug Debug status */
-    private $debug;
-
-    public function __construct(HttpHistory $history, Debug $debug, string $baseUrl)
+    public function __construct(HttpHistory $history, string $baseUrl)
     {
-        $this->debug = $debug;
-        $this->services[HttpHistory::class] = $history;
-
         $this->baseUrl = $baseUrl;
+        $this->services[HttpHistory::class] = $history;
     }
 
     /** {@inheritDoc} */

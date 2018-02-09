@@ -32,8 +32,8 @@ default:
         - here
 
         # examples :
-        - Behapi\Context\Http: ~
-        - Behapi\Context\Json: ~
+        - Behapi\Http\Context: ~
+        - Behapi\Json\Context: ~
 
   extensions:
     Behapi\Behapi:
@@ -48,14 +48,14 @@ debugging ; Use the `--config-reference` flag when invoking behat to have more
 information on the available configuration.
 
 After having installed the extension, you can then use the provided contexts
-such as the `Behapi\Context\Http` for the http api operations. In order to use
+such as the `Behapi\Http\Context` for the http api operations. In order to use
 them, you need to use behapi's container (`@Behapi\Container`), or a container
 capable of using behapi's container.
 
 Some services are provided to be injected in contexts, which are the following:
 
 - `@Http\Client\HttpClient`
-- `@Behapi\Tools\HttpHistory`, which is a sort of a container with the last
+- `@Behapi\HttpHistory\History`, which is a sort of a container with the last
   requests done and last responses received
 - `@Http\Message\MessageFactory`
 - `@Http\Message\StreamFactory`
@@ -64,18 +64,18 @@ Some services are provided to be injected in contexts, which are the following:
 *Note:* You don't really need to bother with the services names, as they are
 compatible with behat's auto-wiring feature. 
 
-In order to use (and customize) the `Json` context, you actually need to either
-extend `Behapi\Context\AbstractJson` or use `Behapi\Context\Json`. If you want
-to use something else for the source (as the `Json` context is dependant on
-[php-http](https://github.com/php-http/)), extend the
-`Behapi\Context\AbstractJson` class.
+In order to enable the Json assertions, you need to either extend
+`Behapi\Json\AbstractContext` or use `Behapi\Context\Json`. If you want to use
+something else for the source (as the `Behapi\Json\Context` context is
+dependant on [php-http](https://github.com/php-http/)), extend the
+`Behapi\Json\AbstractContext` class.
 
 If you need to play with the request being built, or the response created when
-the request is sent, you need to inject the `@Behapi\Tools\HttpHistory`. It is
+the request is sent, you need to inject the `@Behapi\HttpHistory\History`. It is
 automatically reseted between scenarios (and scenarios outlines)
 
 If you have installed [phpmatcher](https://github.com/coduo/php-matcher/), the
-Behapi\Context\`JsonMatcher` context is available.
+`Behapi\PhpMatcher\JsonContext` context is available.
 
 A documentation will be made (soon hopefully) with more details.
 

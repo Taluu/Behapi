@@ -1,5 +1,5 @@
-<?php
-namespace Behapi\Context;
+<?php declare(strict_types=1);
+namespace Behapi\Json;
 
 use stdClass;
 use Datetime;
@@ -13,9 +13,15 @@ use Behat\Gherkin\Node\PyStringNode;
 use Symfony\Component\PropertyAccess\PropertyAccess;
 use Symfony\Component\PropertyAccess\PropertyAccessor;
 
-use Behapi\Tools\Assert;
+use Webmozart\Assert\Assert;
 
-abstract class AbstractJson implements Context
+use function preg_match;
+use function json_last_error;
+
+use const JSON_ERROR_NONE;
+use const PREG_OFFSET_CAPTURE;
+
+abstract class AbstractContext implements Context
 {
     /** @var PropertyAccessor */
     private $accessor;
@@ -223,10 +229,23 @@ abstract class AbstractJson implements Context
         Assert::regex($this->getValue($path), $pattern);
     }
 
-    /** @Then in the json, :path should not match :pattern */
+    /**
+     * @Then in the json, :path should not match :pattern
+     *
+     * -----
+     *
+     * Note :: The body of this assertion should be replaced by a
+     * `Assert::notRegex` as soon as the Assert's PR
+     * https://github.com/webmozart/assert/pull/58 is merged and released.
+     */
     public function theJsonPathShouldNotMatch(string $path, string $pattern)
     {
-        Assert::notRegex($this->getValue($path), $pattern);
+        if (!preg_match($pattern, $this->getValue($path), $matches, PREG_OFFSET_CAPTURE)) {
+            // it's all good, it is supposed not to match. :}
+            return;
+        }
+
+        throw new InvalidArgumentException("The value matches {$pattern} at offset {$matches[0][1]}");
     }
 
     /** @Then in the json, the root should be an array */

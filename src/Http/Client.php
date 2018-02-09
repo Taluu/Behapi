@@ -1,5 +1,5 @@
-<?php
-namespace Behapi\Context;
+<?php declare(strict_types=1);
+namespace Behapi\Http;
 
 use RuntimeException;
 
@@ -9,9 +9,9 @@ use Http\Client\HttpClient;
 use Http\Message\StreamFactory;
 use Http\Message\MessageFactory;
 
-use Behapi\Tools\HttpHistory;
+use Behapi\HttpHistory\History as HttpHistory;
 
-trait ApiTrait
+trait Client
 {
     /** @var HttpClient */
     private $client;

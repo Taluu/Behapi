@@ -1,4 +1,4 @@
-<?php
+<?php declare(strict_types=1);
 namespace Behapi;
 
 use Behat\Testwork\ServiceContainer\Extension;
@@ -12,12 +12,8 @@ use Symfony\Component\Config\Definition\Builder\ArrayNodeDefinition;
 use Symfony\Component\DependencyInjection\Reference;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 
-use Behapi\Tools\Debug;
-use Behapi\Tools\HttpHistory as History;
-
-use Behapi\Cli\DebugController;
-use Behapi\EventListener\DebugHttp;
-use Behapi\EventListener\HttpHistory;
+use Behapi\Debug;
+use Behapi\HttpHistory;
 
 /**
  * Extension which feeds the dependencies of behapi's features
@@ -50,17 +46,17 @@ final class Behapi implements Extension
                         ->end()
 
                         ->arrayNode('headers')
-                            ->info('Headers to print in DebugHttp listener')
+                            ->info('Headers to print in Debug Http listener')
                             ->addDefaultsIfNotSet()
                             ->children()
                                 ->arrayNode('request')
-                                    ->info('Request headers to print in DebugHttp listener')
+                                    ->info('Request headers to print in Debug Http listener')
                                     ->defaultValue(['Content-Type'])
                                     ->prototype('scalar')->end()
                                 ->end()
 
                                 ->arrayNode('response')
-                                    ->info('Response headers to print in DebugHttp listener')
+                                    ->info('Response headers to print in Debug Http listener')
                                     ->defaultValue(['Content-Type'])
                                     ->prototype('scalar')->end()
                                 ->end()
@@ -81,36 +77,36 @@ final class Behapi implements Extension
     /** {@inheritDoc} */
     public function load(ContainerBuilder $container, array $config)
     {
-        $container->register(Debug::class, Debug::class)
+        $container->register(Debug\Configuration::class, Debug\Configuration::class)
             ->addArgument($config['debug']['headers']['request'])
             ->addArgument($config['debug']['headers']['response'])
 
             ->setPublic(false)
         ;
 
-        $container->register(History::class, History::class)
+        $container->register(HttpHistory\History::class, HttpHistory\History::class)
             ->setPublic(false)
         ;
 
-        $container->register(DebugController::class, DebugController::class)
+        $container->register(Debug\CliController::class, Debug\CliController::class)
             ->addArgument(new Reference('output.manager'))
-            ->addArgument(new Reference(Debug::class))
+            ->addArgument(new Reference(Debug\Configuration::class))
             ->addArgument($config['debug']['formatter'])
 
             ->setPublic(false)
             ->addTag(CliExtension::CONTROLLER_TAG, ['priority' => 10])
         ;
 
-        $container->register(DebugHttp::class, DebugHttp::class)
-            ->addArgument(new Reference(Debug::class))
-            ->addArgument(new Reference(History::class))
+        $container->register(Debug\Listener::class, Debug\Listener::class)
+            ->addArgument(new Reference(Debug\Configuration::class))
+            ->addArgument(new Reference(HttpHistory\History::class))
 
             ->setPublic(false)
             ->addTag('event_dispatcher.subscriber')
         ;
 
-        $container->register(HttpHistory::class, HttpHistory::class)
-            ->addArgument(new Reference(History::class))
+        $container->register(HttpHistory\Listener::class, HttpHistory\Listener::class)
+            ->addArgument(new Reference(HttpHistory\History::class))
 
             ->setPublic(false)
             ->addTag('event_dispatcher.subscriber')
@@ -129,8 +125,7 @@ final class Behapi implements Extension
         $definition = $container->register(Container::class, Container::class);
 
         $definition
-            ->addArgument(new Reference(History::class))
-            ->addArgument(new Reference(Debug::class))
+            ->addArgument(new Reference(HttpHistory\History::class))
             ->addArgument($config['base_url'])
         ;
 
