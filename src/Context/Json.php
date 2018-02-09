@@ -1,4 +1,4 @@
-<?php
+<?php declare(strict_types=1);
 namespace Behapi\Context;
 
 use stdClass;
@@ -9,6 +9,13 @@ use Webmozart\Assert\Assert;
 use Behapi\Context\ApiTrait;
 use Behapi\HttpHistory\History as HttpHistory;
 
+use function sprintf;
+
+use function json_decode;
+use function json_last_error;
+use function json_last_error_msg;
+
+use const JSON_ERROR_NONE;
 
 class Json extends AbstractJson
 {

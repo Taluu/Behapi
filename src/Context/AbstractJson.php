@@ -1,4 +1,4 @@
-<?php
+<?php declare(strict_types=1);
 namespace Behapi\Context;
 
 use stdClass;
@@ -14,6 +14,10 @@ use Symfony\Component\PropertyAccess\PropertyAccess;
 use Symfony\Component\PropertyAccess\PropertyAccessor;
 
 use Behapi\Tools\Assert;
+
+use function json_last_error;
+
+use const JSON_ERROR_NONE;
 
 abstract class AbstractJson implements Context
 {

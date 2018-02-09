@@ -1,4 +1,4 @@
-<?php
+<?php declare(strict_types=1);
 namespace Behapi;
 
 use Psr\Container\ContainerInterface;
@@ -23,6 +23,9 @@ use Http\Client\Common\Plugin\HistoryPlugin;
 use Http\Client\Common\Plugin\ContentLengthPlugin;
 
 use Behapi\HttpHistory\History as HttpHistory;
+
+use function in_array;
+use function array_key_exists;
 
 final class Container implements ContainerInterface
 {

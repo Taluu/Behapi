@@ -1,4 +1,4 @@
-<?php
+<?php declare(strict_types=1);
 namespace Behapi\Context;
 
 use RuntimeException;
@@ -21,6 +21,10 @@ use Behapi\EventListener\RequestEvent;
 
 use Behapi\Tools\Assert;
 use Behapi\HttpHistory\History as HttpHistory;
+
+use function trim;
+use function is_array;
+use function http_build_query;
 
 class Http implements Context
 {

@@ -1,4 +1,4 @@
-<?php
+<?php declare(strict_types=1);
 namespace Behapi\Context;
 
 use InvalidArgumentException;
@@ -11,6 +11,10 @@ use Symfony\Component\PropertyAccess\PropertyAccessor;
 
 use Behapi\Tools\BehapiFactory;
 use Behapi\HttpHistory as HttpHistory;
+
+use function sprintf;
+use function json_encode;
+use function json_decode;
 
 class JsonMatcher implements Context
 {

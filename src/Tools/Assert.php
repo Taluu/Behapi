@@ -1,7 +1,10 @@
-<?php
+<?php declare(strict_types=1);
 namespace Behapi\Tools;
 
 use Webmozart\Assert\Assert as webmozart;
+
+use function sprintf;
+use function preg_match;
 
 /**
  * Assert

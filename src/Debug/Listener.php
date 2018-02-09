@@ -19,6 +19,11 @@ use Behat\Gherkin\Node\TaggedNodeInterface;
 
 use Behapi\HttpHistory\History as HttpHistory;
 
+use function printf;
+use function current;
+use function method_exists;
+use function iterator_to_array;
+
 /**
  * Debug http
  *
