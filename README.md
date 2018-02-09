@@ -38,11 +38,11 @@ the `behat.yml.dist` file), or a container capable of using behapi's container.
 
 Some services are provided to be injected in contexts, which are the following:
 
-- `@Http\Client\HttpClient`, which is the http client
+- `@Http\Client\HttpClient`
 - `@Behapi\Tools\HttpHistory`, which is a sort of a container with the last
   requests done and last responses received
-- `@Http\Message\MessageFactory`, which is the message factory (see psr 7)
-- `@Http\Message\StreamFactory`, which is the stream factory (see psr 7)
+- `@Http\Message\MessageFactory`
+- `@Http\Message\StreamFactory`
 
 *Note:* Since Behat 3.4 and Behapi 0.4, you don't really need to bother with the
 services names, as they are compatible with behat 3.4's auto-wiring feature. :}
