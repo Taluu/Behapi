@@ -55,7 +55,7 @@ capable of using behapi's container.
 Some services are provided to be injected in contexts, which are the following:
 
 - `@Http\Client\HttpClient`
-- `@Behapi\Tools\HttpHistory`, which is a sort of a container with the last
+- `@Behapi\HttpHistory\History`, which is a sort of a container with the last
   requests done and last responses received
 - `@Http\Message\MessageFactory`
 - `@Http\Message\StreamFactory`
@@ -71,7 +71,7 @@ to use something else for the source (as the `Json` context is dependant on
 `Behapi\Context\AbstractJson` class.
 
 If you need to play with the request being built, or the response created when
-the request is sent, you need to inject the `@Behapi\Tools\HttpHistory`. It is
+the request is sent, you need to inject the `@Behapi\HttpHistory\History`. It is
 automatically reseted between scenarios (and scenarios outlines)
 
 If you have installed [phpmatcher](https://github.com/coduo/php-matcher/), the

@@ -9,7 +9,7 @@ use Http\Client\HttpClient;
 use Http\Message\StreamFactory;
 use Http\Message\MessageFactory;
 
-use Behapi\Tools\HttpHistory;
+use Behapi\HttpHistory\History as HttpHistory;
 
 trait ApiTrait
 {

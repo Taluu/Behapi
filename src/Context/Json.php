@@ -4,10 +4,11 @@ namespace Behapi\Context;
 use stdClass;
 use InvalidArgumentException;
 
-use Behapi\Context\ApiTrait;
-use Behapi\Tools\HttpHistory;
-
 use Webmozart\Assert\Assert;
+
+use Behapi\Context\ApiTrait;
+use Behapi\HttpHistory\History as HttpHistory;
+
 
 class Json extends AbstractJson
 {

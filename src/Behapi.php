@@ -13,8 +13,7 @@ use Symfony\Component\DependencyInjection\Reference;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 
 use Behapi\Debug;
-use Behapi\EventListener\HttpHistory;
-use Behapi\Tools\HttpHistory as History;
+use Behapi\HttpHistory;
 
 /**
  * Extension which feeds the dependencies of behapi's features
@@ -85,7 +84,7 @@ final class Behapi implements Extension
             ->setPublic(false)
         ;
 
-        $container->register(History::class, History::class)
+        $container->register(HttpHistory\History::class, HttpHistory\History::class)
             ->setPublic(false)
         ;
 
@@ -100,14 +99,14 @@ final class Behapi implements Extension
 
         $container->register(Debug\Listener::class, Debug\Listener::class)
             ->addArgument(new Reference(Debug\Configuration::class))
-            ->addArgument(new Reference(History::class))
+            ->addArgument(new Reference(HttpHistory\History::class))
 
             ->setPublic(false)
             ->addTag('event_dispatcher.subscriber')
         ;
 
-        $container->register(HttpHistory::class, HttpHistory::class)
-            ->addArgument(new Reference(History::class))
+        $container->register(HttpHistory\Listener::class, HttpHistory\Listener::class)
+            ->addArgument(new Reference(HttpHistory\History::class))
 
             ->setPublic(false)
             ->addTag('event_dispatcher.subscriber')
@@ -126,7 +125,7 @@ final class Behapi implements Extension
         $definition = $container->register(Container::class, Container::class);
 
         $definition
-            ->addArgument(new Reference(History::class))
+            ->addArgument(new Reference(HttpHistory\History::class))
             ->addArgument($config['base_url'])
         ;
 

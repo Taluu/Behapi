@@ -20,7 +20,7 @@ use Behapi\EventListener\Events;
 use Behapi\EventListener\RequestEvent;
 
 use Behapi\Tools\Assert;
-use Behapi\Tools\HttpHistory;
+use Behapi\HttpHistory\History as HttpHistory;
 
 class Http implements Context
 {

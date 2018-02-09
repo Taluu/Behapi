@@ -9,8 +9,8 @@ use Behat\Gherkin\Node\PyStringNode;
 use Symfony\Component\PropertyAccess\PropertyAccess;
 use Symfony\Component\PropertyAccess\PropertyAccessor;
 
-use Behapi\Tools\HttpHistory;
 use Behapi\Tools\BehapiFactory;
+use Behapi\HttpHistory as HttpHistory;
 
 class JsonMatcher implements Context
 {

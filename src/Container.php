@@ -22,7 +22,7 @@ use Http\Client\Common\Plugin\BaseUriPlugin;
 use Http\Client\Common\Plugin\HistoryPlugin;
 use Http\Client\Common\Plugin\ContentLengthPlugin;
 
-use Behapi\Tools\HttpHistory;
+use Behapi\HttpHistory\History as HttpHistory;
 
 final class Container implements ContainerInterface
 {

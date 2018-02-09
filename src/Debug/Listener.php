@@ -17,7 +17,7 @@ use Behat\Behat\EventDispatcher\Event\GherkinNodeTested;
 
 use Behat\Gherkin\Node\TaggedNodeInterface;
 
-use Behapi\Tools\HttpHistory as History;
+use Behapi\HttpHistory\History as HttpHistory;
 
 /**
  * Debug http
@@ -33,13 +33,13 @@ final class Listener implements EventSubscriberInterface
     // 2 - value
     private const TEMPLATE = "\033[36m| \033[1m%s : \033[0;36m%s\033[0m\n";
 
-    /** @var History */
+    /** @var HttpHistory */
     private $history;
 
     /** @var Configuration */
     private $configuration;
 
-    public function __construct(Configuration $configuration, History $history)
+    public function __construct(Configuration $configuration, HttpHistory $history)
     {
         $this->history = $history;
         $this->configuration = $configuration;
