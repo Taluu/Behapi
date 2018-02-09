@@ -22,6 +22,7 @@ use Http\Client\Common\Plugin\BaseUriPlugin;
 use Http\Client\Common\Plugin\HistoryPlugin;
 use Http\Client\Common\Plugin\ContentLengthPlugin;
 
+use Behapi\Http\PluginClientBuilder;
 use Behapi\HttpHistory\History as HttpHistory;
 
 use function in_array;
@@ -49,6 +50,7 @@ final class Container implements ContainerInterface
             HttpHistory::class,
             StreamFactory::class,
             MessageFactory::class,
+            PluginClientBuilder::class,
             EventDispatcherInterface::class,
         ];
 
@@ -63,6 +65,9 @@ final class Container implements ContainerInterface
         }
 
         switch ($id) {
+            case PluginClientBuilder::class:
+                return $this->services[$id] = $this->getPluginClientBuilder();
+
             case HttpClient::class:
                 return $this->services[$id] = $this->getHttpClient();
 
@@ -79,19 +84,24 @@ final class Container implements ContainerInterface
         throw new ServiceNotFoundException("Service {$id} is not available", $id);
     }
 
-    private function getHttpClient(): HttpClient
+    private function getPluginClientBuilder(): PluginClientBuilder
     {
+        $builder = new PluginClientBuilder;
         $uriFactory = UriFactoryDiscovery::find();
         $baseUri = $uriFactory->createUri($this->baseUrl);
 
-        $plugins = [
-            new ContentLengthPlugin,
-            new BaseUriPlugin($baseUri),
-            new HistoryPlugin($this->services[HttpHistory::class])
-        ];
+        $builder->addPlugin(new ContentLengthPlugin);
+        $builder->addPlugin(new BaseUriPlugin($baseUri));
+        $builder->addPlugin(new HistoryPlugin($this->services[HttpHistory::class]));
 
+        return $builder;
+    }
+
+    private function getHttpClient(): HttpClient
+    {
         $http = HttpClientDiscovery::find();
+        $builder = $this->get(PluginClientBuilder::class);
 
-        return new PluginClient($http, $plugins);
+        return $builder->createClient($http);
     }
 }
