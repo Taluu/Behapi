@@ -33,7 +33,7 @@ default:
 
         # examples :
         - Behapi\Context\Http: ~
-        - Behapi\Context\Json: ~
+        - Behapi\Json\Context: ~
 
   extensions:
     Behapi\Behapi:
@@ -64,11 +64,11 @@ Some services are provided to be injected in contexts, which are the following:
 *Note:* You don't really need to bother with the services names, as they are
 compatible with behat's auto-wiring feature. 
 
-In order to use (and customize) the `Json` context, you actually need to either
-extend `Behapi\Context\AbstractJson` or use `Behapi\Context\Json`. If you want
-to use something else for the source (as the `Json` context is dependant on
-[php-http](https://github.com/php-http/)), extend the
-`Behapi\Context\AbstractJson` class.
+In order to enable the Json assertions, you need to either extend
+`Behapi\Json\AbstractContext` or use `Behapi\Context\Json`. If you want to use
+something else for the source (as the `Behapi\Json\Context` context is
+dependant on [php-http](https://github.com/php-http/)), extend the
+`Behapi\Json\AbstractContext` class.
 
 If you need to play with the request being built, or the response created when
 the request is sent, you need to inject the `@Behapi\HttpHistory\History`. It is

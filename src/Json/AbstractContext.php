@@ -1,5 +1,5 @@
 <?php declare(strict_types=1);
-namespace Behapi\Context;
+namespace Behapi\Json;
 
 use stdClass;
 use Datetime;
@@ -21,7 +21,7 @@ use function json_last_error;
 use const JSON_ERROR_NONE;
 use const PREG_OFFSET_CAPTURE;
 
-abstract class AbstractJson implements Context
+abstract class AbstractContext implements Context
 {
     /** @var PropertyAccessor */
     private $accessor;

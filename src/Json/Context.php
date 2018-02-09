@@ -1,5 +1,5 @@
 <?php declare(strict_types=1);
-namespace Behapi\Context;
+namespace Behapi\Json;
 
 use stdClass;
 use InvalidArgumentException;
@@ -17,7 +17,7 @@ use function json_last_error_msg;
 
 use const JSON_ERROR_NONE;
 
-class Json extends AbstractJson
+class Context extends AbstractContext
 {
     use ApiTrait;
 
