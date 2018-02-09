@@ -11,17 +11,8 @@ use Http\Message\MessageFactory;
 
 use Behapi\HttpHistory\History as HttpHistory;
 
-trait Client
+trait Response
 {
-    /** @var PluginClientBuilder */
-    private $builder;
-
-    /** @var StreamFactory */
-    private $streamFactory;
-
-    /** @var MessageFactory */
-    private $messageFactory;
-
     /** @var HttpHistory */
     private $history;
 

@@ -9,7 +9,7 @@ use Behat\Gherkin\Node\PyStringNode;
 use Symfony\Component\PropertyAccess\PropertyAccess;
 use Symfony\Component\PropertyAccess\PropertyAccessor;
 
-use Behapi\Http\Client;
+use Behapi\Http\Response;
 use Behapi\HttpHistory\History as HttpHistory;
 
 use function sprintf;
@@ -18,7 +18,7 @@ use function json_decode;
 
 class JsonContext implements Context
 {
-    use Client;
+    use Response;
 
     /** @var MatcherFactory */
     private $factory;
