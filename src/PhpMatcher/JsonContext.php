@@ -1,5 +1,5 @@
 <?php declare(strict_types=1);
-namespace Behapi\Context;
+namespace Behapi\PhpMatcher;
 
 use InvalidArgumentException;
 
@@ -9,14 +9,14 @@ use Behat\Gherkin\Node\PyStringNode;
 use Symfony\Component\PropertyAccess\PropertyAccess;
 use Symfony\Component\PropertyAccess\PropertyAccessor;
 
-use Behapi\Tools\BehapiFactory;
+use Behapi\Context\ApiTrait;
 use Behapi\HttpHistory as HttpHistory;
 
 use function sprintf;
 use function json_encode;
 use function json_decode;
 
-class JsonMatcher implements Context
+class JsonContext implements Context
 {
     use ApiTrait;
 
@@ -29,7 +29,7 @@ class JsonMatcher implements Context
     public function __construct(HttpHistory $history)
     {
         $this->history = $history;
-        $this->factory = new BehapiFactory;
+        $this->factory = new MatcherFactory;
         $this->accessor = PropertyAccess::createPropertyAccessor();
     }
 

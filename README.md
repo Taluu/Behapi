@@ -75,7 +75,7 @@ the request is sent, you need to inject the `@Behapi\HttpHistory\History`. It is
 automatically reseted between scenarios (and scenarios outlines)
 
 If you have installed [phpmatcher](https://github.com/coduo/php-matcher/), the
-Behapi\Context\`JsonMatcher` context is available.
+`Behapi\PhpMatcher\JsonContext` context is available.
 
 A documentation will be made (soon hopefully) with more details.
 
