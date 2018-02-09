@@ -19,6 +19,22 @@ use it for any configurations actually) :
 
 ```yaml
 default:
+  suites:
+    main:
+      paths: [%paths.base%/features/specs]
+      services: "@Behapi\Container"
+      autowire: true
+
+      contexts:
+        - List
+        - your
+        - contexts
+        - here
+
+        # examples :
+        - Behapi\Context\Http: ~
+        - Behapi\Context\Json: ~
+
   extensions:
     Behapi\Behapi:
       base_url: 'http://localhost'
@@ -33,8 +49,8 @@ information on the available configuration.
 
 After having installed the extension, you can then use the provided contexts
 such as the `Behapi\Context\Http` for the http api operations. In order to use
-them, you need to use behapi's container (`@Behapi\Container`, see example in
-the `behat.yml.dist` file), or a container capable of using behapi's container.
+them, you need to use behapi's container (`@Behapi\Container`), or a container
+capable of using behapi's container.
 
 Some services are provided to be injected in contexts, which are the following:
 
@@ -45,13 +61,13 @@ Some services are provided to be injected in contexts, which are the following:
 - `@Http\Message\StreamFactory`
 - `@Symfony\Component\EventDispatcher\EventDispatcherInterface`
 
-*Note:* Since Behat 3.4 and Behapi 0.4, you don't really need to bother with the
-services names, as they are compatible with behat 3.4's auto-wiring feature. :}
+*Note:* You don't really need to bother with the services names, as they are
+compatible with behat's auto-wiring feature. 
 
 In order to use (and customize) the `Json` context, you actually need to either
 extend `Behapi\Context\AbstractJson` or `Behapi\Context\Json`. If you want to
 use something else for the source (as the `Json` context is dependant on
-[php-http](https://github.com/php-http/)), extend (or use) the
+[php-http](https://github.com/php-http/)), extend the
 `Behapi\Context\AbstractJson` class.
 
 If you need to play with the request being built, or the response created when
