@@ -11,17 +11,16 @@ use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 use Http\Message\StreamFactory;
 use Http\Message\MessageFactory;
 
-use Http\Discovery\HttpClientDiscovery;
 use Http\Discovery\UriFactoryDiscovery;
 use Http\Discovery\StreamFactoryDiscovery;
 use Http\Discovery\MessageFactoryDiscovery;
 
-use Http\Client\HttpClient;
 use Http\Client\Common\PluginClient;
 use Http\Client\Common\Plugin\BaseUriPlugin;
 use Http\Client\Common\Plugin\HistoryPlugin;
 use Http\Client\Common\Plugin\ContentLengthPlugin;
 
+use Behapi\Http\PluginClientBuilder;
 use Behapi\HttpHistory\History as HttpHistory;
 
 use function in_array;
@@ -45,11 +44,10 @@ final class Container implements ContainerInterface
     public function has($id)
     {
         static $services = [
-            HttpClient::class,
             HttpHistory::class,
             StreamFactory::class,
             MessageFactory::class,
-            EventDispatcherInterface::class,
+            PluginClientBuilder::class,
         ];
 
         return in_array($id, $services);
@@ -63,35 +61,29 @@ final class Container implements ContainerInterface
         }
 
         switch ($id) {
-            case HttpClient::class:
-                return $this->services[$id] = $this->getHttpClient();
+            case PluginClientBuilder::class:
+                return $this->services[$id] = $this->getPluginClientBuilder();
 
             case MessageFactory::class:
                 return $this->services[$id] = MessageFactoryDiscovery::find();
 
             case StreamFactory::class:
                 return $this->services[$id] = StreamFactoryDiscovery::find();
-
-            case EventDispatcherInterface::class:
-                return $this->services[$id] = new EventDispatcher;
         }
 
         throw new ServiceNotFoundException("Service {$id} is not available", $id);
     }
 
-    private function getHttpClient(): HttpClient
+    private function getPluginClientBuilder(): PluginClientBuilder
     {
+        $builder = new PluginClientBuilder;
         $uriFactory = UriFactoryDiscovery::find();
         $baseUri = $uriFactory->createUri($this->baseUrl);
 
-        $plugins = [
-            new ContentLengthPlugin,
-            new BaseUriPlugin($baseUri),
-            new HistoryPlugin($this->services[HttpHistory::class])
-        ];
+        $builder->addPlugin(new ContentLengthPlugin);
+        $builder->addPlugin(new BaseUriPlugin($baseUri));
+        $builder->addPlugin(new HistoryPlugin($this->services[HttpHistory::class]));
 
-        $http = HttpClientDiscovery::find();
-
-        return new PluginClient($http, $plugins);
+        return $builder;
     }
 }

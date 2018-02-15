@@ -54,12 +54,12 @@ capable of using behapi's container.
 
 Some services are provided to be injected in contexts, which are the following:
 
-- `@Http\Client\HttpClient`
+- `@Behapi\Http\PluginClientBuilder`, which will build a
+  `Http\Client\Common\PluginClient`
 - `@Behapi\HttpHistory\History`, which is a sort of a container with the last
   requests done and last responses received
 - `@Http\Message\MessageFactory`
 - `@Http\Message\StreamFactory`
-- `@Symfony\Component\EventDispatcher\EventDispatcherInterface`
 
 *Note:* You don't really need to bother with the services names, as they are
 compatible with behat's auto-wiring feature. 

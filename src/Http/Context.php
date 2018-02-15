@@ -8,11 +8,10 @@ use Psr\Http\Message\RequestInterface;
 use Behat\Gherkin\Node\TableNode;
 use Behat\Behat\Context\Context as BehatContext;
 
-use Symfony\Component\EventDispatcher\EventDispatcherInterface;
-
 use Http\Client\HttpClient;
 use Http\Message\StreamFactory;
 use Http\Message\MessageFactory;
+use Http\Discovery\HttpClientDiscovery;
 
 use Webmozart\Assert\Assert;
 
@@ -27,7 +26,16 @@ use function http_build_query;
 
 class Context implements BehatContext
 {
-    use Client;
+    use Response;
+
+    /** @var PluginClientBuilder */
+    private $builder;
+
+    /** @var StreamFactory */
+    private $streamFactory;
+
+    /** @var MessageFactory */
+    private $messageFactory;
 
     /** @var RequestInterface */
     private $request;
@@ -35,16 +43,17 @@ class Context implements BehatContext
     /** @var mixed[] Query args to add */
     private $query;
 
-    /** @var EventDispatcherInterface */
-    private $dispatcher;
+    /** @var HttpClient|HttpAsyncClient */
+    private $client;
 
-    public function __construct(HttpClient $client, StreamFactory $streamFactory, MessageFactory $messageFactory, HttpHistory $history, EventDispatcherInterface $dispatcher)
+    public function __construct(PluginClientBuilder $builder, StreamFactory $streamFactory, MessageFactory $messageFactory, HttpHistory $history)
     {
-        $this->client = $client;
+        $this->builder = $builder;
         $this->history = $history;
-        $this->dispatcher = $dispatcher;
         $this->streamFactory = $streamFactory;
         $this->messageFactory = $messageFactory;
+
+        $this->client = HttpClientDiscovery::find();
     }
 
     /** @When /^I create a "(?P<method>GET|POST|PATCH|PUT|DELETE|OPTIONS|HEAD)" request to "(?P<url>.+?)"$/ */
@@ -153,8 +162,8 @@ class Context implements BehatContext
             $request = $request->withUri($uri);
         }
 
-        $this->dispatcher->dispatch(Events::REQUEST_PRE_SENDING, $event = new RequestEvent($request));
-        $this->client->sendRequest($event->getRequest());
+        $client = $this->builder->createClient($this->client);
+        $client->sendRequest($request);
     }
 
     /** @Then the status code should be :expected */
