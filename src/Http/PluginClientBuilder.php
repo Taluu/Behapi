@@ -4,6 +4,8 @@ namespace Behapi\Http;
 use Http\Client\Common\Plugin;
 use Http\Client\Common\PluginClient;
 
+use function array_values;
+
 final class PluginClientBuilder
 {
     /** @var Plugin[] */
@@ -22,6 +24,15 @@ final class PluginClientBuilder
     {
         unset($this->plugins[$name]);
         $this->client = null;
+    }
+
+    public function getPlugin(string $name): Plugin
+    {
+        if (!isset($this->plugins[$name])) {
+            throw new PluginNotFound($name);
+        }
+
+        return $this->plugins[$name];
     }
 
     public function createClient($client, array $options = []): PluginClient
