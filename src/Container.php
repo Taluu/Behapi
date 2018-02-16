@@ -23,7 +23,9 @@ use Http\Client\Common\Plugin\ContentLengthPlugin;
 use Behapi\Http\PluginClientBuilder;
 use Behapi\HttpHistory\History as HttpHistory;
 
+use function bin2hex;
 use function in_array;
+use function random_bytes;
 use function array_key_exists;
 
 final class Container implements ContainerInterface
@@ -80,9 +82,10 @@ final class Container implements ContainerInterface
         $uriFactory = UriFactoryDiscovery::find();
         $baseUri = $uriFactory->createUri($this->baseUrl);
 
-        $builder->addPlugin(new ContentLengthPlugin);
-        $builder->addPlugin(new BaseUriPlugin($baseUri));
-        $builder->addPlugin(new HistoryPlugin($this->services[HttpHistory::class]));
+        // use randomized strings so that these cannot be removed (safety)
+        $builder->addPlugin(bin2hex(random_bytes(10)), new ContentLengthPlugin);
+        $builder->addPlugin(bin2hex(random_bytes(10)), new BaseUriPlugin($baseUri));
+        $builder->addPlugin(bin2hex(random_bytes(10)), new HistoryPlugin($this->services[HttpHistory::class]));
 
         return $builder;
     }
