@@ -18,6 +18,18 @@ final class PluginClientBuilder
         $this->client = null;
     }
 
+    /** @param Plugin|string $plugin Plugin or plugin class to remove */
+    public function removePlugin($element): void
+    {
+        $callback = $element instanceof Plugin
+            ? function (Plugin $plugin) use ($element) { return $plugin !== $element; }
+            : function (Plugin $plugin) use ($element) { return get_class($plugin) !== $element; }
+        ;
+
+        $this->plugins = array_filter($this->plugins, $callback);
+        $this->client = null;
+    }
+
     public function createClient($client, array $options = []): PluginClient
     {
         if (null === $this->client) {
