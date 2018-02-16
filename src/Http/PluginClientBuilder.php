@@ -12,21 +12,15 @@ final class PluginClientBuilder
     /** @var ?PluginClient */
     private $client;
 
-    public function addPlugin(Plugin $plugin): void
+    public function addPlugin(string $name, Plugin $plugin): void
     {
-        $this->plugins[] = $plugin;
+        $this->plugins[$name] = $plugin;
         $this->client = null;
     }
 
-    /** @param Plugin|string $plugin Plugin or plugin class to remove */
-    public function removePlugin($element): void
+    public function removePlugin(string $name): void
     {
-        $callback = $element instanceof Plugin
-            ? function (Plugin $plugin) use ($element) { return $plugin !== $element; }
-            : function (Plugin $plugin) use ($element) { return get_class($plugin) !== $element; }
-        ;
-
-        $this->plugins = array_filter($this->plugins, $callback);
+        unset($this->plugins[$name]);
         $this->client = null;
     }
 
@@ -35,7 +29,7 @@ final class PluginClientBuilder
         if (null === $this->client) {
             $this->client = new PluginClient(
                 $client,
-                $this->plugins,
+                array_values($this->plugins),
                 $options
             );
         }
