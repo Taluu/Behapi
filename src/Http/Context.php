@@ -252,10 +252,7 @@ class Context implements BehatContext
         Assert::NotEq((string) $response->getBody(), $data);
     }
 
-    /**
-     * @AfterScenario @api
-     * @AfterScenario @rest
-     */
+    /** @AfterScenario @api */
     public function clearCache(): void
     {
         $this->query = [];
