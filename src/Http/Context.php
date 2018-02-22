@@ -57,7 +57,7 @@ class Context implements BehatContext
     }
 
     /** @When /^I create a "(?P<method>GET|POST|PATCH|PUT|DELETE|OPTIONS|HEAD)" request to "(?P<url>.+?)"$/ */
-    public function createARequest(string $method, string $url)
+    public function createARequest(string $method, string $url): void
     {
         $url = trim($url);
 
@@ -75,14 +75,14 @@ class Context implements BehatContext
      *
      * Shortcut for `When I create a X request to Then send the request`
      */
-    public function sendARequest($method, $url)
+    public function sendARequest($method, $url): void
     {
         $this->createARequest($method, $url);
         $this->sendRequest();
     }
 
     /** @When I add/set the value :value to the parameter :parameter */
-    public function addAParameter(string $parameter, string $value)
+    public function addAParameter(string $parameter, string $value): void
     {
         if (!isset($this->query[$parameter])) {
             $this->query[$parameter] = $value;
@@ -100,7 +100,7 @@ class Context implements BehatContext
     }
 
     /** @When I set the following query arguments: */
-    public function setTheParameters(TableNode $parameters)
+    public function setTheParameters(TableNode $parameters): void
     {
         $this->query = [];
 
@@ -110,14 +110,14 @@ class Context implements BehatContext
     }
 
     /** @When I set the content-type to :type */
-    public function setContentType(string $type)
+    public function setContentType(string $type): void
     {
         $request = $this->getRequest();
         $this->request = $request->withHeader('Content-Type', $type);
     }
 
     /** @When I set the following body: */
-    public function setTheBody(string $body)
+    public function setTheBody(string $body): void
     {
         $stream = $this->streamFactory->createStream($body);
 
@@ -126,14 +126,14 @@ class Context implements BehatContext
     }
 
     /** @When I add/set the value :value to the header :header */
-    public function addHeader(string $header, string $value)
+    public function addHeader(string $header, string $value): void
     {
         $request = $this->getRequest();
         $this->request = $request->withAddedHeader($header, $value);
     }
 
     /** @When I set the headers: */
-    public function setHeaders(TableNode $headers)
+    public function setHeaders(TableNode $headers): void
     {
         $request = $this->getRequest();
 
@@ -145,7 +145,7 @@ class Context implements BehatContext
     }
 
     /** @When I send the request */
-    public function sendRequest()
+    public function sendRequest(): void
     {
         $request = $this->getRequest();
 
@@ -167,49 +167,49 @@ class Context implements BehatContext
     }
 
     /** @Then the status code should be :expected */
-    public function statusCodeShouldBe(int $expected)
+    public function statusCodeShouldBe(int $expected): void
     {
         $response = $this->getResponse();
         Assert::same((int) $response->getStatusCode(), $expected);
     }
 
     /** @Then the status code should not be :expected */
-    public function statusCodeShouldNotBe(int $expected)
+    public function statusCodeShouldNotBe(int $expected): void
     {
         $response = $this->getResponse();
         Assert::notSame((int) $response->getStatusCode(), $expected);
     }
 
     /** @Then the content-type should be equal to :expected */
-    public function contentTypeShouldBe(string $expected)
+    public function contentTypeShouldBe(string $expected): void
     {
         $response = $this->getResponse();
         Assert::same($response->getHeaderLine('Content-type'), $expected);
     }
 
     /** @Then the response header :header should be equal to :expected */
-    public function headerShouldBe(string $header, string $expected)
+    public function headerShouldBe(string $header, string $expected): void
     {
         $response = $this->getResponse();
         Assert::same($response->getHeaderLine($header), $expected);
     }
 
     /** @Then the response header :header should contain :expected */
-    public function headerShouldContain(string $header, string $expected)
+    public function headerShouldContain(string $header, string $expected): void
     {
         $response = $this->getResponse();
         Assert::contains((string) $response->getHeaderLine($header), $expected);
     }
 
     /** @Then the response should have a header :header */
-    public function responseShouldHaveHeader(string $header)
+    public function responseShouldHaveHeader(string $header): void
     {
         $response = $this->getResponse();
         Assert::true($response->hasHeader($header));
     }
 
     /** @Then the response should have sent some data */
-    public function responseShouldHaveSentSomeData()
+    public function responseShouldHaveSentSomeData(): void
     {
         $body = $this->getResponse()->getBody();
 
@@ -218,35 +218,35 @@ class Context implements BehatContext
     }
 
     /** @Then the response should not have sent any data */
-    public function responseShouldNotHaveAnyData()
+    public function responseShouldNotHaveAnyData(): void
     {
         $body = $this->getResponse()->getBody();
         Assert::nullOrSame($body->getSize(), 0);
     }
 
     /** @Then the response should contain :data */
-    public function responseShouldContain(string $data)
+    public function responseShouldContain(string $data): void
     {
         $response = $this->getResponse();
         Assert::contains((string) $response->getBody(), $data);
     }
 
     /** @Then the response should not contain :data */
-    public function responseShouldNotContain(string $data)
+    public function responseShouldNotContain(string $data): void
     {
         $response = $this->getResponse();
         Assert::notContains((string) $response->getBody(), $data);
     }
 
     /** @Then the response should be :data */
-    public function responseShouldBe(string $data)
+    public function responseShouldBe(string $data): void
     {
         $response = $this->getResponse();
         Assert::eq((string) $response->getBody(), $data);
     }
 
     /** @Then the response should not be :data */
-    public function responseShouldNotBe(string $data)
+    public function responseShouldNotBe(string $data): void
     {
         $response = $this->getResponse();
         Assert::NotEq((string) $response->getBody(), $data);
@@ -256,7 +256,7 @@ class Context implements BehatContext
      * @AfterScenario @api
      * @AfterScenario @rest
      */
-    public function clearCache()
+    public function clearCache(): void
     {
         $this->query = [];
         $this->request = null;

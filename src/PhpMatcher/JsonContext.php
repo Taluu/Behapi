@@ -34,7 +34,7 @@ class JsonContext implements Context
     }
 
     /** @Then the root should match: */
-    public function root_should_match(PyStringNode $pattern)
+    public function root_should_match(PyStringNode $pattern): void
     {
         $matcher = $this->factory->createMatcher();
 
@@ -51,7 +51,7 @@ class JsonContext implements Context
     }
 
     /** @Then in the json, :path should match: */
-    public function path_should_match(string $path, PyStringNode $pattern)
+    public function path_should_match(string $path, PyStringNode $pattern): void
     {
         $value = $this->getValue($path);
         $matcher = $this->factory->createMatcher();
@@ -72,7 +72,7 @@ class JsonContext implements Context
     }
 
     /** @Then in the json, :path should not match: */
-    public function path_should_not_match(string $path, PyStringNode $pattern)
+    public function path_should_not_match(string $path, PyStringNode $pattern): void
     {
         $value = $this->getValue($path);
         $matcher = $this->factory->createMatcher();
