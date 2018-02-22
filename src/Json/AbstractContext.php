@@ -51,22 +51,6 @@ abstract class AbstractContext implements BehatContext
         return $this->accessor->getValue($this->getJson(), $path);
     }
 
-    /**
-     * @Then the response should be a valid json response
-     *
-     * ---
-     *
-     * This method is built-on the default php's json extension. You should
-     * overwrite it if you want to add supplementary checks or use something
-     * else instead (such as Seldaek's JsonLint package).
-     */
-    public function responseIsValidjson()
-    {
-        $this->getJson();
-
-        Assert::same(json_last_error(), JSON_ERROR_NONE, 'The latest json response should be a valid json response');
-    }
-
     /** @Then :path should be accessible in the latest json response */
     public function pathShouldBeReadable(string $path)
     {
