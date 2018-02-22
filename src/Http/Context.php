@@ -26,16 +26,8 @@ use function http_build_query;
 
 class Context implements BehatContext
 {
+    use Builder;
     use Response;
-
-    /** @var PluginClientBuilder */
-    private $builder;
-
-    /** @var StreamFactory */
-    private $streamFactory;
-
-    /** @var MessageFactory */
-    private $messageFactory;
 
     /** @var RequestInterface */
     private $request;
