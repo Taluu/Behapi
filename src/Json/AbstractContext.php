@@ -34,7 +34,7 @@ abstract class AbstractContext implements BehatContext
     /**
      * Get the latest json response
      *
-     * @return stdClass decoded json into an object
+     * @return mixed decoded json
      */
     abstract protected function getJson();
 
