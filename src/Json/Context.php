@@ -37,12 +37,16 @@ class Context extends AbstractContext
         return $decoded;
     }
 
+    protected function getContentTypes(): array
+    {
+        return ['application/json'];
+    }
+
     public function responseIsValidjson()
     {
         [$contentType,] = explode(';', $this->getResponse()->getHeaderLine('Content-Type'), 2);
 
-        // todo : support multiple json formats (jsonld, jsonapi, ...)
-        Assert::same($contentType, 'application/json', 'The response should have a valid content-type (expected %2$s, got %1$s)');
+        Assert::oneOf($contentType, $this->getContentTypes(), 'The response should have a valid content-type (expected one of %2$s, got %1$s)');
 
         parent::responseIsValidjson();
     }
