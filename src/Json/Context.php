@@ -30,11 +30,7 @@ class Context extends AbstractContext
     /** {@inheritDoc} */
     protected function getJson()
     {
-        $decoded = json_decode((string) $this->getResponse()->getBody());
-
-        Assert::same(JSON_ERROR_NONE, json_last_error(), sprintf('The response is not a valid json (%s)', json_last_error_msg()));
-
-        return $decoded;
+        return json_decode((string) $this->getResponse()->getBody());
     }
 
     protected function getContentTypes(): array
