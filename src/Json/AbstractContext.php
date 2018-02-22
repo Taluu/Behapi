@@ -31,21 +31,8 @@ abstract class AbstractContext implements BehatContext
         $this->accessor = PropertyAccess::createPropertyAccessor();
     }
 
-    /**
-     * Get the latest json response
-     *
-     * @return mixed decoded json
-     */
     abstract protected function getJson();
 
-    /**
-     * Get the value for a path
-     *
-     * @param string $path Path to parse
-     *
-     * @return mixed
-     * @throws AccessException path not valid
-     */
     protected function getValue(string $path)
     {
         return $this->accessor->getValue($this->getJson(), $path);

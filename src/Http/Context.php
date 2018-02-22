@@ -263,10 +263,6 @@ class Context implements BehatContext
         // the history is resetted in its own event listener
     }
 
-    /**
-     * @return RequestInterface
-     * @throws RuntimeException
-     */
     public function getRequest(): RequestInterface
     {
         if (null === $this->request) {
@@ -276,11 +272,6 @@ class Context implements BehatContext
         return $this->request;
     }
 
-    /**
-     * Get the default content type, used when makeRequest is called
-     *
-     * @return string
-     */
     protected function getDefaultContentType(): string
     {
         return 'application/json';
