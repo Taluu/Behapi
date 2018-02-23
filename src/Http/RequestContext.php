@@ -48,7 +48,7 @@ class RequestContext implements Context
         $this->request = $this->messageFactory->createRequest(strtoupper($method), $url);
 
         // let's set a default content-type
-        $this->set_content_type($this->getDefaultContentType());
+        $this->set_the_content_type($this->getDefaultContentType());
     }
 
     /**
