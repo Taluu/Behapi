@@ -27,7 +27,6 @@ class Context extends AbstractContext
         $this->history = $history;
     }
 
-    /** {@inheritDoc} */
     protected function getJson()
     {
         return json_decode((string) $this->getResponse()->getBody());
@@ -47,7 +46,7 @@ class Context extends AbstractContext
      * overwrite it if you want to add supplementary checks or use something
      * else instead (such as Seldaek's JsonLint package).
      */
-    public function responseIsValidjson()
+    public function response_should_be_a_valid_json_response()
     {
         $this->getJson();
 
