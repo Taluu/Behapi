@@ -22,6 +22,8 @@ use Behapi\HttpHistory;
  */
 final class Behapi implements Extension
 {
+    const DEBUG_INTROSPECTION_TAG = 'behapi.debug.introspection';
+
     /** {@inheritDoc} */
     public function getConfigKey()
     {
@@ -95,6 +97,19 @@ final class Behapi implements Extension
     /** {@inheritDoc} */
     public function process(ContainerBuilder $container)
     {
+        $dumpers = [];
+
+        foreach ($container->findTaggedServiceIds(self::DEBUG_INTROSPECTION_TAG) as $id => $tags) {
+            foreach ($tags as $attributes) {
+                $priority = $attributes['priority'] ?? 0;
+                $dumpers[$priority][] = new Reference($id);
+            }
+        }
+
+        krsort($dumpers);
+
+        $container->getDefinition(Debug\Listener::class)
+            ->addArgument(array_merge(...$dumpers));
     }
 
     private function loadContainer(ContainerBuilder $container, array $config): void
