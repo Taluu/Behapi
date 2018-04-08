@@ -160,12 +160,20 @@ final class Behapi implements Extension
             ->addTag(self::DEBUG_INTROSPECTION_TAG, ['priority' => -80])
         ;
 
+        $container->register(Debug\Introspection\Request\VarDumper\JsonAdapter::class, Debug\Introspection\Request\VarDumper\JsonAdapter::class)
+            ->addTag(self::DEBUG_INTROSPECTION_TAG, ['priority' => -75])
+        ;
+
         $container->register(Debug\Introspection\Response\EchoerAdapter::class, Debug\Introspection\Response\EchoerAdapter::class)
             ->addTag(self::DEBUG_INTROSPECTION_TAG, ['priority' => -100])
         ;
 
         $container->register(Debug\Introspection\Response\VarDumperAdapter::class, Debug\Introspection\Response\VarDumperAdapter::class)
             ->addTag(self::DEBUG_INTROSPECTION_TAG, ['priority' => -80])
+        ;
+
+        $container->register(Debug\Introspection\Response\VarDumper\JsonAdapter::class, Debug\Introspection\Response\VarDumper\JsonAdapter::class)
+            ->addTag(self::DEBUG_INTROSPECTION_TAG, ['priority' => -70])
         ;
     }
 }
