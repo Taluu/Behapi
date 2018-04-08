@@ -152,28 +152,21 @@ final class Behapi implements Extension
             ->addTag('event_dispatcher.subscriber')
         ;
 
-        $container->register(Debug\Introspection\Request\EchoerAdapter::class, Debug\Introspection\Request\EchoerAdapter::class)
-            ->addTag(self::DEBUG_INTROSPECTION_TAG, ['priority' => -100])
-        ;
+        $adapters = [
+            Debug\Introspection\Request\EchoerAdapter::class => -100,
+            Debug\Introspection\Response\EchoerAdapter::class => -100,
 
-        $container->register(Debug\Introspection\Request\VarDumperAdapter::class, Debug\Introspection\Request\VarDumperAdapter::class)
-            ->addTag(self::DEBUG_INTROSPECTION_TAG, ['priority' => -80])
-        ;
+            Debug\Introspection\Request\VarDumperAdapter::class => -80,
+            Debug\Introspection\Response\VarDumperAdapter::class => -80,
 
-        $container->register(Debug\Introspection\Request\VarDumper\JsonAdapter::class, Debug\Introspection\Request\VarDumper\JsonAdapter::class)
-            ->addTag(self::DEBUG_INTROSPECTION_TAG, ['priority' => -75])
-        ;
+            Debug\Introspection\Request\VarDumper\JsonAdapter::class => -75,
+            Debug\Introspection\Response\VarDumper\JsonAdapter::class => -75,
+        ];
 
-        $container->register(Debug\Introspection\Response\EchoerAdapter::class, Debug\Introspection\Response\EchoerAdapter::class)
-            ->addTag(self::DEBUG_INTROSPECTION_TAG, ['priority' => -100])
-        ;
-
-        $container->register(Debug\Introspection\Response\VarDumperAdapter::class, Debug\Introspection\Response\VarDumperAdapter::class)
-            ->addTag(self::DEBUG_INTROSPECTION_TAG, ['priority' => -80])
-        ;
-
-        $container->register(Debug\Introspection\Response\VarDumper\JsonAdapter::class, Debug\Introspection\Response\VarDumper\JsonAdapter::class)
-            ->addTag(self::DEBUG_INTROSPECTION_TAG, ['priority' => -70])
-        ;
+        foreach ($adapters as $adapter => $priority) {
+            $container->register($adapter, $adapter)
+                ->addTag(self::DEBUG_INTROSPECTION_TAG, ['priority' => $priority])
+            ;
+        }
     }
 }

@@ -1,6 +1,7 @@
 <?php declare(strict_types=1);
 namespace Behapi\Debug;
 
+use Psr\Http\Message\MessageInterface;
 use Psr\Http\Message\RequestInterface;
 use Psr\Http\Message\ResponseInterface;
 
@@ -131,6 +132,7 @@ final class Listener implements EventSubscriberInterface
             ResponseInterface::class => $response,
         ];
 
+        /** @var MessageInterface $message */
         foreach ($messages as $interface => $message) {
             if (!$message instanceof $interface) {
                 continue;
