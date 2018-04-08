@@ -8,23 +8,14 @@ use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Input\InputInterface;
 
 use Behat\Testwork\Cli\Controller;
-use Behat\Testwork\Output\OutputManager;
 
 final class CliController implements Controller
 {
     /** @var Configuration */
     private $configuration;
 
-    /** @var OutputManager */
-    private $manager;
-
-    /** @var string Formatter's name to use on debug occasions */
-    private $formatter;
-
-    public function __construct(OutputManager $manager, Configuration $configuration, string $formatter = 'pretty')
+    public function __construct(Configuration $configuration)
     {
-        $this->manager = $manager;
-        $this->formatter = $formatter;
         $this->configuration = $configuration;
     }
 
@@ -39,11 +30,5 @@ final class CliController implements Controller
     public function execute(InputInterface $input, OutputInterface $output)
     {
         $this->configuration->setStatus($input->getOption('behapi-debug'));
-
-        if (true === $this->configuration->getStatus()) {
-            // disable all formatters, enable only the pretty one
-            $this->manager->disableAllFormatters();
-            $this->manager->enableFormatter($this->formatter);
-        }
     }
 }

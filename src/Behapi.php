@@ -45,6 +45,7 @@ final class Behapi implements Extension
                     ->children()
                         ->scalarNode('formatter')
                             ->defaultValue('pretty')
+                            ->info('Not used anymore, only here for BC')
                         ->end()
 
                         ->arrayNode('headers')
@@ -137,9 +138,7 @@ final class Behapi implements Extension
         ;
 
         $container->register(Debug\CliController::class, Debug\CliController::class)
-            ->addArgument(new Reference('output.manager'))
             ->addArgument(new Reference(Debug\Configuration::class))
-            ->addArgument($config['formatter'])
 
             ->setPublic(false)
             ->addTag(CliExtension::CONTROLLER_TAG, ['priority' => 10])
