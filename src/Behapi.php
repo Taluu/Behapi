@@ -77,32 +77,8 @@ final class Behapi implements Extension
     /** {@inheritDoc} */
     public function load(ContainerBuilder $container, array $config)
     {
-        $container->register(Debug\Configuration::class, Debug\Configuration::class)
-            ->addArgument($config['debug']['headers']['request'])
-            ->addArgument($config['debug']['headers']['response'])
-
-            ->setPublic(false)
-        ;
-
         $container->register(HttpHistory\History::class, HttpHistory\History::class)
             ->setPublic(false)
-        ;
-
-        $container->register(Debug\CliController::class, Debug\CliController::class)
-            ->addArgument(new Reference('output.manager'))
-            ->addArgument(new Reference(Debug\Configuration::class))
-            ->addArgument($config['debug']['formatter'])
-
-            ->setPublic(false)
-            ->addTag(CliExtension::CONTROLLER_TAG, ['priority' => 10])
-        ;
-
-        $container->register(Debug\Listener::class, Debug\Listener::class)
-            ->addArgument(new Reference(Debug\Configuration::class))
-            ->addArgument(new Reference(HttpHistory\History::class))
-
-            ->setPublic(false)
-            ->addTag('event_dispatcher.subscriber')
         ;
 
         $container->register(HttpHistory\Listener::class, HttpHistory\Listener::class)
@@ -112,6 +88,7 @@ final class Behapi implements Extension
             ->addTag('event_dispatcher.subscriber')
         ;
 
+        $this->loadDebugServices($container, $config['debug']);
         $this->loadContainer($container, $config);
     }
 
@@ -133,5 +110,32 @@ final class Behapi implements Extension
         $definition->setShared(false);
 
         $definition->addTag(HelperContainerExtension::HELPER_CONTAINER_TAG);
+    }
+
+    private function loadDebugServices(ContainerBuilder $container, array $config): void
+    {
+        $container->register(Debug\Configuration::class, Debug\Configuration::class)
+            ->addArgument($config['headers']['request'])
+            ->addArgument($config['headers']['response'])
+
+            ->setPublic(false)
+        ;
+
+        $container->register(Debug\CliController::class, Debug\CliController::class)
+            ->addArgument(new Reference('output.manager'))
+            ->addArgument(new Reference(Debug\Configuration::class))
+            ->addArgument($config['formatter'])
+
+            ->setPublic(false)
+            ->addTag(CliExtension::CONTROLLER_TAG, ['priority' => 10])
+        ;
+
+        $container->register(Debug\Listener::class, Debug\Listener::class)
+            ->addArgument(new Reference(Debug\Configuration::class))
+            ->addArgument(new Reference(HttpHistory\History::class))
+
+            ->setPublic(false)
+            ->addTag('event_dispatcher.subscriber')
+        ;
     }
 }
