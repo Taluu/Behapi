@@ -19,6 +19,8 @@ final class EchoerAdapter implements Adapter
             throw new UnsupportedMessage($message, ResponseInterface::class);
         }
 
+        assert($message instanceof ResponseInterface);
+
         echo "\n";
 
         printf(self::TEMPLATE, 'Response status', "{$message->getStatusCode()} {$message->getReasonPhrase()}");

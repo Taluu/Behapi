@@ -17,6 +17,8 @@ final class VarDumperAdapter implements Adapter
             throw new UnsupportedMessage($message, ResponseInterface::class);
         }
 
+        assert($message instanceof ResponseInterface);
+
         // mandatory, clearing the line
         // todo : check how to clear without this echo...
         echo "\n";

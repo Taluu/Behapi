@@ -20,6 +20,8 @@ final class EchoerAdapter implements Adapter
             throw new UnsupportedMessage($message, RequestInterface::class);
         }
 
+        assert($message instanceof RequestInterface);
+
         echo "\n";
 
         printf(self::TEMPLATE, 'Request', "{$message->getMethod()} {$message->getUri()}");
