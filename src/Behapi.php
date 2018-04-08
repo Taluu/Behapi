@@ -152,5 +152,13 @@ final class Behapi implements Extension
             ->setPublic(false)
             ->addTag('event_dispatcher.subscriber')
         ;
+
+        $container->register(Debug\Introspection\Request\EchoerAdapter::class, Debug\Introspection\Request\EchoerAdapter::class)
+            ->addTag(self::DEBUG_INTROSPECTION_TAG, ['priority' => -100])
+        ;
+
+        $container->register(Debug\Introspection\Response\EchoerAdapter::class, Debug\Introspection\Response\EchoerAdapter::class)
+            ->addTag(self::DEBUG_INTROSPECTION_TAG, ['priority' => -100])
+        ;
     }
 }
