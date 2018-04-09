@@ -22,6 +22,8 @@ use Behapi\HttpHistory;
  */
 final class Behapi implements Extension
 {
+    const DEBUG_INTROSPECTION_TAG = 'behapi.debug.introspection';
+
     /** {@inheritDoc} */
     public function getConfigKey()
     {
@@ -43,6 +45,7 @@ final class Behapi implements Extension
                     ->children()
                         ->scalarNode('formatter')
                             ->defaultValue('pretty')
+                            ->info('Not used anymore, only here for BC')
                         ->end()
 
                         ->arrayNode('headers')
@@ -77,32 +80,8 @@ final class Behapi implements Extension
     /** {@inheritDoc} */
     public function load(ContainerBuilder $container, array $config)
     {
-        $container->register(Debug\Configuration::class, Debug\Configuration::class)
-            ->addArgument($config['debug']['headers']['request'])
-            ->addArgument($config['debug']['headers']['response'])
-
-            ->setPublic(false)
-        ;
-
         $container->register(HttpHistory\History::class, HttpHistory\History::class)
             ->setPublic(false)
-        ;
-
-        $container->register(Debug\CliController::class, Debug\CliController::class)
-            ->addArgument(new Reference('output.manager'))
-            ->addArgument(new Reference(Debug\Configuration::class))
-            ->addArgument($config['debug']['formatter'])
-
-            ->setPublic(false)
-            ->addTag(CliExtension::CONTROLLER_TAG, ['priority' => 10])
-        ;
-
-        $container->register(Debug\Listener::class, Debug\Listener::class)
-            ->addArgument(new Reference(Debug\Configuration::class))
-            ->addArgument(new Reference(HttpHistory\History::class))
-
-            ->setPublic(false)
-            ->addTag('event_dispatcher.subscriber')
         ;
 
         $container->register(HttpHistory\Listener::class, HttpHistory\Listener::class)
@@ -112,12 +91,26 @@ final class Behapi implements Extension
             ->addTag('event_dispatcher.subscriber')
         ;
 
+        $this->loadDebugServices($container, $config['debug']);
         $this->loadContainer($container, $config);
     }
 
     /** {@inheritDoc} */
     public function process(ContainerBuilder $container)
     {
+        $dumpers = [];
+
+        foreach ($container->findTaggedServiceIds(self::DEBUG_INTROSPECTION_TAG) as $id => $tags) {
+            foreach ($tags as $attributes) {
+                $priority = $attributes['priority'] ?? 0;
+                $dumpers[$priority][] = new Reference($id);
+            }
+        }
+
+        krsort($dumpers);
+
+        $container->getDefinition(Debug\Listener::class)
+            ->addArgument(array_merge(...$dumpers));
     }
 
     private function loadContainer(ContainerBuilder $container, array $config): void
@@ -133,5 +126,47 @@ final class Behapi implements Extension
         $definition->setShared(false);
 
         $definition->addTag(HelperContainerExtension::HELPER_CONTAINER_TAG);
+    }
+
+    private function loadDebugServices(ContainerBuilder $container, array $config): void
+    {
+        $container->register(Debug\Configuration::class, Debug\Configuration::class)
+            ->addArgument($config['headers']['request'])
+            ->addArgument($config['headers']['response'])
+
+            ->setPublic(false)
+        ;
+
+        $container->register(Debug\CliController::class, Debug\CliController::class)
+            ->addArgument(new Reference(Debug\Configuration::class))
+
+            ->setPublic(false)
+            ->addTag(CliExtension::CONTROLLER_TAG, ['priority' => 10])
+        ;
+
+        $container->register(Debug\Listener::class, Debug\Listener::class)
+            ->addArgument(new Reference(Debug\Configuration::class))
+            ->addArgument(new Reference(HttpHistory\History::class))
+
+            ->setPublic(false)
+            ->addTag('event_dispatcher.subscriber')
+        ;
+
+        $adapters = [
+            Debug\Introspection\Request\EchoerAdapter::class => -100,
+            Debug\Introspection\Response\EchoerAdapter::class => -100,
+
+            Debug\Introspection\Request\VarDumperAdapter::class => -80,
+            Debug\Introspection\Response\VarDumperAdapter::class => -80,
+
+            Debug\Introspection\Request\VarDumper\JsonAdapter::class => -75,
+            Debug\Introspection\Response\VarDumper\JsonAdapter::class => -75,
+        ];
+
+        foreach ($adapters as $adapter => $priority) {
+            $container->register($adapter, $adapter)
+                ->addTag(self::DEBUG_INTROSPECTION_TAG, ['priority' => $priority])
+            ;
+        }
     }
 }

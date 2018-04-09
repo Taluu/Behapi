@@ -1,6 +1,7 @@
 <?php declare(strict_types=1);
 namespace Behapi\Debug;
 
+use Psr\Http\Message\MessageInterface;
 use Psr\Http\Message\RequestInterface;
 use Psr\Http\Message\ResponseInterface;
 
@@ -17,6 +18,7 @@ use Behat\Behat\EventDispatcher\Event\GherkinNodeTested;
 
 use Behat\Gherkin\Node\TaggedNodeInterface;
 
+use Behapi\Debug\Introspection\Adapter;
 use Behapi\HttpHistory\History as HttpHistory;
 
 use function printf;
@@ -34,19 +36,20 @@ use function iterator_to_array;
  */
 final class Listener implements EventSubscriberInterface
 {
-    // 1 - key
-    // 2 - value
-    private const TEMPLATE = "\033[36m| \033[1m%s : \033[0;36m%s\033[0m\n";
-
     /** @var HttpHistory */
     private $history;
 
     /** @var Configuration */
     private $configuration;
 
-    public function __construct(Configuration $configuration, HttpHistory $history)
+    /* @var Adapter[] */
+    private $adapters;
+
+    /** @param Adapter[] $adapters Introspection adapters to use in this listener (sorted by priority) */
+    public function __construct(Configuration $configuration, HttpHistory $history, array $adapters)
     {
         $this->history = $history;
+        $this->adapters = $adapters;
         $this->configuration = $configuration;
     }
 
@@ -124,31 +127,26 @@ final class Listener implements EventSubscriberInterface
 
     private function debug(?RequestInterface $request, ?ResponseInterface $response): void
     {
-        if (!$request instanceof RequestInterface) {
-            return;
+        $messages = [
+            RequestInterface::class => $request,
+            ResponseInterface::class => $response,
+        ];
+
+        /** @var MessageInterface $message */
+        foreach ($messages as $interface => $message) {
+            if (!$message instanceof $interface) {
+                continue;
+            }
+
+            foreach ($this->adapters as $adapter) {
+                if (!$adapter->supports($message)) {
+                    continue;
+                }
+
+                $adapter->introspect($message, $this->configuration->getRequestHeaders());
+                break;
+            }
         }
-
-        printf(self::TEMPLATE, 'Request', "{$request->getMethod()} {$request->getUri()}");
-
-        foreach ($this->configuration->getRequestHeaders() as $header) {
-            printf(self::TEMPLATE, "Request {$header}", $request->getHeaderLine($header));
-        }
-
-        echo "\n";
-
-        if (!$response instanceof ResponseInterface) {
-            return;
-        }
-
-        printf(self::TEMPLATE, 'Response status', "{$response->getStatusCode()} {$response->getReasonPhrase()}");
-
-        foreach ($this->configuration->getResponseHeaders() as $header) {
-            printf(self::TEMPLATE, "Response {$header}", $response->getHeaderLine($header));
-        }
-
-        echo "\n";
-        echo (string) $response->getBody();
-        echo "\n";
     }
 
     private function hasTag(GherkinNodeTested $event, string $tag): bool
