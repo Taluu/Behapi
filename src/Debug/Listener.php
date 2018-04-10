@@ -93,14 +93,8 @@ final class Listener implements EventSubscriberInterface
             return;
         }
 
-        foreach ([$result] as $testResult) {
-            if (TestResult::FAILED !== $testResult->getResultCode()) {
-                continue;
-            }
-
-            foreach ($this->history as list($request, $response)) {
-                $this->debug($request, $response);
-            }
+        foreach ($this->history as list($request, $response)) {
+            $this->debug($request, $response);
         }
     }
 
