@@ -95,22 +95,16 @@ final class Listener implements EventSubscriberInterface
         }
 
         $values = iterator_to_array($this->history);
-        $key = -1;
 
         foreach ([$result] as $testResult) {
-            ++$key;
-
             if (TestResult::FAILED !== $testResult->getResultCode()) {
                 continue;
             }
 
-            // no history created
-            if (!isset($values[$key])) {
-                continue;
-            }
-
-            foreach ($values[$key] as list($request, $response)) {
-                $this->debug($request, $response);
+            foreach ($values as $tuples) {
+                foreach ($tuples as list($request, $response)) {
+                    $this->debug($request, $response);
+                }
             }
         }
     }
