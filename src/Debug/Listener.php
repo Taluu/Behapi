@@ -76,12 +76,8 @@ final class Listener implements EventSubscriberInterface
 
         // debug only if tag is present (all debug) or only on test failures
         if ($this->hasTag($event, 'debug')) {
-            $tuples = current($this->history);
-
-            foreach ($tuples as $tuple) {
-                foreach ($tuple as list($request, $response)) {
-                    $this->debug($request, $response);
-                }
+            foreach ($this->history as list($request, $response)) {
+                $this->debug($request, $response);
             }
 
             return;
@@ -97,17 +93,13 @@ final class Listener implements EventSubscriberInterface
             return;
         }
 
-        $values = iterator_to_array($this->history);
-
         foreach ([$result] as $testResult) {
             if (TestResult::FAILED !== $testResult->getResultCode()) {
                 continue;
             }
 
-            foreach ($values as $tuples) {
-                foreach ($tuples as list($request, $response)) {
-                    $this->debug($request, $response);
-                }
+            foreach ($this->history as list($request, $response)) {
+                $this->debug($request, $response);
             }
         }
     }

@@ -17,43 +17,29 @@ use Http\Client\Exception\HttpException;
 use function end;
 use function key;
 use function reset;
+use function count;
 
 final class History implements Journal, IteratorAggregate
 {
-    /** @var MessageInterface[][] Array of array of tuples of RequestInterface and ?ResponseInterface */
+    /** @var ?MessageInterface[][] */
     private $tuples = [];
-
-    public function start()
-    {
-        $this->tuples[] = [];
-    }
 
     /** {@inheritDoc} */
     public function addSuccess(RequestInterface $request, ResponseInterface $response)
     {
-        end($this->tuples);
-        $key = key($this->tuples);
-
-        $this->tuples[$key][] = [$request, $response];
-
-        reset($this->tuples);
+        $this->tuples[] = [$request, $response];
     }
 
     /** {@inheritDoc} */
     public function addFailure(RequestInterface $request, Exception $exception)
     {
-        end($this->tuples);
-        $key = key($this->tuples);
-
         $tuple = [$request, null];
 
         if ($exception instanceof HttpException) {
             $tuple[1] = $exception->getResponse();
         }
 
-        $this->tuples[$key][] = $tuple;
-
-        reset($this->tuples);
+        $this->tuples[] = $tuple;
     }
 
     public function getLastResponse(): ?ResponseInterface
@@ -65,14 +51,14 @@ final class History implements Journal, IteratorAggregate
         $tuple = end($this->tuples);
         reset($this->tuples);
 
-        $tuple = end($tuple);
-
         return $tuple[1];
     }
 
-    public function getIterator(): Iterator
+    public function getIterator(): iterable
     {
-        return new ArrayIterator($this->tuples);
+        yield from $this->tuples;
+
+        return count($this->tuples);
     }
 
     public function reset(): void
