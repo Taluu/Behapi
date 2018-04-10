@@ -1,11 +1,8 @@
 <?php declare(strict_types=1);
 namespace Behapi\HttpHistory;
 
-use Iterator;
-use ArrayIterator;
 use IteratorAggregate;
 
-use Psr\Http\Message\MessageInterface;
 use Psr\Http\Message\RequestInterface;
 use Psr\Http\Message\ResponseInterface;
 
@@ -15,31 +12,28 @@ use Http\Client\Exception;
 use Http\Client\Exception\HttpException;
 
 use function end;
-use function key;
 use function reset;
 use function count;
 
 final class History implements Journal, IteratorAggregate
 {
-    /** @var ?MessageInterface[][] */
+    /** @var Tuple[] */
     private $tuples = [];
 
     /** {@inheritDoc} */
     public function addSuccess(RequestInterface $request, ResponseInterface $response)
     {
-        $this->tuples[] = [$request, $response];
+        $this->tuples[] = new Tuple($request, $response);
     }
 
     /** {@inheritDoc} */
     public function addFailure(RequestInterface $request, Exception $exception)
     {
-        $tuple = [$request, null];
+        $response = $exception instanceof HttpException
+            ? $exception->getResponse()
+            : null;
 
-        if ($exception instanceof HttpException) {
-            $tuple[1] = $exception->getResponse();
-        }
-
-        $this->tuples[] = $tuple;
+        $this->tuples[] = new Tuple($request, $response);
     }
 
     public function getLastResponse(): ?ResponseInterface
@@ -48,12 +42,14 @@ final class History implements Journal, IteratorAggregate
             return null;
         }
 
+        /** @var Tuple $tuple */
         $tuple = end($this->tuples);
         reset($this->tuples);
 
-        return $tuple[1];
+        return $tuple->getResponse();
     }
 
+    /** @return iterable<Tuple> */
     public function getIterator(): iterable
     {
         yield from $this->tuples;
