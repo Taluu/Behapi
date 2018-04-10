@@ -11,7 +11,7 @@ use Behat\Testwork\Tester\Result\TestResult;
 use Behat\Testwork\Tester\Result\TestResults;
 use Behat\Testwork\EventDispatcher\Event\AfterTested;
 
-use Behat\Behat\EventDispatcher\Event\OutlineTested;
+use Behat\Behat\EventDispatcher\Event\ExampleTested;
 use Behat\Behat\EventDispatcher\Event\ScenarioTested;
 use Behat\Behat\EventDispatcher\Event\BackgroundTested;
 use Behat\Behat\EventDispatcher\Event\GherkinNodeTested;
@@ -57,7 +57,7 @@ final class Listener implements EventSubscriberInterface
     public static function getSubscribedEvents()
     {
         return [
-            OutlineTested::AFTER => 'debugAfter',
+            ExampleTested::AFTER => 'debugAfter',
             ScenarioTested::AFTER => 'debugAfter',
             BackgroundTested::AFTER => 'debugAfter',
         ];
@@ -97,17 +97,10 @@ final class Listener implements EventSubscriberInterface
             return;
         }
 
-        // all ->getTestResult() returns actually TestResults even for simple
-        // scenarios. So we have to ensure that if we are not testing against
-        // OutlineTested, we need to wrap the result in an array
-        if ($result instanceof TestResults && !$event instanceof OutlineTested) {
-            $result = [$result];
-        }
-
         $values = iterator_to_array($this->history);
         $key = -1;
 
-        foreach ($result as $testResult) {
+        foreach ([$result] as $testResult) {
             ++$key;
 
             if (TestResult::FAILED !== $testResult->getResultCode()) {
