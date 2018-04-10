@@ -3,7 +3,7 @@ namespace Behapi\HttpHistory;
 
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 
-use Behat\Behat\EventDispatcher\Event\OutlineTested;
+use Behat\Behat\EventDispatcher\Event\ExampleTested;
 use Behat\Behat\EventDispatcher\Event\ScenarioTested;
 use Behat\Behat\EventDispatcher\Event\BackgroundTested;
 
@@ -27,11 +27,11 @@ final class Listener implements EventSubscriberInterface
     public static function getSubscribedEvents()
     {
         return [
-            OutlineTested::BEFORE => 'start',
+            ExampleTested::BEFORE => 'start',
             ScenarioTested::BEFORE => 'start',
             BackgroundTested::BEFORE => 'start',
 
-            OutlineTested::AFTER => ['clear', -99],
+            ExampleTested::AFTER => ['clear', -99],
             ScenarioTested::AFTER => ['clear', -99],
             BackgroundTested::AFTER => ['clear', -99]
         ];
