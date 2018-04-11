@@ -13,7 +13,7 @@ use Behat\Testwork\EventDispatcher\Event\AfterTested;
 
 use Behat\Behat\EventDispatcher\Event\ExampleTested;
 use Behat\Behat\EventDispatcher\Event\ScenarioTested;
-use Behat\Behat\EventDispatcher\Event\GherkinNodeTested;
+use Behat\Behat\EventDispatcher\Event\ScenarioLikeTested;
 
 use Behat\Gherkin\Node\TaggedNodeInterface;
 
@@ -60,7 +60,7 @@ final class Listener implements EventSubscriberInterface
         ];
     }
 
-    public function debugAfter(GherkinNodeTested $event): void
+    public function debugAfter(ScenarioLikeTested $event): void
     {
         if (!$event instanceof AfterTested) {
             return;
@@ -119,7 +119,7 @@ final class Listener implements EventSubscriberInterface
         }
     }
 
-    private function hasTag(GherkinNodeTested $event, string $tag): bool
+    private function hasTag(ScenarioLikeTested $event, string $tag): bool
     {
         $node = $event->getNode();
 
