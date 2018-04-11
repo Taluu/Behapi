@@ -41,25 +41,47 @@ final class Behapi implements Extension
                 ->end()
 
                 ->arrayNode('debug')
-                    ->addDefaultsIfNotSet()
+                    ->canBeDisabled()
                     ->children()
                         ->scalarNode('formatter')
                             ->defaultValue('pretty')
                             ->info('Not used anymore, only here for BC')
                         ->end()
 
+                        ->arrayNode('introspection')
+                            ->info('Debug Introspection configuration')
+                            ->addDefaultsIfNotSet()
+                            ->children()
+                                ->arrayNode('var_dumper')
+                                    ->addDefaultsIfNotSet()
+                                    ->children()
+                                        ->arrayNode('json')
+                                            ->addDefaultsIfNotSet()
+                                            ->children()
+                                                ->arrayNode('types')
+                                                    ->info('Types to be used in the json var-dumper adapter')
+                                                    ->defaultValue(['application/json'])
+                                                    ->prototype('scalar')->end()
+                                                ->end()
+                                            ->end()
+                                        ->end()
+                                    ->end()
+                                ->end()
+                            ->end()
+                        ->end()
+
                         ->arrayNode('headers')
-                            ->info('Headers to print in Debug Http listener')
+                            ->info('Headers to print in Debug Http introspection adapters')
                             ->addDefaultsIfNotSet()
                             ->children()
                                 ->arrayNode('request')
-                                    ->info('Request headers to print in Debug Http listener')
+                                    ->info('Request headers to print in Debug Http introspection adapters')
                                     ->defaultValue(['Content-Type'])
                                     ->prototype('scalar')->end()
                                 ->end()
 
                                 ->arrayNode('response')
-                                    ->info('Response headers to print in Debug Http listener')
+                                    ->info('Response headers to print in Debug Http introspection adapters')
                                     ->defaultValue(['Content-Type'])
                                     ->prototype('scalar')->end()
                                 ->end()
@@ -130,22 +152,23 @@ final class Behapi implements Extension
 
     private function loadDebugServices(ContainerBuilder $container, array $config): void
     {
-        $container->register(Debug\Configuration::class, Debug\Configuration::class)
-            ->addArgument($config['headers']['request'])
-            ->addArgument($config['headers']['response'])
+        if (!$config['enabled']) {
+            return;
+        }
 
+        $container->register(Debug\Status::class, Debug\Status::class)
             ->setPublic(false)
         ;
 
         $container->register(Debug\CliController::class, Debug\CliController::class)
-            ->addArgument(new Reference(Debug\Configuration::class))
+            ->addArgument(new Reference(Debug\Status::class))
 
             ->setPublic(false)
             ->addTag(CliExtension::CONTROLLER_TAG, ['priority' => 10])
         ;
 
         $container->register(Debug\Listener::class, Debug\Listener::class)
-            ->addArgument(new Reference(Debug\Configuration::class))
+            ->addArgument(new Reference(Debug\Status::class))
             ->addArgument(new Reference(HttpHistory\History::class))
 
             ->setPublic(false)
@@ -153,20 +176,24 @@ final class Behapi implements Extension
         ;
 
         $adapters = [
-            Debug\Introspection\Request\EchoerAdapter::class => -100,
-            Debug\Introspection\Response\EchoerAdapter::class => -100,
+            Debug\Introspection\Request\EchoerAdapter::class => [-100, [$config['headers']['request']]],
+            Debug\Introspection\Response\EchoerAdapter::class => [-100, [$config['headers']['response']]],
 
-            Debug\Introspection\Request\VarDumperAdapter::class => -80,
-            Debug\Introspection\Response\VarDumperAdapter::class => -80,
+            Debug\Introspection\Request\VarDumperAdapter::class => [-80, [$config['headers']['request']]],
+            Debug\Introspection\Response\VarDumperAdapter::class => [-80, [$config['headers']['response']]],
 
-            Debug\Introspection\Request\VarDumper\JsonAdapter::class => -75,
-            Debug\Introspection\Response\VarDumper\JsonAdapter::class => -75,
+            Debug\Introspection\Request\VarDumper\JsonAdapter::class => [-75, [$config['headers']['request'], $config['introspection']['var_dumper']['json']['types']]],
+            Debug\Introspection\Response\VarDumper\JsonAdapter::class => [-75, [$config['headers']['response'], $config['introspection']['var_dumper']['json']['types']]],
         ];
 
-        foreach ($adapters as $adapter => $priority) {
-            $container->register($adapter, $adapter)
+        foreach ($adapters as $adapter => [$priority, $args]) {
+            $def = $container->register($adapter, $adapter)
                 ->addTag(self::DEBUG_INTROSPECTION_TAG, ['priority' => $priority])
             ;
+
+            foreach ($args as $arg) {
+                $def->addArgument($arg);
+            }
         }
     }
 }

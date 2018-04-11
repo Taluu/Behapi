@@ -7,10 +7,8 @@ interface Adapter
 {
     /**
      * Introspect useful information on a http message
-     *
-     * @param string[] $headers Headers to introspect
      */
-    public function introspect(MessageInterface $message, array $headers): void;
+    public function introspect(MessageInterface $message): void;
 
     /**
      * Determines if this introspection supports the given http message

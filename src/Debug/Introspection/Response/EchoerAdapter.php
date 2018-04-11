@@ -13,7 +13,16 @@ final class EchoerAdapter implements Adapter
     // 2 - value
     private const TEMPLATE = "\033[36m| \033[1m%s : \033[0;36m%s\033[0m\n";
 
-    public function introspect(MessageInterface $message, array $headers): void
+    /** @var iterable<string> */
+    private $headers;
+
+    /** @param iterable<string> $headers */
+    public function __construct(iterable $headers)
+    {
+        $this->headers = $headers;
+    }
+
+    public function introspect(MessageInterface $message): void
     {
         if (!$this->supports($message)) {
             throw new UnsupportedMessage($message, ResponseInterface::class);
@@ -25,7 +34,7 @@ final class EchoerAdapter implements Adapter
 
         printf(self::TEMPLATE, 'Response status', "{$message->getStatusCode()} {$message->getReasonPhrase()}");
 
-        foreach ($headers as $header) {
+        foreach ($this->headers as $header) {
             printf(self::TEMPLATE, "Response {$header}", $message->getHeaderLine($header));
         }
 
