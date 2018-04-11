@@ -20,8 +20,7 @@ final class MatcherFactory extends SimpleFactory
         $this->matcher = new Matcher\JsonMatcher($orMatcher);
     }
 
-    /** {@inheritDoc} */
-    public function createMatcher()
+    public function createMatcher(): Matcher
     {
         return new Matcher($this->matcher);
     }
