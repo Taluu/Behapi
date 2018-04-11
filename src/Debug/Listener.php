@@ -13,7 +13,6 @@ use Behat\Testwork\EventDispatcher\Event\AfterTested;
 
 use Behat\Behat\EventDispatcher\Event\ExampleTested;
 use Behat\Behat\EventDispatcher\Event\ScenarioTested;
-use Behat\Behat\EventDispatcher\Event\BackgroundTested;
 use Behat\Behat\EventDispatcher\Event\GherkinNodeTested;
 
 use Behat\Gherkin\Node\TaggedNodeInterface;
@@ -58,7 +57,6 @@ final class Listener implements EventSubscriberInterface
         return [
             ExampleTested::AFTER => 'debugAfter',
             ScenarioTested::AFTER => 'debugAfter',
-            BackgroundTested::AFTER => 'debugAfter',
         ];
     }
 
@@ -125,12 +123,7 @@ final class Listener implements EventSubscriberInterface
     {
         $node = $event->getNode();
 
-        // no tags, no chocolates
-        if (!$node instanceof TaggedNodeInterface) {
-            return false;
-        }
-
-        if ($node->hasTag($tag)) {
+        if ($node instanceof TaggedNodeInterface && $node->hasTag($tag)) {
             return true;
         }
 
