@@ -9,8 +9,11 @@ use Behat\Behat\Context\Context;
 use Behat\Gherkin\Node\TableNode;
 
 use Http\Client\HttpClient;
+use Http\Client\HttpAsyncClient;
+
 use Http\Message\StreamFactory;
 use Http\Message\MessageFactory;
+
 use Http\Discovery\HttpClientDiscovery;
 
 use function trim;
@@ -21,7 +24,7 @@ class RequestContext implements Context
 {
     use Builder;
 
-    /** @var RequestInterface */
+    /** @var ?RequestInterface */
     private $request;
 
     /** @var mixed[] Query args to add */

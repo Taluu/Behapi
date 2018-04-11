@@ -1,6 +1,7 @@
 <?php declare(strict_types=1);
 namespace Behapi\PhpMatcher;
 
+use stdClass;
 use InvalidArgumentException;
 
 use Behat\Behat\Context\Context;

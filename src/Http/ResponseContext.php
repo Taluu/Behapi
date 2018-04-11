@@ -22,14 +22,14 @@ final class ResponseContext implements Context
     public function status_code_should_be(int $expected): void
     {
         $response = $this->getResponse();
-        Assert::same((int) $response->getStatusCode(), $expected);
+        Assert::same($response->getStatusCode(), $expected);
     }
 
     /** @Then the status code should not be :expected */
     public function status_code_should_not_be(int $expected): void
     {
         $response = $this->getResponse();
-        Assert::notSame((int) $response->getStatusCode(), $expected);
+        Assert::notSame($response->getStatusCode(), $expected);
     }
 
     /** @Then the content-type should be equal to :expected */
@@ -50,7 +50,7 @@ final class ResponseContext implements Context
     public function header_should_contain(string $header, string $expected): void
     {
         $response = $this->getResponse();
-        Assert::contains((string) $response->getHeaderLine($header), $expected);
+        Assert::contains($response->getHeaderLine($header), $expected);
     }
 
     /** @Then the response should have a header :header */
@@ -101,7 +101,7 @@ final class ResponseContext implements Context
     public function response_should_not_be(string $data): void
     {
         $response = $this->getResponse();
-        Assert::NotEq((string) $response->getBody(), $data);
+        Assert::notEq((string) $response->getBody(), $data);
     }
 
 }

@@ -1,6 +1,7 @@
 <?php declare(strict_types=1);
 namespace Behapi\Http;
 
+use Throwable;
 use InvalidArgumentException;
 
 final class PluginNotFound extends InvalidArgumentException
