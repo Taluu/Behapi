@@ -15,6 +15,7 @@ use Symfony\Component\PropertyAccess\PropertyAccessor;
 
 use Webmozart\Assert\Assert;
 
+use function count;
 use function preg_match;
 use function json_last_error;
 
