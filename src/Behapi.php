@@ -41,7 +41,7 @@ final class Behapi implements Extension
                 ->end()
 
                 ->arrayNode('debug')
-                    ->addDefaultsIfNotSet()
+                    ->canBeDisabled()
                     ->children()
                         ->scalarNode('formatter')
                             ->defaultValue('pretty')
@@ -130,6 +130,10 @@ final class Behapi implements Extension
 
     private function loadDebugServices(ContainerBuilder $container, array $config): void
     {
+        if (!$config['enabled']) {
+            return;
+        }
+
         $container->register(Debug\Status::class, Debug\Status::class)
             ->setPublic(false)
         ;
