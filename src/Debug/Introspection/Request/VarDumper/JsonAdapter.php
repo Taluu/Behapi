@@ -9,14 +9,20 @@ use Symfony\Component\VarDumper\VarDumper;
 use Behapi\Debug\Introspection\Adapter;
 use Behapi\Debug\Introspection\UnsupportedMessage;
 
+use function in_array;
+
 final class JsonAdapter implements Adapter
 {
     /** @var iterable<string> */
     private $headers;
 
+    /** @var string[] */
+    private $types;
+
     /** @param iterable<string> $headers */
-    public function __construct(iterable $headers)
+    public function __construct(iterable $headers, array $types)
     {
+        $this->types = $types;
         $this->headers = $headers;
     }
 
@@ -61,6 +67,6 @@ final class JsonAdapter implements Adapter
 
         [$contentType,] = explode(';', $message->getHeaderLine('Content-Type'), 2);
 
-        return 'application/json' === $contentType;
+        return in_array($contentType, $this->types, true);
     }
 }

@@ -48,6 +48,28 @@ final class Behapi implements Extension
                             ->info('Not used anymore, only here for BC')
                         ->end()
 
+                        ->arrayNode('introspection')
+                            ->info('Debug Introspection configuration')
+                            ->addDefaultsIfNotSet()
+                            ->children()
+                                ->arrayNode('var_dumper')
+                                    ->addDefaultsIfNotSet()
+                                    ->children()
+                                        ->arrayNode('json')
+                                            ->addDefaultsIfNotSet()
+                                            ->children()
+                                                ->arrayNode('types')
+                                                    ->info('Types to be used in the json var-dumper adapter')
+                                                    ->defaultValue(['application/json'])
+                                                    ->prototype('scalar')->end()
+                                                ->end()
+                                            ->end()
+                                        ->end()
+                                    ->end()
+                                ->end()
+                            ->end()
+                        ->end()
+
                         ->arrayNode('headers')
                             ->info('Headers to print in Debug Http introspection adapters')
                             ->addDefaultsIfNotSet()
@@ -154,21 +176,24 @@ final class Behapi implements Extension
         ;
 
         $adapters = [
-            Debug\Introspection\Request\EchoerAdapter::class => [-100, $config['headers']['request']],
-            Debug\Introspection\Response\EchoerAdapter::class => [-100, $config['headers']['response']],
+            Debug\Introspection\Request\EchoerAdapter::class => [-100, [$config['headers']['request']]],
+            Debug\Introspection\Response\EchoerAdapter::class => [-100, [$config['headers']['response']]],
 
-            Debug\Introspection\Request\VarDumperAdapter::class => [-80, $config['headers']['request']],
-            Debug\Introspection\Response\VarDumperAdapter::class => [-80, $config['headers']['response']],
+            Debug\Introspection\Request\VarDumperAdapter::class => [-80, [$config['headers']['request']]],
+            Debug\Introspection\Response\VarDumperAdapter::class => [-80, [$config['headers']['response']]],
 
-            Debug\Introspection\Request\VarDumper\JsonAdapter::class => [-75, $config['headers']['request']],
-            Debug\Introspection\Response\VarDumper\JsonAdapter::class => [-75, $config['headers']['response']],
+            Debug\Introspection\Request\VarDumper\JsonAdapter::class => [-75, [$config['headers']['request'], $config['introspection']['var_dumper']['json']['types']]],
+            Debug\Introspection\Response\VarDumper\JsonAdapter::class => [-75, [$config['headers']['response'], $config['introspection']['var_dumper']['json']['types']]],
         ];
 
-        foreach ($adapters as $adapter => [$priority, $headers]) {
-            $container->register($adapter, $adapter)
-                ->addArgument($headers)
+        foreach ($adapters as $adapter => [$priority, $args]) {
+            $def = $container->register($adapter, $adapter)
                 ->addTag(self::DEBUG_INTROSPECTION_TAG, ['priority' => $priority])
             ;
+
+            foreach ($args as $arg) {
+                $def->addArgument($arg);
+            }
         }
     }
 }
