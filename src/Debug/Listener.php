@@ -19,12 +19,11 @@ use Behat\Behat\EventDispatcher\Event\GherkinNodeTested;
 use Behat\Gherkin\Node\TaggedNodeInterface;
 
 use Behapi\Debug\Introspection\Adapter;
+
+use Behapi\HttpHistory\Tuple as HttpTuple;
 use Behapi\HttpHistory\History as HttpHistory;
 
-use function printf;
-use function current;
 use function method_exists;
-use function iterator_to_array;
 
 /**
  * Debug http
@@ -76,12 +75,8 @@ final class Listener implements EventSubscriberInterface
 
         // debug only if tag is present (all debug) or only on test failures
         if ($this->hasTag($event, 'debug')) {
-            $tuples = current($this->history);
-
-            foreach ($tuples as $tuple) {
-                foreach ($tuple as list($request, $response)) {
-                    $this->debug($request, $response);
-                }
+            foreach ($this->history as $http) {
+                $this->debug($http);
             }
 
             return;
@@ -97,26 +92,16 @@ final class Listener implements EventSubscriberInterface
             return;
         }
 
-        $values = iterator_to_array($this->history);
-
-        foreach ([$result] as $testResult) {
-            if (TestResult::FAILED !== $testResult->getResultCode()) {
-                continue;
-            }
-
-            foreach ($values as $tuples) {
-                foreach ($tuples as list($request, $response)) {
-                    $this->debug($request, $response);
-                }
-            }
+        foreach ($this->history as $http) {
+            $this->debug($http);
         }
     }
 
-    private function debug(?RequestInterface $request, ?ResponseInterface $response): void
+    private function debug(HttpTuple $http): void
     {
         $messages = [
-            RequestInterface::class => $request,
-            ResponseInterface::class => $response,
+            RequestInterface::class => $http->getRequest(),
+            ResponseInterface::class => $http->getResponse(),
         ];
 
         /** @var MessageInterface $message */
