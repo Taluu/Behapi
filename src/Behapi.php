@@ -130,19 +130,19 @@ final class Behapi implements Extension
 
     private function loadDebugServices(ContainerBuilder $container, array $config): void
     {
-        $container->register(Debug\Configuration::class, Debug\Configuration::class)
+        $container->register(Debug\Status::class, Debug\Status::class)
             ->setPublic(false)
         ;
 
         $container->register(Debug\CliController::class, Debug\CliController::class)
-            ->addArgument(new Reference(Debug\Configuration::class))
+            ->addArgument(new Reference(Debug\Status::class))
 
             ->setPublic(false)
             ->addTag(CliExtension::CONTROLLER_TAG, ['priority' => 10])
         ;
 
         $container->register(Debug\Listener::class, Debug\Listener::class)
-            ->addArgument(new Reference(Debug\Configuration::class))
+            ->addArgument(new Reference(Debug\Status::class))
             ->addArgument(new Reference(HttpHistory\History::class))
 
             ->setPublic(false)

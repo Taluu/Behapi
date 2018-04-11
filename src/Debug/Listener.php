@@ -37,18 +37,18 @@ final class Listener implements EventSubscriberInterface
     /** @var HttpHistory */
     private $history;
 
-    /** @var Configuration */
-    private $configuration;
+    /** @var Status */
+    private $status;
 
     /* @var Adapter[] */
     private $adapters;
 
     /** @param Adapter[] $adapters Introspection adapters to use in this listener (sorted by priority) */
-    public function __construct(Configuration $configuration, HttpHistory $history, array $adapters)
+    public function __construct(Status $status, HttpHistory $history, array $adapters)
     {
         $this->history = $history;
         $this->adapters = $adapters;
-        $this->configuration = $configuration;
+        $this->status = $status;
     }
 
     /** {@inheritDoc} */
@@ -80,7 +80,7 @@ final class Listener implements EventSubscriberInterface
             return;
         }
 
-        if (false === $this->configuration->getStatus()) {
+        if (false === $this->status->isEnabled()) {
             return;
         }
 

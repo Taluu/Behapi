@@ -6,18 +6,18 @@ namespace Behapi\Debug;
  *
  * @author Baptiste Clavié <clavie.b@gmail.com>
  */
-final class Configuration
+final class Status
 {
     /** @var bool */
-    private $status = false;
+    private $enabled = false;
 
-    public function setStatus(bool $status)
+    public function setEnabled(bool $enabled)
     {
-        $this->status = $status;
+        $this->enabled = $enabled;
     }
 
-    public function getStatus(): bool
+    public function isEnabled(): bool
     {
-        return $this->status;
+        return $this->enabled;
     }
 }

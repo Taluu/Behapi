@@ -11,12 +11,12 @@ use Behat\Testwork\Cli\Controller;
 
 final class CliController implements Controller
 {
-    /** @var Configuration */
-    private $configuration;
+    /** @var Status */
+    private $status;
 
-    public function __construct(Configuration $configuration)
+    public function __construct(Status $status)
     {
-        $this->configuration = $configuration;
+        $this->status = $status;
     }
 
     /** {@inheritDoc} */
@@ -29,6 +29,6 @@ final class CliController implements Controller
     /** {@inheritDoc} */
     public function execute(InputInterface $input, OutputInterface $output)
     {
-        $this->configuration->setStatus($input->getOption('behapi-debug'));
+        $this->status->setEnabled($input->getOption('behapi-debug'));
     }
 }
