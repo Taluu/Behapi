@@ -2,7 +2,7 @@
 namespace Behapi\Json;
 
 use stdClass;
-use Datetime;
+use DateTime;
 
 use Throwable;
 use InvalidArgumentException;
@@ -135,7 +135,7 @@ abstract class AbstractContext implements BehatContext
     final public function the_json_path_should_be_a_valid_date(string $path): void
     {
         try {
-            new Datetime($this->getValue($path));
+            new DateTime($this->getValue($path));
         } catch (Throwable $t) {
             throw new InvalidArgumentException("$path does not contain a valid date");
         }
