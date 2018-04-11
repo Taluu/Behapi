@@ -82,6 +82,8 @@ final class Container implements ContainerInterface
         $uriFactory = UriFactoryDiscovery::find();
         $baseUri = $uriFactory->createUri($this->baseUrl);
 
+        assert($this->services[HttpHistory::class] instanceof HttpHistory);
+
         // use randomized strings so that these cannot be removed (safety)
         $builder->addPlugin(bin2hex(random_bytes(10)), new ContentLengthPlugin);
         $builder->addPlugin(bin2hex(random_bytes(10)), new BaseUriPlugin($baseUri));
