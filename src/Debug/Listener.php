@@ -113,7 +113,7 @@ final class Listener implements EventSubscriberInterface
                     continue;
                 }
 
-                $adapter->introspect($message, $this->configuration->getRequestHeaders());
+                $adapter->introspect($message);
                 break;
             }
         }

@@ -49,17 +49,17 @@ final class Behapi implements Extension
                         ->end()
 
                         ->arrayNode('headers')
-                            ->info('Headers to print in Debug Http listener')
+                            ->info('Headers to print in Debug Http introspection adapters')
                             ->addDefaultsIfNotSet()
                             ->children()
                                 ->arrayNode('request')
-                                    ->info('Request headers to print in Debug Http listener')
+                                    ->info('Request headers to print in Debug Http introspection adapters')
                                     ->defaultValue(['Content-Type'])
                                     ->prototype('scalar')->end()
                                 ->end()
 
                                 ->arrayNode('response')
-                                    ->info('Response headers to print in Debug Http listener')
+                                    ->info('Response headers to print in Debug Http introspection adapters')
                                     ->defaultValue(['Content-Type'])
                                     ->prototype('scalar')->end()
                                 ->end()
@@ -131,9 +131,6 @@ final class Behapi implements Extension
     private function loadDebugServices(ContainerBuilder $container, array $config): void
     {
         $container->register(Debug\Configuration::class, Debug\Configuration::class)
-            ->addArgument($config['headers']['request'])
-            ->addArgument($config['headers']['response'])
-
             ->setPublic(false)
         ;
 
@@ -153,18 +150,19 @@ final class Behapi implements Extension
         ;
 
         $adapters = [
-            Debug\Introspection\Request\EchoerAdapter::class => -100,
-            Debug\Introspection\Response\EchoerAdapter::class => -100,
+            Debug\Introspection\Request\EchoerAdapter::class => [-100, $config['headers']['request']],
+            Debug\Introspection\Response\EchoerAdapter::class => [-100, $config['headers']['response']],
 
-            Debug\Introspection\Request\VarDumperAdapter::class => -80,
-            Debug\Introspection\Response\VarDumperAdapter::class => -80,
+            Debug\Introspection\Request\VarDumperAdapter::class => [-80, $config['headers']['request']],
+            Debug\Introspection\Response\VarDumperAdapter::class => [-80, $config['headers']['response']],
 
-            Debug\Introspection\Request\VarDumper\JsonAdapter::class => -75,
-            Debug\Introspection\Response\VarDumper\JsonAdapter::class => -75,
+            Debug\Introspection\Request\VarDumper\JsonAdapter::class => [-75, $config['headers']['request']],
+            Debug\Introspection\Response\VarDumper\JsonAdapter::class => [-75, $config['headers']['response']],
         ];
 
-        foreach ($adapters as $adapter => $priority) {
+        foreach ($adapters as $adapter => [$priority, $headers]) {
             $container->register($adapter, $adapter)
+                ->addArgument($headers)
                 ->addTag(self::DEBUG_INTROSPECTION_TAG, ['priority' => $priority])
             ;
         }

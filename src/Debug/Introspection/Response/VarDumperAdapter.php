@@ -11,7 +11,16 @@ use Behapi\Debug\Introspection\UnsupportedMessage;
 
 final class VarDumperAdapter implements Adapter
 {
-    public function introspect(MessageInterface $message, array $headers): void
+    /** @var iterable<string> */
+    private $headers;
+
+    /** @param iterable<string> $headers */
+    public function __construct(iterable $headers)
+    {
+        $this->headers = $headers;
+    }
+
+    public function introspect(MessageInterface $message): void
     {
         if (!$this->supports($message)) {
             throw new UnsupportedMessage($message, ResponseInterface::class);
@@ -27,7 +36,7 @@ final class VarDumperAdapter implements Adapter
             'Response Status' => "{$message->getStatusCode()} {$message->getReasonPhrase()}",
         ];
 
-        foreach ($headers as $header) {
+        foreach ($this->headers as $header) {
             $introspect["Response {$header}"] = $message->getHeaderLine($header);
         }
 
