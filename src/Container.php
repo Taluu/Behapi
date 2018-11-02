@@ -52,7 +52,7 @@ final class Container implements ContainerInterface
             PluginClientBuilder::class,
         ];
 
-        return in_array($id, $services);
+        return in_array($id, $services, true);
     }
 
     /** {@inheritDoc} */
