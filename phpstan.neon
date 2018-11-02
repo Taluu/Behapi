@@ -8,3 +8,6 @@ parameters:
     # too lazy to properly structure the node builders just to add some asserts
     # and stuff like that for every line (or almost).
     - '{Cannot call method arrayNode() on Symfony\Component\Config\Definition\Builder\NodeParentInterface|null.}'
+
+  includes:
+    - vendor/phpstan/phpstan-strict-rules/rules.neon
