@@ -6,7 +6,6 @@ use InvalidArgumentException;
 
 use Webmozart\Assert\Assert;
 
-use Behapi\Http\Response;
 use Behapi\HttpHistory\History as HttpHistory;
 
 use function sprintf;
@@ -19,7 +18,8 @@ use const JSON_ERROR_NONE;
 
 class Context extends AbstractContext
 {
-    use Response;
+    /** @var HttpHistory */
+    private $history;
 
     public function __construct(HttpHistory $history)
     {
@@ -29,7 +29,7 @@ class Context extends AbstractContext
 
     protected function getJson()
     {
-        return json_decode((string) $this->getResponse()->getBody());
+        return json_decode((string) $this->history->getLastResponse()->getBody());
     }
 
     protected function getContentTypes(): array
@@ -50,7 +50,7 @@ class Context extends AbstractContext
     {
         $this->getJson();
 
-        [$contentType,] = explode(';', $this->getResponse()->getHeaderLine('Content-Type'), 2);
+        [$contentType,] = explode(';', $this->history->getLastResponse()->getHeaderLine('Content-Type'), 2);
 
         Assert::same(JSON_ERROR_NONE, json_last_error(), sprintf('The response is not a valid json (%s)', json_last_error_msg()));
         Assert::oneOf($contentType, $this->getContentTypes(), 'The response should have a valid content-type (expected one of %2$s, got %1$s)');
