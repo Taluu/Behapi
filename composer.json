@@ -60,6 +60,9 @@
         "php-http/message": "^1.0",
         "php-http/mock-client": "^0.3",
 
-        "symfony/var-dumper": "^2.8 || ^3.3 || ^4.0"
+        "symfony/var-dumper": "^2.8 || ^3.3 || ^4.0",
+
+        "phpstan/phpstan": "^0.10",
+        "phpstan/phpstan-strict-rules": "^0.10"
     }
 }

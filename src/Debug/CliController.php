@@ -29,6 +29,9 @@ final class CliController implements Controller
     /** {@inheritDoc} */
     public function execute(InputInterface $input, OutputInterface $output)
     {
-        $this->status->setEnabled($input->getOption('behapi-debug'));
+        $debug = $input->getOption('behapi-debug');
+        assert(is_bool($debug));
+
+        $this->status->setEnabled($debug);
     }
 }
