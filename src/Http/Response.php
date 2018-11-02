@@ -18,12 +18,6 @@ trait Response
 
     public function getResponse(): ResponseInterface
     {
-        $response = $this->history->getLastResponse();
-
-        if (!$response instanceof ResponseInterface) {
-            throw new RuntimeException('No response');
-        }
-
-        return $response;
+        return $this->history->getLastResponse();
     }
 }

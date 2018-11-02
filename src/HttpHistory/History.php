@@ -36,10 +36,10 @@ final class History implements Journal, IteratorAggregate
         $this->tuples[] = new Tuple($request, $response);
     }
 
-    public function getLastResponse(): ?ResponseInterface
+    public function getLastResponse(): ResponseInterface
     {
         if (1 > count($this->tuples)) {
-            return null;
+            throw new NoResponse;
         }
 
         /** @var Tuple $tuple */
