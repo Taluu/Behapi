@@ -46,7 +46,13 @@ final class History implements Journal, IteratorAggregate
         $tuple = end($this->tuples);
         reset($this->tuples);
 
-        return $tuple->getResponse();
+        $response = $tuple->getResponse();
+
+        if (null === $response) {
+            throw new NoResponse;
+        }
+
+        return $response;
     }
 
     /** @return iterable<Tuple> */
