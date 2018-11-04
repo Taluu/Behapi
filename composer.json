@@ -54,7 +54,7 @@
     "require-dev": {
         "behat/behat": "^3.4",
 
-        "nyholm/psr7": "^0.2",
+        "nyholm/psr7": "^1.0",
         "coduo/php-matcher": "^2.3 || ^3.0",
 
         "php-http/message": "^1.0",
