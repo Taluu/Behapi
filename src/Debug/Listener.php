@@ -2,7 +2,6 @@
 namespace Behapi\Debug;
 
 use Psr\Http\Message\MessageInterface;
-use Psr\Http\Message\RequestInterface;
 use Psr\Http\Message\ResponseInterface;
 
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
@@ -66,56 +65,41 @@ final class Listener implements EventSubscriberInterface
             return;
         }
 
-        // no http tag... still no chocolates
+        // no http tag... no chocolates
         if (!$this->hasTag($event, 'http')) {
-            return;
-        }
-
-        // debug only if tag is present (all debug) or only on test failures
-        if ($this->hasTag($event, 'debug')) {
-            foreach ($this->history as $http) {
-                $this->debug($http);
-            }
-
-            return;
-        }
-
-        if (false === $this->status->isEnabled()) {
             return;
         }
 
         $result = $event->getTestResult();
 
-        if (TestResult::FAILED !== $result->getResultCode()) {
+        // debug only if tag is present (all debug) or only on test failures
+        if (
+            !$this->hasTag($event, 'debug')
+            && (false === $this->status->isEnabled() || TestResult::FAILED !== $result->getResultCode())
+        ) {
             return;
         }
 
         foreach ($this->history as $http) {
-            $this->debug($http);
+            $this->debug($http->getRequest());
+
+            $response = $http->getResponse();
+
+            if ($response instanceof ResponseInterface) {
+                $this->debug($response);
+            }
         }
     }
 
-    private function debug(HttpTuple $http): void
+    private function debug(MessageInterface $message): void
     {
-        $messages = [
-            RequestInterface::class => $http->getRequest(),
-            ResponseInterface::class => $http->getResponse(),
-        ];
-
-        /** @var MessageInterface $message */
-        foreach ($messages as $interface => $message) {
-            if (!$message instanceof $interface) {
+        foreach ($this->adapters as $adapter) {
+            if (!$adapter->supports($message)) {
                 continue;
             }
 
-            foreach ($this->adapters as $adapter) {
-                if (!$adapter->supports($message)) {
-                    continue;
-                }
-
-                $adapter->introspect($message);
-                break;
-            }
+            $adapter->introspect($message);
+            break;
         }
     }
 
