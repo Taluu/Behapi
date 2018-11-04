@@ -39,7 +39,7 @@ final class Listener implements EventSubscriberInterface
     /** @var Status */
     private $status;
 
-    /* @var Adapter[] */
+    /** @var Adapter[] */
     private $adapters;
 
     /** @param Adapter[] $adapters Introspection adapters to use in this listener (sorted by priority) */

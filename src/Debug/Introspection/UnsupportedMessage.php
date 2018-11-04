@@ -6,7 +6,7 @@ use Psr\Http\Message\MessageInterface;
 
 final class UnsupportedMessage extends InvalidArgumentException
 {
-    /* @var MessageInterface */
+    /** @var MessageInterface */
     private $httpMessage;
 
     public function __construct(MessageInterface $message, string $expected)
