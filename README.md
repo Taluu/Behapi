@@ -2,7 +2,7 @@ Behapi
 ======
 Behat extension to help write describe features related to HTTP APIs.
 
-PHP 7.1, Behat 3.4, and a discoverable php-http client are required to make
+PHP 7.1, Behat 3.5, and a discoverable php-http client are required to make
 this extension work.
 
 Installing this extension is pretty easy, and there are multiple ways to do

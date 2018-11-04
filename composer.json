@@ -43,7 +43,7 @@
     },
 
     "conflict": {
-        "behat/behat": "< 3.4",
+        "behat/behat": "< 3.5",
         "symfony/dependency-injection": "< 2.8"
     },
 
@@ -51,7 +51,7 @@
     "minimum-stability": "dev",
 
     "require-dev": {
-        "behat/behat": "^3.4",
+        "behat/behat": "^3.5",
 
         "nyholm/psr7": "^1.0",
         "coduo/php-matcher": "^2.3 || ^3.0",
