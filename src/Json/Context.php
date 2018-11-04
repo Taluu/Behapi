@@ -21,20 +21,20 @@ class Context extends AbstractContext
     /** @var HttpHistory */
     private $history;
 
-    public function __construct(HttpHistory $history)
+    /** @var string[] */
+    private $contentTypes;
+
+    public function __construct(HttpHistory $history, array $contentTypes = ['application/json'])
     {
         parent::__construct();
+
         $this->history = $history;
+        $this->contentTypes = $contentTypes;
     }
 
     protected function getJson()
     {
         return json_decode((string) $this->history->getLastResponse()->getBody());
-    }
-
-    protected function getContentTypes(): array
-    {
-        return ['application/json'];
     }
 
     /**
@@ -53,6 +53,6 @@ class Context extends AbstractContext
         [$contentType,] = explode(';', $this->history->getLastResponse()->getHeaderLine('Content-Type'), 2);
 
         Assert::same(JSON_ERROR_NONE, json_last_error(), sprintf('The response is not a valid json (%s)', json_last_error_msg()));
-        Assert::oneOf($contentType, $this->getContentTypes(), 'The response should have a valid content-type (expected one of %2$s, got %1$s)');
+        Assert::oneOf($contentType, $this->contentTypes, 'The response should have a valid content-type (expected one of %2$s, got %1$s)');
     }
 }
