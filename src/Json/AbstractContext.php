@@ -191,8 +191,8 @@ abstract class AbstractContext implements BehatContext
     {
         $value = $this->getValue($path);
 
-        Assert::isArray($value);
-        Assert::lessThanEq(count($value), $count);
+        Assert::isCountable($value);
+        Assert::maxCount($value, $count);
     }
 
     /** @Then in the json, :path should match :pattern */
