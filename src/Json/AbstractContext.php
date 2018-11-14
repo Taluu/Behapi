@@ -51,16 +51,16 @@ abstract class AbstractContext implements BehatContext
         Assert::false($this->accessor->isReadable($this->getJson(), $path), "The path $path should not be a valid path");
     }
 
-    /** @Then in the json, :path should be equal to :expected */
-    final public function the_json_path_should_be_equal_to(string $path, $expected): void
+    /**
+     * @Then in the json, :path should be equal to :expected
+     * @Then in the json, :path should :not be equal to :expected
+     */
+    final public function the_json_path_should_be_equal_to(string $path, ?string $not = null, $expected): void
     {
-        Assert::eq($this->getValue($path), $expected);
-    }
+        $assert = [Assert::class, $not !== null ? 'notEq' : 'eq'];
+        assert(is_callable($assert));
 
-    /** @Then in the json, :path should not be equal to :expected */
-    final public function the_json_path_should_not_be_equal_to(string $path, $expected): void
-    {
-        Assert::notEq($this->getValue($path), $expected);
+        $assert($this->getValue($path), $expected);
     }
 
     /** @Then in the json, :path should be: */
@@ -69,52 +69,52 @@ abstract class AbstractContext implements BehatContext
         Assert::same($this->getValue($path), $expected->getRaw());
     }
 
-    /** @Then /^in the json, "(?P<path>(?:[^"]|\\")*)" should be (?P<expected>true|false)$/ */
-    final public function the_json_path_should_be(string $path, string $expected): void
+    /**
+     * @Then /^in the json, "(?P<path>(?:[^"]|\\")*)" should be (?P<expected>true|false)$/
+     * @Then /^in the json, "(?P<path>(?:[^"]|\\")*)" should :not be (?P<expected>true|false)$/
+     */
+    final public function the_json_path_should_be(string $path, ?string $not = null, string $expected): void
     {
-        Assert::same($this->getValue($path), 'true' === $expected);
+        $assert = [Assert::class, $not !== null ? 'notSame' : 'same'];
+        assert(is_callable($assert));
+
+        $assert($this->getValue($path), 'true' === $expected);
     }
 
-    /** @Then /^in the json, "(?P<path>(?:[^"]|\\")*)" should not be (?P<expected>true|false)$/ */
-    final public function the_json_path_should_not_be(string $path, string $expected): void
+    /**
+     * @Then in the json, :path should be null
+     * @Then in the json, :path should :not be null
+     */
+    final public function the_json_path_should_be_null(string $path, ?string $not = null): void
     {
-        Assert::notSame($this->getValue($path), 'true' === $expected);
+        $assert = [Assert::class, $not !== null ? 'notNull' : 'null'];
+        assert(is_callable($assert));
+
+        $assert($this->getValue($path));
     }
 
-    /** @Then in the json, :path should be null */
-    final public function the_json_path_should_be_null(string $path): void
+    /**
+     * @Then in the json, :path should be empty
+     * @Then in the json, :path should :not be empty
+     */
+    final public function the_json_path_should_be_empty(string $path, ?string $not = null): void
     {
-        Assert::null($this->getValue($path));
+        $assert = [Assert::class, $not !== null ? 'notEmpty' : 'isEmpty'];
+        assert(is_callable($assert));
+
+        $assert($this->getValue($path));
     }
 
-    /** @Then in the json, :path should not be null */
-    final public function the_json_path_should_not_be_null(string $path): void
+    /**
+     * @Then in the json, :path should contain :expected
+     * @Then in the json, :path should :not contain :expected
+     */
+    final public function the_json_path_contains(string $path, ?string $not = null, $expected): void
     {
-        Assert::notNull($this->getValue($path));
-    }
+        $assert = [Assert::class, $not !== null ? 'notContains' : 'contains'];
+        assert(is_callable($assert));
 
-    /** @Then in the json, :path should be empty */
-    final public function the_json_path_should_be_empty(string $path): void
-    {
-        Assert::isEmpty($this->getValue($path));
-    }
-
-    /** @Then in the json, :path should not be empty */
-    final public function the_json_path_should_not_be_empty(string $path): void
-    {
-        Assert::notEmpty($this->getValue($path));
-    }
-
-    /** @Then in the json, :path should contain :expected */
-    final public function the_json_path_contains(string $path, $expected): void
-    {
-        Assert::contains($this->getValue($path), $expected);
-    }
-
-    /** @Then /^in the json, :path should not contain :expected */
-    final public function the_json_path_not_contains(string $path, $expected): void
-    {
-        Assert::notContains($this->getValue($path), $expected);
+        $assert($this->getValue($path), $expected);
     }
 
     /** @Then in the json, :path collection should contain an element with :value equal to :expected */
@@ -245,103 +245,83 @@ abstract class AbstractContext implements BehatContext
         Assert::same(json_last_error(), JSON_ERROR_NONE);
     }
 
-    /** @Then /^in the json, all the elements in the (?:root|\"(?P<path>(?:[^"]|\\")*)\") collection should have an? "(?P<property>(?:[^"]|\\")*)" property$/ */
-    final public function the_json_path_elements_in_collection_should_have_a_property(string $path, string $property): void
+    /**
+     * @Then /^in the json, all the elements in the (?:root|\"(?P<path>(?:[^"]|\\")*)\") collection should have a(?:n?) "(?P<property>(?:[^"]|\\")*)" property$/
+     * @Then /^in the json, all the elements in the (?:root|\"(?P<path>(?:[^"]|\\")*)\") collection should (?P<not>not) have a(?:n?) "(?P<property>(?:[^"]|\\")*)" property$/
+     **/
+    final public function the_json_path_elements_in_collection_should_have_a_property(string $path, ?string $not = null, string $property): void
     {
-        Assert::allPropertyExists(empty($path) ? $this->getJson() : $this->getValue($path), $property);
+        $assert = [Assert::class, $not !== null ? 'allPropertyNotExists' : 'allPropertyExists'];
+        assert(is_callable($assert));
+
+        $assert(empty($path) ? $this->getJson() : $this->getValue($path), $property);
     }
 
-    /** @Then /^in the json, all the elements in the (?:root|\"(?P<path>(?:[^"]|\\")*)\") collection should not have an? "(?P<property>(?:[^"]|\\")*)" property$/ */
-    final public function the_json_path_elements_in_collection_should_not_have_a_property(string $path, string $property): void
-    {
-        Assert::allPropertyNotExists(empty($path) ? $this->getJson() : $this->getValue($path), $property);
-    }
-
-    /** @Then /^in the json, each "(?P<property>(?:[^"]|\\")*)" property in the (?:root|\"(?P<path>(?:[^"]|\\")*)\") collection should be equal to "(?P<expected>(?:[^"]|\\")*)"$/ */
-    final public function the_json_each_elements_in_collection_should_be_equal_to(string $path, string $property, string $expected): void
+    /**
+     * @Then /^in the json, each "(?P<property>(?:[^"]|\\")*)" property in the (?:root|\"(?P<path>(?:[^"]|\\")*)\") collection should be equal to "(?P<expected>(?:[^"]|\\")*)"$/
+     * @Then /^in the json, each "(?P<property>(?:[^"]|\\")*)" property in the (?:root|\"(?P<path>(?:[^"]|\\")*)\") collection should (?P<not>not) be equal to "(?P<expected>(?:[^"]|\\")*)"$/
+     */
+    final public function the_json_each_elements_in_collection_should_be_equal_to(string $path, string $property, ?string $not = null, string $expected): void
     {
         $values = empty($path) ? $this->getJson() : $this->getValue($path);
         Assert::isIterable($values);
 
+        $assert = [Assert::class, $not !== null ? 'notSame' : 'same'];
+        assert(is_callable($assert));
+
         foreach ($values as $element) {
-            Assert::same($this->accessor->getValue($element, $property), $expected);
+            $assert($this->accessor->getValue($element, $property), $expected);
         }
     }
 
-    /** @Then /^in the json, each "(?P<property>(?:[^"]|\\")*)" property in the (?:root|\"(?P<path>(?:[^"]|\\")*)\") collection should not be equal to "(?P<expected>(?:[^"]|\\")*)"$/ */
-    final public function the_json_each_elements_in_collection_should_not_be_equal_to(string $path, string $property, string $expected): void
+    /**
+     * @Then /^in the json, each "(?P<property>(?:[^"]|\\")*)" property in the (?:root|\"(?P<path>(?:[^"]|\\")*)\") collection should be (?P<expected>true|false)$/
+     * @Then /^in the json, each "(?P<property>(?:[^"]|\\")*)" property in the (?:root|\"(?P<path>(?:[^"]|\\")*)\") collection should (?P<not>not) be (?P<expected>true|false)$/
+     */
+    final public function the_json_each_elements_in_collection_should_be_bool(string $path, string $property, ?string $not = null, string $expected): void
     {
         $values = empty($path) ? $this->getJson() : $this->getValue($path);
         Assert::isIterable($values);
 
+        $assert = [Assert::class, $not !== null ? 'notSame' : 'same'];
+        assert(is_callable($assert));
+
         foreach ($values as $element) {
-            Assert::notSame($this->accessor->getValue($element, $property), $expected);
+            $assert($this->accessor->getValue($element, $property), $expected === 'true');
         }
     }
 
-    /** @Then /^in the json, each "(?P<property>(?:[^"]|\\")*)" property in the (?:root|\"(?P<path>(?:[^"]|\\")*)\") collection should be (?P<expected>true|false)$/ */
-    final public function the_json_each_elements_in_collection_should_be_bool(string $path, string $property, string $expected): void
+    /**
+     * @Then /^in the json, each "(?P<property>(?:[^"]|\\")*)" property in the (?:root|\"(?P<path>(?:[^"]|\\")*)\") collection should be equal to (?P<expected>[0-9]+)$/
+     * @Then /^in the json, each "(?P<property>(?:[^"]|\\")*)" property in the (?:root|\"(?P<path>(?:[^"]|\\")*)\") collection should (?P<not>not) be equal to (?P<expected>[0-9]+)$/
+     */
+    final public function the_json_each_elements_in_collection_should_be_equal_to_int(string $path, string $property, ?string $not = null, int $expected): void
     {
         $values = empty($path) ? $this->getJson() : $this->getValue($path);
         Assert::isIterable($values);
 
+        $assert = [Assert::class, $not !== null ? 'notSame' : 'same'];
+        assert(is_callable($assert));
+
         foreach ($values as $element) {
-            Assert::same($this->accessor->getValue($element, $property), $expected === 'true');
+            $assert($this->accessor->getValue($element, $property), $expected);
         }
     }
 
-    /** @Then /^in the json, each "(?P<property>(?:[^"]|\\")*)" property in the (?:root|\"(?P<path>(?:[^"]|\\")*)\") collection should not be (?P<expected>true|false)$/ */
-    final public function the_json_each_elements_in_collection_should_not_be_bool(string $path, string $property, string $expected): void
+    /**
+     * @Then /^in the json, each "(?P<property>(?:[^"]|\\")*)" property in the (?:root|\"(?P<path>(?:[^"]|\\")*)\") collection should contain "(?P<expected>(?:[^"]|\\")*)"$/
+     * @Then /^in the json, each "(?P<property>(?:[^"]|\\")*)" property in the (?:root|\"(?P<path>(?:[^"]|\\")*)\") collection should (?P<not>not) contain "(?P<expected>(?:[^"]|\\")*)"$/
+     **/
+    final public function the_json_each_elements_in_collection_should_contain(string $path, string $property, ?string $not = null, string $expected): void
     {
         $values = empty($path) ? $this->getJson() : $this->getValue($path);
         Assert::isIterable($values);
 
-        foreach ($values as $element) {
-            Assert::notSame($this->accessor->getValue($element, $property), $expected === 'true');
-        }
-    }
-
-    /** @Then /^in the json, each "(?P<property>(?:[^"]|\\")*)" property in the (?:root|\"(?P<path>(?:[^"]|\\")*)\") collection should be equal to (?P<expected>[0-9]+)$/ */
-    final public function the_json_each_elements_in_collection_should_be_equal_to_int(string $path, string $property, int $expected): void
-    {
-        $values = empty($path) ? $this->getJson() : $this->getValue($path);
-        Assert::isIterable($values);
+        $assert = [Assert::class, $not !== null ? 'notSame' : 'same'];
+        assert(is_callable($assert));
 
         foreach ($values as $element) {
-            Assert::same($this->accessor->getValue($element, $property), $expected);
-        }
-    }
-
-    /** @Then /^in the json, each "(?P<property>(?:[^"]|\\")*)" property in the (?:root|\"(?P<path>(?:[^"]|\\")*)\") collection should not be equal to (?P<expected>[0-9]+)$/ */
-    final public function the_json_each_elements_in_collection_should_not_be_equal_to_int(string $path, string $property, int $expected): void
-    {
-        $values = empty($path) ? $this->getJson() : $this->getValue($path);
-        Assert::isIterable($values);
-
-        foreach ($values as $element) {
-            Assert::notSame($this->accessor->getValue($element, $property), $expected);
-        }
-    }
-
-    /** @Then /^in the json, each "(?P<property>(?:[^"]|\\")*)" property in the (?:root|\"(?P<path>(?:[^"]|\\")*)\") collection should contain "(?P<expected>(?:[^"]|\\")*)"$/ */
-    final public function the_json_each_elements_in_collection_should_contain(string $path, string $property, string $expected): void
-    {
-        $values = empty($path) ? $this->getJson() : $this->getValue($path);
-        Assert::isIterable($values);
-
-        foreach ($values as $element) {
-            Assert::contains($this->accessor->getValue($element, $property), $expected);
-        }
-    }
-
-    /** @Then /^in the json, each "(?P<property>(?:[^"]|\\")*)" property in the (?:root|\"(?P<path>(?:[^"]|\\")*)\") collection should not contain "(?P<expected>(?:[^"]|\\")*)"$/ */
-    final public function the_json_each_elements_in_collection_should_not_contain(string $path, string $property, string $expected): void
-    {
-        $values = empty($path) ? $this->getJson() : $this->getValue($path);
-        Assert::isIterable($values);
-
-        foreach ($values as $element) {
-            Assert::notContains($this->accessor->getValue($element, $property), $expected);
+            $assert($this->accessor->getValue($element, $property), $expected);
         }
     }
 }
