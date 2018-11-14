@@ -165,31 +165,46 @@ abstract class AbstractContext implements BehatContext
         Assert::lessThanEq($this->getValue($path), $expected);
     }
 
-    /** @Then in the json, :path should be an array */
-    final public function should_be_an_array(string $path): void
+    /**
+     * @Then in the json, the root should be an array
+     * @Then in the json, :path should be an array
+     */
+    final public function should_be_an_array(?string $path = null): void
     {
-        Assert::isArray($this->getValue($path));
+        Assert::isArray($path === null ? $this->getJson() : $this->getValue($path));
     }
 
-    /** @Then in the json, :path should have at least :count element(s) */
-    final public function the_json_path_should_have_at_least_elements(string $path, int $count): void
+    /**
+     * @Then in the json, the root collection should have at least :count element(s)
+     * @Then in the json, :path collection should have at least :count element(s)
+     */
+    final public function the_json_collection_should_have_at_least_elements(?string $path = null, int $count): void
     {
-        $value = $this->getValue($path);
+        $value = $path === null ? $this->getJson() : $this->getValue($path);
 
-        Assert::isArray($value);
-        Assert::greaterThanEq(count($value), $count);
+        Assert::isCountable($value);
+        Assert::minCount($value, $count);
     }
 
-    /** @Then in the json, :path should have :count element(s) */
-    final public function the_json_path_should_have_elements(string $path, int $count): void
+    /**
+     * @Then in the json, the root collection should have :count element(s)
+     * @Then in the json, :path collection should have :count element(s)
+     */
+    final public function the_json_path_should_have_elements(?string $path = null, int $count): void
     {
-        Assert::count($this->getValue($path), $count);
+        $value = $path === null ? $this->getJson() : $this->getValue($path);
+
+        Assert::isCountable($value);
+        Assert::count($value, $count);
     }
 
-    /** @Then in the json, :path should have at most :count element(s) */
-    final public function the_json_path_should_have_at_most_elements(string $path, int $count): void
+    /**
+     * @Then in the json, the root collection should have at most :count element(s)
+     * @Then in the json, :path collection should have at most :count element(s)
+     */
+    final public function the_json_path_should_have_at_most_elements(?string $path = null, int $count): void
     {
-        $value = $this->getValue($path);
+        $value = $path === null ? $this->getJson() : $this->getValue($path);
 
         Assert::isCountable($value);
         Assert::maxCount($value, $count);
@@ -218,30 +233,6 @@ abstract class AbstractContext implements BehatContext
         }
 
         throw new InvalidArgumentException("The value matches {$pattern} at offset {$matches[0][1]}");
-    }
-
-    /** @Then in the json, the root should be an array */
-    final public function root_should_be_an_array(): void
-    {
-        Assert::isArray($this->getJson());
-    }
-
-    /** @Then in the json, the root should have :count element(s) */
-    final public function the_root_should_have_elements(int $count): void
-    {
-        $value = $this->getJson();
-
-        Assert::isArray($value);
-        Assert::count($value, $count);
-    }
-
-    /** @Then in the json, the root should have at most :count element(s) */
-    final public function the_root_should_have_at_most_elements(int $count): void
-    {
-        $value = $this->getJson();
-
-        Assert::isArray($value);
-        Assert::lessThanEq($value, $count);
     }
 
     /** @Then in the json, :path should be a valid json encoded string */
