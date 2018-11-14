@@ -121,6 +121,7 @@ abstract class AbstractContext implements BehatContext
     final public function the_json_path_collection_contains(string $path, string $value, $expected): void
     {
         $collection = $this->accessor->getValue($this->getJson(), $path);
+        Assert::isIterable($collection);
 
         foreach ($collection as $element) {
             if ($expected === $this->accessor->getValue($element, $value)) {
@@ -242,5 +243,105 @@ abstract class AbstractContext implements BehatContext
 
         Assert::notNull($value);
         Assert::same(json_last_error(), JSON_ERROR_NONE);
+    }
+
+    /** @Then /^in the json, all the elements in the (?:root|\"(?P<path>(?:[^"]|\\")*)\") collection should have an? "(?P<property>(?:[^"]|\\")*)" property$/ */
+    final public function the_json_path_elements_in_collection_should_have_a_property(string $path, string $property): void
+    {
+        Assert::allPropertyExists(empty($path) ? $this->getJson() : $this->getValue($path), $property);
+    }
+
+    /** @Then /^in the json, all the elements in the (?:root|\"(?P<path>(?:[^"]|\\")*)\") collection should not have an? "(?P<property>(?:[^"]|\\")*)" property$/ */
+    final public function the_json_path_elements_in_collection_should_not_have_a_property(string $path, string $property): void
+    {
+        Assert::allPropertyNotExists(empty($path) ? $this->getJson() : $this->getValue($path), $property);
+    }
+
+    /** @Then /^in the json, each "(?P<property>(?:[^"]|\\")*)" property in the (?:root|\"(?P<path>(?:[^"]|\\")*)\") collection should be equal to "(?P<expected>(?:[^"]|\\")*)"$/ */
+    final public function the_json_each_elements_in_collection_should_be_equal_to(string $path, string $property, string $expected): void
+    {
+        $values = empty($path) ? $this->getJson() : $this->getValue($path);
+        Assert::isIterable($values);
+
+        foreach ($values as $element) {
+            Assert::same($this->accessor->getValue($element, $property), $expected);
+        }
+    }
+
+    /** @Then /^in the json, each "(?P<property>(?:[^"]|\\")*)" property in the (?:root|\"(?P<path>(?:[^"]|\\")*)\") collection should not be equal to "(?P<expected>(?:[^"]|\\")*)"$/ */
+    final public function the_json_each_elements_in_collection_should_not_be_equal_to(string $path, string $property, string $expected): void
+    {
+        $values = empty($path) ? $this->getJson() : $this->getValue($path);
+        Assert::isIterable($values);
+
+        foreach ($values as $element) {
+            Assert::notSame($this->accessor->getValue($element, $property), $expected);
+        }
+    }
+
+    /** @Then /^in the json, each "(?P<property>(?:[^"]|\\")*)" property in the (?:root|\"(?P<path>(?:[^"]|\\")*)\") collection should be (?P<expected>true|false)$/ */
+    final public function the_json_each_elements_in_collection_should_be_bool(string $path, string $property, string $expected): void
+    {
+        $values = empty($path) ? $this->getJson() : $this->getValue($path);
+        Assert::isIterable($values);
+
+        foreach ($values as $element) {
+            Assert::same($this->accessor->getValue($element, $property), $expected === 'true');
+        }
+    }
+
+    /** @Then /^in the json, each "(?P<property>(?:[^"]|\\")*)" property in the (?:root|\"(?P<path>(?:[^"]|\\")*)\") collection should not be (?P<expected>true|false)$/ */
+    final public function the_json_each_elements_in_collection_should_not_be_bool(string $path, string $property, string $expected): void
+    {
+        $values = empty($path) ? $this->getJson() : $this->getValue($path);
+        Assert::isIterable($values);
+
+        foreach ($values as $element) {
+            Assert::notSame($this->accessor->getValue($element, $property), $expected === 'true');
+        }
+    }
+
+    /** @Then /^in the json, each "(?P<property>(?:[^"]|\\")*)" property in the (?:root|\"(?P<path>(?:[^"]|\\")*)\") collection should be equal to (?P<expected>[0-9]+)$/ */
+    final public function the_json_each_elements_in_collection_should_be_equal_to_int(string $path, string $property, int $expected): void
+    {
+        $values = empty($path) ? $this->getJson() : $this->getValue($path);
+        Assert::isIterable($values);
+
+        foreach ($values as $element) {
+            Assert::same($this->accessor->getValue($element, $property), $expected);
+        }
+    }
+
+    /** @Then /^in the json, each "(?P<property>(?:[^"]|\\")*)" property in the (?:root|\"(?P<path>(?:[^"]|\\")*)\") collection should not be equal to (?P<expected>[0-9]+)$/ */
+    final public function the_json_each_elements_in_collection_should_not_be_equal_to_int(string $path, string $property, int $expected): void
+    {
+        $values = empty($path) ? $this->getJson() : $this->getValue($path);
+        Assert::isIterable($values);
+
+        foreach ($values as $element) {
+            Assert::notSame($this->accessor->getValue($element, $property), $expected);
+        }
+    }
+
+    /** @Then /^in the json, each "(?P<property>(?:[^"]|\\")*)" property in the (?:root|\"(?P<path>(?:[^"]|\\")*)\") collection should contain "(?P<expected>(?:[^"]|\\")*)"$/ */
+    final public function the_json_each_elements_in_collection_should_contain(string $path, string $property, string $expected): void
+    {
+        $values = empty($path) ? $this->getJson() : $this->getValue($path);
+        Assert::isIterable($values);
+
+        foreach ($values as $element) {
+            Assert::contains($this->accessor->getValue($element, $property), $expected);
+        }
+    }
+
+    /** @Then /^in the json, each "(?P<property>(?:[^"]|\\")*)" property in the (?:root|\"(?P<path>(?:[^"]|\\")*)\") collection should not contain "(?P<expected>(?:[^"]|\\")*)"$/ */
+    final public function the_json_each_elements_in_collection_should_not_contain(string $path, string $property, string $expected): void
+    {
+        $values = empty($path) ? $this->getJson() : $this->getValue($path);
+        Assert::isIterable($values);
+
+        foreach ($values as $element) {
+            Assert::notContains($this->accessor->getValue($element, $property), $expected);
+        }
     }
 }
