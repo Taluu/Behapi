@@ -34,21 +34,23 @@ abstract class AbstractContext implements BehatContext
 
     abstract protected function getJson();
 
-    protected function getValue(string $path)
+    protected function getValue(?string $path)
     {
-        return $this->accessor->getValue($this->getJson(), $path);
+        $json = $this->getJson();
+
+        return $path === null ? $json : $this->accessor->getValue($json, $path);
     }
 
     /** @Then :path should be accessible in the latest json response */
     final public function path_should_be_readable(string $path): void
     {
-        Assert::true($this->accessor->isReadable($this->getJson(), $path), "The path $path should be a valid path");
+        Assert::true($this->accessor->isReadable($this->getValue(null), $path), "The path $path should be a valid path");
     }
 
     /** @Then :path should not exist in the latest json response */
     final public function path_should_not_be_readable(string $path): void
     {
-        Assert::false($this->accessor->isReadable($this->getJson(), $path), "The path $path should not be a valid path");
+        Assert::false($this->accessor->isReadable($this->getValue(null), $path), "The path $path should not be a valid path");
     }
 
     /**
@@ -120,7 +122,7 @@ abstract class AbstractContext implements BehatContext
     /** @Then in the json, :path collection should contain an element with :value equal to :expected */
     final public function the_json_path_collection_contains(string $path, string $value, $expected): void
     {
-        $collection = $this->accessor->getValue($this->getJson(), $path);
+        $collection = $this->getValue($path);
         Assert::isIterable($collection);
 
         foreach ($collection as $element) {
@@ -172,7 +174,7 @@ abstract class AbstractContext implements BehatContext
      */
     final public function should_be_an_array(?string $path = null): void
     {
-        Assert::isArray($path === null ? $this->getJson() : $this->getValue($path));
+        Assert::isArray($this->getValue($path));
     }
 
     /**
@@ -181,7 +183,7 @@ abstract class AbstractContext implements BehatContext
      */
     final public function the_json_collection_should_have_at_least_elements(?string $path = null, int $count): void
     {
-        $value = $path === null ? $this->getJson() : $this->getValue($path);
+        $value = $this->getValue($path);
 
         Assert::isCountable($value);
         Assert::minCount($value, $count);
@@ -193,7 +195,7 @@ abstract class AbstractContext implements BehatContext
      */
     final public function the_json_path_should_have_elements(?string $path = null, int $count): void
     {
-        $value = $path === null ? $this->getJson() : $this->getValue($path);
+        $value = $this->getValue($path);
 
         Assert::isCountable($value);
         Assert::count($value, $count);
@@ -205,7 +207,7 @@ abstract class AbstractContext implements BehatContext
      */
     final public function the_json_path_should_have_at_most_elements(?string $path = null, int $count): void
     {
-        $value = $path === null ? $this->getJson() : $this->getValue($path);
+        $value = $this->getValue($path);
 
         Assert::isCountable($value);
         Assert::maxCount($value, $count);
@@ -254,7 +256,7 @@ abstract class AbstractContext implements BehatContext
         $assert = [Assert::class, $not !== null ? 'allPropertyNotExists' : 'allPropertyExists'];
         assert(is_callable($assert));
 
-        $assert(empty($path) ? $this->getJson() : $this->getValue($path), $property);
+        $assert($this->getValue(empty($path) ? null : $path), $property);
     }
 
     /**
@@ -263,7 +265,7 @@ abstract class AbstractContext implements BehatContext
      */
     final public function the_json_each_elements_in_collection_should_be_equal_to(string $path, string $property, ?string $not = null, string $expected): void
     {
-        $values = empty($path) ? $this->getJson() : $this->getValue($path);
+        $values = $this->getValue(empty($path) ? null : $path);
         Assert::isIterable($values);
 
         $assert = [Assert::class, $not !== null ? 'notSame' : 'same'];
@@ -280,7 +282,7 @@ abstract class AbstractContext implements BehatContext
      */
     final public function the_json_each_elements_in_collection_should_be_bool(string $path, string $property, ?string $not = null, string $expected): void
     {
-        $values = empty($path) ? $this->getJson() : $this->getValue($path);
+        $values = $this->getValue(empty($path) ? null : $path);
         Assert::isIterable($values);
 
         $assert = [Assert::class, $not !== null ? 'notSame' : 'same'];
@@ -297,7 +299,7 @@ abstract class AbstractContext implements BehatContext
      */
     final public function the_json_each_elements_in_collection_should_be_equal_to_int(string $path, string $property, ?string $not = null, int $expected): void
     {
-        $values = empty($path) ? $this->getJson() : $this->getValue($path);
+        $values = $this->getValue(empty($path) ? null : $path);
         Assert::isIterable($values);
 
         $assert = [Assert::class, $not !== null ? 'notSame' : 'same'];
@@ -314,7 +316,7 @@ abstract class AbstractContext implements BehatContext
      **/
     final public function the_json_each_elements_in_collection_should_contain(string $path, string $property, ?string $not = null, string $expected): void
     {
-        $values = empty($path) ? $this->getJson() : $this->getValue($path);
+        $values = $this->getValue(empty($path) ? null : $path);
         Assert::isIterable($values);
 
         $assert = [Assert::class, $not !== null ? 'notSame' : 'same'];
