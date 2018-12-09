@@ -2,15 +2,14 @@ Behapi
 ======
 Behat extension to help write describe features related to HTTP APIs.
 
-PHP 7.1, Behat 3.5, and a discoverable php-http client are required to make
+PHP 7.1, Behat 3.5 and a discoverable php-http client are required to make
 this extension work.
 
-Installing this extension is pretty easy, and there are multiple ways to do
-that ; but the one exposed here is the best (this is pretty subjective), which
-is via Composer. You just need to require `taluu/behapi` and an implementation
-of a http/client (providing `php-http/client-implementation ^1.0`,
+Installing this extension requires you to require `taluu/behapi` and an
+implementation of a http/client (providing
+`php-http/client-implementation ^1.0`,
 `php-http/message-factory-implementation ^1.0` and
-`psr/http-message-implementation ^1.0`), and it's done !
+`psr/http-message-implementation ^1.0`).
 
 Howto
 -----
@@ -48,23 +47,23 @@ debugging ; Use the `--config-reference` flag when invoking behat to have more
 information on the available configuration.
 
 After having installed the extension, you can then use the provided contexts
-such as the `Behapi\Http\Context` for the http api operations. In order to use
-them, you need to use behapi's container (`@Behapi\Container`), or a container
-capable of using behapi's container.
+such as the `Behapi\Http\RequestContext` for the http api operations. In order
+to use them, you need to use behapi's container (`@Behapi\Container`), or a
+container capable of using behapi's container.
 
 Some services are provided to be injected in contexts, which are the following:
 
 - `@Behapi\Http\PluginClientBuilder`, which will build a
-  `Http\Client\Common\PluginClient`
+  `Http\Client\Common\PluginClient` when needed
 - `@Behapi\HttpHistory\History`, which is a sort of a container with the last
   requests done and last responses received
 - `@Http\Message\MessageFactory`
 - `@Http\Message\StreamFactory`
 
 *Note:* You don't really need to bother with the services names, as they are
-compatible with behat's auto-wiring feature. 
+compatible with behat's auto-wiring feature.
 
-In order to enable the Json assertions, you need to use the 
+In order to enable the Json assertions, you need to use the
 `Behapi\Context\Json` context. If you want to add some other json assertions,
 extend the `Behapi\Json\Context` class. Note that if you use the json context,
 you should have used the client provided by the client builder used in the
@@ -81,9 +80,9 @@ A documentation will be made (soon hopefully) with more details.
 
 Contributing
 ------------
-Contributing (issues, pull-requests) are of course always welcome ! Just be
-sure to respect the standards (such as psr-2, ... etc), and follow proper git
-etiquette (atomic commits, ...) and proper conduct too, and it should be fine !
+Contributing (issues, pull-requests) are of course always welcome ! Be sure to
+respect the standards (such as psr-2, ... etc), follow proper git etiquette
+(atomic commits, ...), proper conduct too and it should be fine !
 
 Thanks
 ------
