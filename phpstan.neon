@@ -6,8 +6,16 @@ parameters:
   ignoreErrors:
     # have to ignore it, because Symfony config works like that and I'm waaay
     # too lazy to properly structure the node builders just to add some asserts
-    # and stuff like that for every line (or almost).
-    - '{Cannot call method arrayNode() on Symfony\Component\Config\Definition\Builder\NodeParentInterface|null.}'
+    # and stuff like that for (almost) every line.
+    - '{^Cannot call method arrayNode\\() on Symfony\Component\Config\Definition\Builder\NodeParentInterface|null.$}'
+
+    # Waiting for https://github.com/phpstan/phpstan/issues/1615 to be solved
+    # and then this ignore pattern can be gone.
+    #
+    # As there is some sort of "magic" with nette / neon, we kinda have to make
+    # a magic pattern so we can't focus this ignore on the Assert lib
+    # specifically. But as it should temporary, who cares, amiritte ?
+    - "{^Trying to invoke array\\('Webmozart[\\\\].+?', 'notSame'|'same'\\) but it might not be a callable.$}"
 
   includes:
     - vendor/phpstan/phpstan-strict-rules/rules.neon
