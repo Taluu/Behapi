@@ -64,10 +64,9 @@ Some services are provided to be injected in contexts, which are the following:
 *Note:* You don't really need to bother with the services names, as they are
 compatible with behat's auto-wiring feature. 
 
-In order to enable the Json assertions, you need to use `Behapi\Context\Json`.
-If you want to use something else for the source (as the `Behapi\Json\Context`
-context is dependant on [php-http](https://github.com/php-http/)), extend the
-`Behapi\Json\Context` class.
+In order to enable the Json assertions, you need to use the 
+`Behapi\Context\Json` context. If you want to add some other json assertions,
+extend the `Behapi\Json\Context` class.
 
 If you need to play with the request being built, or the response created when
 the request is sent, you need to inject the `@Behapi\HttpHistory\History`. It is
