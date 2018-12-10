@@ -9,13 +9,15 @@ parameters:
     # and stuff like that for (almost) every line.
     - '{^Cannot call method arrayNode\\() on Symfony\Component\Config\Definition\Builder\NodeParentInterface|null.$}'
 
-    # Waiting for https://github.com/phpstan/phpstan/issues/1615 to be solved
-    # and then this ignore pattern can be gone.
-    #
-    # As there is some sort of "magic" with nette / neon, we kinda have to make
-    # a magic pattern so we can't focus this ignore on the Assert lib
-    # specifically. But as it should temporary, who cares, amiritte ?
-    - "{^Trying to invoke array\\('Webmozart[\\\\].+?', 'notSame'|'same'\\) but it might not be a callable.$}"
+    # Waiting for https://github.com/beberlei/assert/pull/264 to be merged
+    # and released, so that this ignore pattern can be removed.
+    - '{^Parameter #3 \\$offset of function mb_strpos expects int, null given.$}'
+    - '{^Parameter #1 \$format of function sprintf expects string, string|null given.$}'
+
+    # phpstan doesn't detect well assertions with function_exists,
+    # method_exists and class_exists, so we have to ignore them...
+    - '{^Function is_countable not found.$}'
 
   includes:
     - vendor/phpstan/phpstan-strict-rules/rules.neon
+    - vendor/phpstan/phpstan-beberlei-assert/extension.neon

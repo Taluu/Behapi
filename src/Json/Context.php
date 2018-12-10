@@ -13,8 +13,7 @@ use Behat\Behat\Context\Context as BehatContext;
 use Symfony\Component\PropertyAccess\PropertyAccess;
 use Symfony\Component\PropertyAccess\PropertyAccessor;
 
-use Webmozart\Assert\Assert;
-
+use Behapi\Assert\Assert;
 use Behapi\HttpHistory\History as HttpHistory;
 
 use function sprintf;
@@ -30,7 +29,6 @@ use const PREG_OFFSET_CAPTURE;
 class Context implements BehatContext
 {
     use CountTrait;
-    use RegexTrait;
     use ComparisonTrait;
     use EachInCollectionTrait;
 
@@ -59,16 +57,19 @@ class Context implements BehatContext
         return $path === null ? $json : $this->accessor->getValue($json, $path);
     }
 
-    /** @Then :path should be accessible in the latest json response */
-    final public function path_should_be_readable(string $path): void
+    /**
+     * @Then :path should be accessible in the latest json response
+     * @Then :path should :not exist in the latest json response
+     */
+    final public function path_should_be_readable(string $path, ?string $not = null): void
     {
-        Assert::true($this->accessor->isReadable($this->getValue(null), $path), "The path $path should be a valid path");
-    }
+        $assert = Assert::that($this->accessor->isReadable($this->getValue(null), $path));
 
-    /** @Then :path should not exist in the latest json response */
-    final public function path_should_not_be_readable(string $path): void
-    {
-        Assert::false($this->accessor->isReadable($this->getValue(null), $path), "The path $path should not be a valid path");
+        if ($not !== null) {
+            $assert = $assert->not();
+        }
+
+        $assert->same(true);
     }
 
     /**
@@ -77,16 +78,28 @@ class Context implements BehatContext
      */
     final public function the_json_path_should_be_equal_to(string $path, ?string $not = null, $expected): void
     {
-        $assert = [Assert::class, $not !== null ? 'notEq' : 'eq'];
-        assert(is_callable($assert));
+        $assert = Assert::that($this->getValue($path));
 
-        $assert($this->getValue($path), $expected);
+        if ($not !== null) {
+            $assert = $assert->not();
+        }
+
+        $assert->eq($expected);
     }
 
-    /** @Then in the json, :path should be: */
-    final public function the_json_path_should_be_py_string(string $path, PyStringNode $expected): void
+    /**
+     * @Then in the json, :path should be:
+     * @Then in the json, :path should :not be:
+     */
+    final public function the_json_path_should_be_py_string(string $path, ?string $not = null, PyStringNode $expected): void
     {
-        Assert::same($this->getValue($path), $expected->getRaw());
+        $assert = Assert::that($this->getValue($path));
+
+        if ($not !== null) {
+            $assert = $assert->not();
+        }
+
+        $assert->same($expected->getRaw());
     }
 
     /**
@@ -95,10 +108,13 @@ class Context implements BehatContext
      */
     final public function the_json_path_should_be(string $path, ?string $not = null, string $expected): void
     {
-        $assert = [Assert::class, $not !== null ? 'notSame' : 'same'];
-        assert(is_callable($assert));
+        $assert = Assert::that($this->getValue($path));
 
-        $assert($this->getValue($path), 'true' === $expected);
+        if ($not !== null) {
+            $assert = $assert->not();
+        }
+
+        $assert->same($expected === 'true');
     }
 
     /**
@@ -107,10 +123,13 @@ class Context implements BehatContext
      */
     final public function the_json_path_should_be_null(string $path, ?string $not = null): void
     {
-        $assert = [Assert::class, $not !== null ? 'notNull' : 'null'];
-        assert(is_callable($assert));
+        $assert = Assert::that($this->getValue($path));
 
-        $assert($this->getValue($path));
+        if ($not !== null) {
+            $assert = $assert->not();
+        }
+
+        $assert->null();
     }
 
     /**
@@ -119,10 +138,13 @@ class Context implements BehatContext
      */
     final public function the_json_path_should_be_empty(string $path, ?string $not = null): void
     {
-        $assert = [Assert::class, $not !== null ? 'notEmpty' : 'isEmpty'];
-        assert(is_callable($assert));
+        $assert = Assert::that($this->getValue($path));
 
-        $assert($this->getValue($path));
+        if ($not !== null) {
+            $assert = $assert->not();
+        }
+
+        $assert->empty();
     }
 
     /**
@@ -131,17 +153,23 @@ class Context implements BehatContext
      */
     final public function the_json_path_contains(string $path, ?string $not = null, $expected): void
     {
-        $assert = [Assert::class, $not !== null ? 'notContains' : 'contains'];
-        assert(is_callable($assert));
+        $assert = Assert::that($this->getValue($path));
 
-        $assert($this->getValue($path), $expected);
+        if ($not !== null) {
+            $assert = $assert->not();
+        }
+
+        $assert->contains($expected);
     }
 
     /** @Then in the json, :path collection should contain an element with :value equal to :expected */
     final public function the_json_path_collection_contains(string $path, string $value, $expected): void
     {
         $collection = $this->getValue($path);
-        Assert::isIterable($collection);
+
+        Assert::that($collection)
+            ->isTraversable()
+        ;
 
         foreach ($collection as $element) {
             if ($expected === $this->accessor->getValue($element, $value)) {
@@ -168,14 +196,17 @@ class Context implements BehatContext
      */
     final public function should_be_an_array(?string $path = null): void
     {
-        Assert::isArray($this->getValue($path));
+        Assert::that($this->getValue($path))
+            ->isArray()
+        ;
     }
 
     /** @Then in the json, :path should be a valid json encoded string */
     final public function the_json_path_should_be_a_valid_json_encoded_string(string $path): void
     {
-        json_decode($this->getValue($path));
-        Assert::same(json_last_error(), JSON_ERROR_NONE);
+        Assert::that($this->getValue($path))
+            ->isJsonString()
+        ;
     }
 
     /**
@@ -193,7 +224,27 @@ class Context implements BehatContext
 
         [$contentType,] = explode(';', $this->history->getLastResponse()->getHeaderLine('Content-Type'), 2);
 
-        Assert::same(JSON_ERROR_NONE, json_last_error(), sprintf('The response is not a valid json (%s)', json_last_error_msg()));
-        Assert::oneOf($contentType, $this->contentTypes, 'The response should have a valid content-type (expected one of %2$s, got %1$s)');
+        Assert::that(json_last_error())
+            ->same(JSON_ERROR_NONE, sprintf('The response is not a valid json (%s)', json_last_error_msg()))
+        ;
+
+        Assert::that($contentType)
+            ->choice($this->contentTypes, 'The response should have a valid content-type (expected one of %2$s, got %1$s)')
+        ;
+    }
+
+    /**
+     *  @Then in the json, :path should match :pattern
+     *  @Then in the json, :path should :not match :pattern
+     */
+    final public function the_json_path_should_match(string $path, ?string $not = null, string $pattern): void
+    {
+        $assert = Assert::that($this->getValue($path));
+
+        if ($not !== null) {
+            $assert = $assert->not();
+        }
+
+        $assert->regex($pattern);
     }
 }
