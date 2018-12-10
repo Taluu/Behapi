@@ -1,6 +1,6 @@
 parameters:
   level: max
-  paths: 
+  paths:
     - src
 
   ignoreErrors:
@@ -16,7 +16,7 @@ parameters:
     # phpstan doesn't detect well assertions with function_exists,
     # method_exists and class_exists, so we have to ignore them...
     - '{^Function is_countable not found.$}'
-  
+
   # needed because in php 7.3, the ignore pattern on is_countable is reported as "error"
   reportUnmatchedIgnoredErrors: false
 
