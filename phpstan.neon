@@ -20,3 +20,4 @@ parameters:
 
   includes:
     - vendor/phpstan/phpstan-strict-rules/rules.neon
+    - vendor/phpstan/phpstan-beberlei-assert/extension.neon
