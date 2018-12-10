@@ -1,10 +1,15 @@
 <?php declare(strict_types=1);
 namespace Behapi\Json;
 
-use Webmozart\Assert\Assert;
+use Symfony\Component\PropertyAccess\PropertyAccessor;
+
+use Behapi\Assert\Assert;
 
 trait EachInCollectionTrait
 {
+    /** @var PropertyAccessor */
+    private $accessor;
+
     abstract protected function getValue(?string $path);
 
     /**
@@ -13,10 +18,16 @@ trait EachInCollectionTrait
      **/
     final public function the_json_path_elements_in_collection_should_have_a_property(string $path, ?string $not = null, string $property): void
     {
-        $assert = [Assert::class, $not !== null ? 'allPropertyNotExists' : 'allPropertyExists'];
-        assert(is_callable($assert));
+        $assert = Assert::that($this->getValue(empty($path) ? null : $path));
 
-        $assert($this->getValue(empty($path) ? null : $path), $property);
+        if ($not !== null) {
+            $assert = $assert->not();
+        }
+
+        $assert
+            ->all()
+            ->propertyExists($property)
+        ;
     }
 
     /**
@@ -26,14 +37,22 @@ trait EachInCollectionTrait
     final public function the_json_each_elements_in_collection_should_be_equal_to(string $path, string $property, ?string $not = null, string $expected): void
     {
         $values = $this->getValue(empty($path) ? null : $path);
-        Assert::isIterable($values);
 
-        $assert = [Assert::class, $not !== null ? 'notSame' : 'same'];
-        assert(is_callable($assert));
+        Assert::that($values)
+            ->isTraversable()
+        ;
 
-        foreach ($values as $element) {
-            $assert($this->accessor->getValue($element, $property), $expected);
+        $values = array_map(function ($value) use ($property) { return $this->accessor->getValue($value, $property); }, $values);
+
+        $assert = Assert::that($values)
+            ->all()
+        ;
+
+        if ($not !== null) {
+            $assert = $assert->not();
         }
+
+        $assert->same($expected);
     }
 
     /**
@@ -43,14 +62,23 @@ trait EachInCollectionTrait
     final public function the_json_each_elements_in_collection_should_be_bool(string $path, string $property, ?string $not = null, string $expected): void
     {
         $values = $this->getValue(empty($path) ? null : $path);
-        Assert::isIterable($values);
 
-        $assert = [Assert::class, $not !== null ? 'notSame' : 'same'];
-        assert(is_callable($assert));
+        Assert::that($values)
+            ->isTraversable()
+        ;
 
-        foreach ($values as $element) {
-            $assert($this->accessor->getValue($element, $property), $expected === 'true');
+        $values = array_map(function ($value) use ($property) { return $this->accessor->getValue($value, $property); }, $values);
+
+        $assert = Assert::that($values)
+            ->all()
+            ->boolean()
+        ;
+
+        if ($not !== null) {
+            $assert = $assert->not();
         }
+
+        $assert->same($expected === 'true');
     }
 
     /**
@@ -60,14 +88,23 @@ trait EachInCollectionTrait
     final public function the_json_each_elements_in_collection_should_be_equal_to_int(string $path, string $property, ?string $not = null, int $expected): void
     {
         $values = $this->getValue(empty($path) ? null : $path);
-        Assert::isIterable($values);
 
-        $assert = [Assert::class, $not !== null ? 'notSame' : 'same'];
-        assert(is_callable($assert));
+        Assert::that($values)
+            ->isTraversable()
+        ;
 
-        foreach ($values as $element) {
-            $assert($this->accessor->getValue($element, $property), $expected);
+        $values = array_map(function ($value) use ($property) { return $this->accessor->getValue($value, $property); }, $values);
+
+        $assert = Assert::that($values)
+            ->all()
+            ->integer()
+        ;
+
+        if ($not !== null) {
+            $assert = $assert->not();
         }
+
+        $assert->same($expected);
     }
 
     /**
@@ -77,13 +114,21 @@ trait EachInCollectionTrait
     final public function the_json_each_elements_in_collection_should_contain(string $path, string $property, ?string $not = null, string $expected): void
     {
         $values = $this->getValue(empty($path) ? null : $path);
-        Assert::isIterable($values);
 
-        $assert = [Assert::class, $not !== null ? 'notSame' : 'same'];
-        assert(is_callable($assert));
+        Assert::that($values)
+            ->isTraversable()
+        ;
 
-        foreach ($values as $element) {
-            $assert($this->accessor->getValue($element, $property), $expected);
+        $values = array_map(function ($value) use ($property) { return $this->accessor->getValue($value, $property); }, $values);
+
+        $assert = Assert::that($values)
+            ->all()
+        ;
+
+        if ($not !== null) {
+            $assert = $assert->not();
         }
+
+        $assert->contains($expected);
     }
 }

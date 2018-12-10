@@ -1,7 +1,7 @@
 <?php declare(strict_types=1);
 namespace Behapi\Json;
 
-use Webmozart\Assert\Assert;
+use Behapi\Assert\Assert;
 
 trait CountTrait
 {
@@ -13,10 +13,10 @@ trait CountTrait
      */
     final public function the_json_collection_should_have_at_least_elements(?string $path = null, int $count): void
     {
-        $value = $this->getValue($path);
-
-        Assert::isCountable($value);
-        Assert::minCount($value, $count);
+        Assert::that($this->getValue($path))
+            ->isCountable()
+            ->minCount($count)
+        ;
     }
 
     /**
@@ -25,10 +25,10 @@ trait CountTrait
      */
     final public function the_json_path_should_have_elements(?string $path = null, int $count): void
     {
-        $value = $this->getValue($path);
-
-        Assert::isCountable($value);
-        Assert::count($value, $count);
+        Assert::that($this->getValue($path))
+            ->isCountable()
+            ->count($count)
+        ;
     }
 
     /**
@@ -37,9 +37,9 @@ trait CountTrait
      */
     final public function the_json_path_should_have_at_most_elements(?string $path = null, int $count): void
     {
-        $value = $this->getValue($path);
-
-        Assert::isCountable($value);
-        Assert::maxCount($value, $count);
+        Assert::that($this->getValue($path))
+            ->isCountable()
+            ->maxCount($count)
+        ;
     }
 }

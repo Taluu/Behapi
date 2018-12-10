@@ -101,7 +101,7 @@ abstract class Assertion extends Beberlei
      */
     public static function minCount($countable, $count, $message = null, $propertyPath = null)
     {
-        if ($count < \count($countable)) {
+        if ($count > \count($countable)) {
             $message = \sprintf(
                 static::generateMessage($message ?: 'List should have at least %d elements, but only has %d elements.'),
                 static::stringify($count),
@@ -126,7 +126,7 @@ abstract class Assertion extends Beberlei
      */
     public static function maxCount($countable, $count, $message = null, $propertyPath = null)
     {
-        if ($count > \count($countable)) {
+        if ($count < \count($countable)) {
             $message = \sprintf(
                 static::generateMessage($message ?: 'List should have no more than %d elements, but has %d elements.'),
                 static::stringify($count),
