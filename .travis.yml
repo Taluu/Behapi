@@ -6,6 +6,11 @@ php:
     - 7.2
     - 7.3
 
+branches:
+    only:
+        - master
+        - /^v\d+\.\d+(\.\d+)?(-\S*)?$/
+
 install: travis_retry composer install
 script: echo 'OK' #no phpunit currently... see #8
 
