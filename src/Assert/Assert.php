@@ -8,6 +8,7 @@ use Assert\Assert as Beberlei;
  * class to satisfy our needs...
  *
  * @link https://github.com/beberlei/assert/pull/265
+ * @link https://github.com/beberlei/assert/pull/272
  */
 abstract class Assert extends Beberlei
 {
