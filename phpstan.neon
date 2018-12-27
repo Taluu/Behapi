@@ -9,17 +9,6 @@ parameters:
     # and stuff like that for (almost) every line.
     - '{^Cannot call method arrayNode\\() on Symfony\Component\Config\Definition\Builder\NodeParentInterface|null.$}'
 
-    # Waiting for https://github.com/beberlei/assert/pull/264 to be merged
-    # and released, so that this ignore pattern can be removed.
-    - '{^Parameter #1 \$format of function sprintf expects string, string|null given.$}'
-
-    # phpstan doesn't detect well assertions with function_exists,
-    # method_exists and class_exists, so we have to ignore them...
-    - '{^Function is_countable not found.$}'
-
-  # needed because in php 7.3, the ignore pattern on is_countable is reported as "error"
-  reportUnmatchedIgnoredErrors: false
-
   includes:
     - vendor/phpstan/phpstan-strict-rules/rules.neon
     - vendor/phpstan/phpstan-beberlei-assert/extension.neon
