@@ -1,7 +1,7 @@
 <?php declare(strict_types=1);
 namespace Behapi\Assert;
 
-use Assert\Assert as Beberlei;
+use Assert as Beberlei;
 
 /**
  * While the PR in links are not merged and released, let's use this assertion
@@ -10,11 +10,11 @@ use Assert\Assert as Beberlei;
  * @link https://github.com/beberlei/assert/pull/265
  * @link https://github.com/beberlei/assert/pull/272
  */
-abstract class Assert extends Beberlei
+abstract class Assert extends Beberlei\Assert
 {
     protected static $assertionClass = Assertion::class;
 
-    public static function that($value, $defaultMessage = null, $defaultPropertyPath = null)
+    public static function that($value, $defaultMessage = null, ?string $defaultPropertyPath = null): Beberlei\AssertionChain
     {
         $assertionChain = new AssertionChain($value, $defaultMessage, $defaultPropertyPath);
 

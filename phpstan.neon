@@ -9,6 +9,11 @@ parameters:
     # and stuff like that for (almost) every line.
     - '{^Cannot call method arrayNode\\() on Symfony\Component\Config\Definition\Builder\NodeParentInterface|null.$}'
 
+    # have to ignore it until php 7.4, which introduces (co)vrariance on arguments
+    # and return hint, as beberlei/assert introduced a tiny bc break making it
+    # impossible to properly extend its classes until php 7.4
+    - '{^Call to an undefined method Assert\\AssertionChain::not().}'
+
   includes:
     - vendor/phpstan/phpstan-strict-rules/rules.neon
     - vendor/phpstan/phpstan-beberlei-assert/extension.neon

@@ -1,7 +1,7 @@
 <?php declare(strict_types=1);
 namespace Behapi\Assert;
 
-use Assert\AssertionChain as Beberlei;
+use Assert as Beberlei;
 
 /**
  * PR needed while some PRs are not merged and released on upstream. :}
@@ -10,7 +10,7 @@ use Assert\AssertionChain as Beberlei;
  *
  * @link https://github.com/beberlei/assert/pull/265
  */
-class AssertionChain extends Beberlei
+class AssertionChain extends Beberlei\AssertionChain
 {
     /**
      * Perform a negative assertion.
@@ -19,7 +19,7 @@ class AssertionChain extends Beberlei
      */
     private $not = false;
 
-    public function __call($methodName, $args)
+    public function __call($methodName, $args): Beberlei\AssertionChain
     {
         if ($this->not && strtolower(substr($methodName, 0, 3)) !== 'not') {
             $methodName = "not{$methodName}";
@@ -30,10 +30,8 @@ class AssertionChain extends Beberlei
 
     /**
      * Switch chain into negative mode.
-     *
-     * @return AssertionChain
      */
-    public function not()
+    public function not(): self
     {
         $this->not = true;
         return $this;
