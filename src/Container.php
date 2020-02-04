@@ -5,9 +5,6 @@ use Psr\Container\ContainerInterface;
 
 use Behat\Behat\HelperContainer\Exception\ServiceNotFoundException;
 
-use Symfony\Component\EventDispatcher\EventDispatcher;
-use Symfony\Component\EventDispatcher\EventDispatcherInterface;
-
 use Http\Message\StreamFactory;
 use Http\Message\MessageFactory;
 
@@ -15,7 +12,6 @@ use Http\Discovery\UriFactoryDiscovery;
 use Http\Discovery\StreamFactoryDiscovery;
 use Http\Discovery\MessageFactoryDiscovery;
 
-use Http\Client\Common\PluginClient;
 use Http\Client\Common\Plugin\BaseUriPlugin;
 use Http\Client\Common\Plugin\HistoryPlugin;
 use Http\Client\Common\Plugin\ContentLengthPlugin;
