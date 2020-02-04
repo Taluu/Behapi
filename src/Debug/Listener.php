@@ -7,7 +7,6 @@ use Psr\Http\Message\ResponseInterface;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 
 use Behat\Testwork\Tester\Result\TestResult;
-use Behat\Testwork\Tester\Result\TestResults;
 use Behat\Testwork\EventDispatcher\Event\AfterTested;
 
 use Behat\Behat\EventDispatcher\Event\ExampleTested;
@@ -18,7 +17,6 @@ use Behat\Gherkin\Node\TaggedNodeInterface;
 
 use Behapi\Debug\Introspection\Adapter;
 
-use Behapi\HttpHistory\Tuple as HttpTuple;
 use Behapi\HttpHistory\History as HttpHistory;
 
 use function method_exists;
@@ -80,7 +78,7 @@ final class Listener implements EventSubscriberInterface
             return;
         }
 
-        foreach ($this->history as $http) {
+        foreach ($this->history->getTuples() as $http) {
             $this->debug($http->getRequest());
 
             $response = $http->getResponse();
