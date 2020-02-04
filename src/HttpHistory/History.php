@@ -5,10 +5,10 @@ use IteratorAggregate;
 
 use Psr\Http\Message\RequestInterface;
 use Psr\Http\Message\ResponseInterface;
+use Psr\Http\Client\ClientExceptionInterface;
 
 use Http\Client\Common\Plugin\Journal;
 
-use Http\Client\Exception;
 use Http\Client\Exception\HttpException;
 
 use function end;
@@ -17,21 +17,20 @@ use function count;
 
 final class History implements Journal, IteratorAggregate
 {
-    /** @var Tuple[] */
+    /** @var list<Tuple> */
     private $tuples = [];
 
-    /** {@inheritDoc} */
-    public function addSuccess(RequestInterface $request, ResponseInterface $response)
+    public function addSuccess(RequestInterface $request, ResponseInterface $response): void
     {
         $this->tuples[] = new Tuple($request, $response);
     }
 
-    /** {@inheritDoc} */
-    public function addFailure(RequestInterface $request, Exception $exception)
+    public function addFailure(RequestInterface $request, ClientExceptionInterface $exception): void
     {
         $response = $exception instanceof HttpException
             ? $exception->getResponse()
-            : null;
+            : null
+        ;
 
         $this->tuples[] = new Tuple($request, $response);
     }
@@ -42,7 +41,6 @@ final class History implements Journal, IteratorAggregate
             throw new NoResponse;
         }
 
-        /** @var Tuple $tuple */
         $tuple = end($this->tuples);
         reset($this->tuples);
 
@@ -55,8 +53,7 @@ final class History implements Journal, IteratorAggregate
         return $response;
     }
 
-    /** @return iterable<Tuple> */
-    public function getIterator(): iterable
+    public function getIterator()
     {
         yield from $this->tuples;
 

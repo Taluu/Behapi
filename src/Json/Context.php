@@ -1,7 +1,6 @@
 <?php declare(strict_types=1);
 namespace Behapi\Json;
 
-use stdClass;
 use DateTimeImmutable;
 
 use Throwable;
@@ -17,14 +16,12 @@ use Behapi\Assert\Assert;
 use Behapi\HttpHistory\History as HttpHistory;
 
 use function sprintf;
-use function preg_match;
 
 use function json_decode;
 use function json_last_error;
 use function json_last_error_msg;
 
 use const JSON_ERROR_NONE;
-use const PREG_OFFSET_CAPTURE;
 
 class Context implements BehatContext
 {
