@@ -92,9 +92,3 @@ features and integration tests. Special thanks goes to
 [@lunika](https://github.com/lunika), [@rgazelot](https://github.com/rgazelot)
 and [@krichprollsch](https://github.com/krichprollsch), who helped conceived
 this extension, and also pushed me to open-source it.
-
-Badges
-------
-[![Scrutinizer Code Quality](https://scrutinizer-ci.com/g/Taluu/Behapi/badges/quality-score.png?b=master)](https://scrutinizer-ci.com/g/Taluu/Behapi/?branch=master)
-[![Build Status](https://scrutinizer-ci.com/g/Taluu/Behapi/badges/build.png?b=master)](https://scrutinizer-ci.com/g/Taluu/Behapi/build-status/master)
-[![Build Status](https://travis-ci.org/Taluu/Behapi.svg?branch=master)](https://travis-ci.org/Taluu/Behapi)
