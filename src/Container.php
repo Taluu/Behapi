@@ -5,19 +5,17 @@ use Psr\Container\ContainerInterface;
 
 use Behat\Behat\HelperContainer\Exception\ServiceNotFoundException;
 
-use Http\Message\StreamFactory;
-use Http\Message\MessageFactory;
-
-use Http\Discovery\UriFactoryDiscovery;
-use Http\Discovery\StreamFactoryDiscovery;
-use Http\Discovery\MessageFactoryDiscovery;
-
 use Http\Client\Common\Plugin\BaseUriPlugin;
 use Http\Client\Common\Plugin\HistoryPlugin;
 use Http\Client\Common\Plugin\ContentLengthPlugin;
 
 use Behapi\Http\PluginClientBuilder;
 use Behapi\HttpHistory\History as HttpHistory;
+
+use Http\Discovery\Psr17FactoryDiscovery;
+
+use Psr\Http\Message\RequestFactoryInterface;
+use Psr\Http\Message\StreamFactoryInterface;
 
 use function bin2hex;
 use function in_array;
@@ -38,20 +36,18 @@ final class Container implements ContainerInterface
         $this->services[HttpHistory::class] = $history;
     }
 
-    /** {@inheritDoc} */
     public function has($id)
     {
         static $services = [
             HttpHistory::class,
-            StreamFactory::class,
-            MessageFactory::class,
             PluginClientBuilder::class,
+            StreamFactoryInterface::class,
+            RequestFactoryInterface::class,
         ];
 
         return in_array($id, $services, true);
     }
 
-    /** {@inheritDoc} */
     public function get($id)
     {
         if (array_key_exists($id, $this->services)) {
@@ -62,11 +58,11 @@ final class Container implements ContainerInterface
             case PluginClientBuilder::class:
                 return $this->services[$id] = $this->getPluginClientBuilder();
 
-            case MessageFactory::class:
-                return $this->services[$id] = MessageFactoryDiscovery::find();
+            case RequestFactoryInterface::class:
+                return $this->services[$id] = Psr17FactoryDiscovery::findRequestFactory();
 
-            case StreamFactory::class:
-                return $this->services[$id] = StreamFactoryDiscovery::find();
+            case StreamFactoryInterface::class:
+                return $this->services[$id] = Psr17FactoryDiscovery::findStreamFactory();
         }
 
         throw new ServiceNotFoundException("Service {$id} is not available", $id);
@@ -75,7 +71,8 @@ final class Container implements ContainerInterface
     private function getPluginClientBuilder(): PluginClientBuilder
     {
         $builder = new PluginClientBuilder;
-        $uriFactory = UriFactoryDiscovery::find();
+        $uriFactory = Psr17FactoryDiscovery::findUrlFactory();
+
         $baseUri = $uriFactory->createUri($this->baseUrl);
 
         assert($this->services[HttpHistory::class] instanceof HttpHistory);

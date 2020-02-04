@@ -1,17 +1,17 @@
 <?php declare(strict_types=1);
 namespace Behapi\Http;
 
-use Http\Message\StreamFactory;
-use Http\Message\MessageFactory;
+use Psr\Http\Message\RequestFactoryInterface;
+use Psr\Http\Message\StreamFactoryInterface;
 
 trait Builder
 {
     /** @var PluginClientBuilder */
     private $builder;
 
-    /** @var StreamFactory */
+    /** @var StreamFactoryInterface */
     private $streamFactory;
 
-    /** @var MessageFactory */
-    private $messageFactory;
+    /** @var RequestFactoryInterface */
+    private $requestFactory;
 }

@@ -11,10 +11,10 @@ use Behat\Gherkin\Node\TableNode;
 use Http\Client\HttpClient;
 use Http\Client\HttpAsyncClient;
 
-use Http\Message\StreamFactory;
-use Http\Message\MessageFactory;
-
 use Http\Discovery\HttpClientDiscovery;
+
+use Psr\Http\Message\RequestFactoryInterface;
+use Psr\Http\Message\StreamFactoryInterface;
 
 use function trim;
 use function is_array;
@@ -27,17 +27,17 @@ class RequestContext implements Context
     /** @var ?RequestInterface */
     private $request;
 
-    /** @var mixed[] Query args to add */
-    private $query;
+    /** @var array<string, mixed> Query args to add */
+    private $query = [];
 
     /** @var HttpClient|HttpAsyncClient */
     private $client;
 
-    public function __construct(PluginClientBuilder $builder, StreamFactory $streamFactory, MessageFactory $messageFactory)
+    public function __construct(PluginClientBuilder $builder, StreamFactoryInterface $streamFactory, RequestFactoryInterface $requestFactory)
     {
         $this->builder = $builder;
         $this->streamFactory = $streamFactory;
-        $this->messageFactory = $messageFactory;
+        $this->requestFactory = $requestFactory;
 
         $this->client = HttpClientDiscovery::find();
     }
@@ -48,7 +48,7 @@ class RequestContext implements Context
         $url = trim($url);
 
         $this->query = [];
-        $this->request = $this->messageFactory->createRequest(strtoupper($method), $url);
+        $this->request = $this->requestFactory->createRequest(strtoupper($method), $url);
 
         // let's set a default content-type
         $this->set_the_content_type($this->getDefaultContentType());
@@ -61,14 +61,17 @@ class RequestContext implements Context
      *
      * Shortcut for `When I create a X request to Then send the request`
      */
-    final public function send_a_request($method, $url): void
+    final public function send_a_request(string $method, string $url): void
     {
         $this->create_a_request($method, $url);
         $this->send_request();
     }
 
-    /** @When I add/set the value :value to the parameter :parameter */
-    final public function add_a_parameter(string $parameter, string $value): void
+    /**
+     * @param mixed $value
+     * @When I add/set the value :value to the parameter :parameter
+     */
+    final public function add_a_parameter(string $parameter, $value): void
     {
         if (!isset($this->query[$parameter])) {
             $this->query[$parameter] = $value;
