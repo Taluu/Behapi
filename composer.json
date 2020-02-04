@@ -25,16 +25,17 @@
 
         "symfony/property-access": "^3.1 || ^4.0 || ^5.0",
 
+        "psr/http-client": "^1.0",
+        "psr/http-client-implementation": "^1.0",
+
         "psr/http-message": "^1.0",
         "psr/http-message-implementation": "^1.0",
 
-        "php-http/httplug": "^1.0",
-        "php-http/discovery": "^1.0",
-        "php-http/client-common": "^1.4",
-        "php-http/message-factory": "^1.0",
+        "psr/http-factory": "^1.0",
+        "psr/http-factory-implementation": "^1.0",
 
-        "php-http/client-implementation": "^1.0",
-        "php-http/message-factory-implementation": "^1.0"
+        "php-http/discovery": "^1.0",
+        "php-http/client-common": "^2.0"
     },
 
     "suggest": {
@@ -57,8 +58,8 @@
         "coduo/php-matcher": "^2.3 || ^3.0",
 
         "php-http/message": "^1.0",
-        "php-http/mock-client": "^0.3",
 
+        "symfony/http-client": "^4.3 || ^5.0",
         "symfony/var-dumper": "^2.8 || ^3.3 || ^4.0",
 
         "phpstan/phpstan": "^0.10",
