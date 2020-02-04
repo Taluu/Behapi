@@ -19,8 +19,6 @@ use function http_build_query;
 
 class RequestContext implements Context
 {
-    use Builder;
-
     /** @var ?RequestInterface */
     private $request;
 
@@ -29,6 +27,15 @@ class RequestContext implements Context
 
     /** @var ClientInterface */
     private $client;
+
+    /** @var PluginClientBuilder */
+    private $builder;
+
+    /** @var StreamFactoryInterface */
+    private $streamFactory;
+
+    /** @var RequestFactoryInterface */
+    private $requestFactory;
 
     public function __construct(PluginClientBuilder $builder, StreamFactoryInterface $streamFactory, RequestFactoryInterface $requestFactory)
     {
