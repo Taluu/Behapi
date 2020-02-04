@@ -1,7 +1,7 @@
 <?php declare(strict_types=1);
 namespace Behapi\HttpHistory;
 
-use IteratorAggregate;
+use Generator;
 
 use Psr\Http\Message\RequestInterface;
 use Psr\Http\Message\ResponseInterface;
@@ -15,7 +15,7 @@ use function end;
 use function reset;
 use function count;
 
-final class History implements Journal, IteratorAggregate
+final class History implements Journal
 {
     /** @var list<Tuple> */
     private $tuples = [];
@@ -53,7 +53,7 @@ final class History implements Journal, IteratorAggregate
         return $response;
     }
 
-    public function getIterator()
+    public function getTuples(): Generator
     {
         yield from $this->tuples;
 
