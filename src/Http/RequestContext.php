@@ -3,18 +3,15 @@ namespace Behapi\Http;
 
 use RuntimeException;
 
+use Psr\Http\Client\ClientInterface;
 use Psr\Http\Message\RequestInterface;
+use Psr\Http\Message\RequestFactoryInterface;
+use Psr\Http\Message\StreamFactoryInterface;
 
 use Behat\Behat\Context\Context;
 use Behat\Gherkin\Node\TableNode;
 
-use Http\Client\HttpClient;
-use Http\Client\HttpAsyncClient;
-
 use Http\Discovery\HttpClientDiscovery;
-
-use Psr\Http\Message\RequestFactoryInterface;
-use Psr\Http\Message\StreamFactoryInterface;
 
 use function trim;
 use function is_array;
@@ -30,7 +27,7 @@ class RequestContext implements Context
     /** @var array<string, mixed> Query args to add */
     private $query = [];
 
-    /** @var HttpClient|HttpAsyncClient */
+    /** @var ClientInterface */
     private $client;
 
     public function __construct(PluginClientBuilder $builder, StreamFactoryInterface $streamFactory, RequestFactoryInterface $requestFactory)
