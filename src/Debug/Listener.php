@@ -48,8 +48,7 @@ final class Listener implements EventSubscriberInterface
         $this->status = $status;
     }
 
-    /** {@inheritDoc} */
-    public static function getSubscribedEvents()
+    public static function getSubscribedEvents(): array
     {
         return [
             ExampleTested::AFTER => 'debugAfter',
@@ -101,6 +100,11 @@ final class Listener implements EventSubscriberInterface
         }
     }
 
+    /**
+     * @psalm-suppress InvalidReturnType
+     * @psalm-suppress InvalidReturnStatement
+     * @psalm-suppress UndefinedDocblockClass
+     */
     private function hasTag(ScenarioLikeTested $event, string $tag): bool
     {
         $node = $event->getNode();

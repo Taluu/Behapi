@@ -53,6 +53,7 @@ final class History implements Journal
         return $response;
     }
 
+    /** @return Generator<int, Tuple, mixed, int> */
     public function getTuples(): Generator
     {
         yield from $this->tuples;

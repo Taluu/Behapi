@@ -19,19 +19,19 @@ final class CliController implements Controller
         $this->status = $status;
     }
 
-    /** {@inheritDoc} */
-    public function configure(Command $command)
+    public function configure(Command $command): void
     {
         $command
             ->addOption('behapi-debug', null, InputOption::VALUE_NONE, 'Activates the debug mode for behapi');
     }
 
-    /** {@inheritDoc} */
     public function execute(InputInterface $input, OutputInterface $output)
     {
         $debug = $input->getOption('behapi-debug');
         assert(is_bool($debug));
 
         $this->status->setEnabled($debug);
+
+        return null;
     }
 }
