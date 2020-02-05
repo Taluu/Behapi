@@ -17,9 +17,7 @@ use Http\Discovery\Psr17FactoryDiscovery;
 use Psr\Http\Message\RequestFactoryInterface;
 use Psr\Http\Message\StreamFactoryInterface;
 
-use function bin2hex;
 use function in_array;
-use function random_bytes;
 use function array_key_exists;
 
 final class Container implements ContainerInterface
@@ -30,6 +28,13 @@ final class Container implements ContainerInterface
     /** @var string BaseURL for api requests */
     private $baseUrl;
 
+    private const SERVICES = [
+        HttpHistory::class,
+        PluginClientBuilder::class,
+        StreamFactoryInterface::class,
+        RequestFactoryInterface::class,
+    ];
+
     public function __construct(HttpHistory $history, string $baseUrl)
     {
         $this->baseUrl = $baseUrl;
@@ -38,14 +43,7 @@ final class Container implements ContainerInterface
 
     public function has($id)
     {
-        static $services = [
-            HttpHistory::class,
-            PluginClientBuilder::class,
-            StreamFactoryInterface::class,
-            RequestFactoryInterface::class,
-        ];
-
-        return in_array($id, $services, true);
+        return in_array($id, self::SERVICES, true);
     }
 
     public function get($id)
@@ -77,10 +75,9 @@ final class Container implements ContainerInterface
 
         assert($this->services[HttpHistory::class] instanceof HttpHistory);
 
-        // use randomized strings so that these cannot be removed (safety)
-        $builder->addPlugin(bin2hex(random_bytes(10)), new ContentLengthPlugin);
-        $builder->addPlugin(bin2hex(random_bytes(10)), new BaseUriPlugin($baseUri));
-        $builder->addPlugin(bin2hex(random_bytes(10)), new HistoryPlugin($this->services[HttpHistory::class]));
+        $builder = $builder->addPlugin(new ContentLengthPlugin);
+        $builder = $builder->addPlugin(new BaseUriPlugin($baseUri));
+        $builder = $builder->addPlugin(new HistoryPlugin($this->services[HttpHistory::class]));
 
         return $builder;
     }
