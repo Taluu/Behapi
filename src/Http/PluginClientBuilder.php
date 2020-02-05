@@ -1,50 +1,62 @@
 <?php declare(strict_types=1);
 namespace Behapi\Http;
 
+use Psr\Http\Client\ClientInterface;
+
 use Http\Client\Common\Plugin;
 use Http\Client\Common\PluginClient;
 
-use function array_values;
-
+/**
+ * Build an instance of a PluginClient with a dynamic list of plugins.
+ *
+ * @author Baptiste Clavié <clavie.b@gmail.com>
+ */
 final class PluginClientBuilder
 {
-    /** @var Plugin[] */
-    private $plugins;
+    /** @var Plugin[][] List of plugins ordered by priority [priority => Plugin[]]). */
+    private $plugins = [];
 
-    /** @var ?PluginClient */
-    private $client;
+    /** @var array Array of options to give to the plugin client */
+    private $options = [];
 
-    public function addPlugin(string $name, Plugin $plugin): void
+    /** @param int $priority Priority of the plugin. The higher comes first. */
+    public function addPlugin(Plugin $plugin, int $priority = 0): self
     {
-        $this->plugins[$name] = $plugin;
-        $this->client = null;
+        $this->plugins[$priority][] = $plugin;
+
+        return $this;
     }
 
-    public function removePlugin(string $name): void
+    /** @param mixed $value */
+    public function setOption(string $name, $value): self
     {
-        unset($this->plugins[$name]);
-        $this->client = null;
+        $this->options[$name] = $value;
+
+        return $this;
     }
 
-    public function getPlugin(string $name): Plugin
+    public function removeOption(string $name): self
     {
-        if (!isset($this->plugins[$name])) {
-            throw new PluginNotFound($name);
+        unset($this->options[$name]);
+
+        return $this;
+    }
+
+    public function createClient(ClientInterface $client): PluginClient
+    {
+        $plugins = $this->plugins;
+
+        if (0 === count($plugins)) {
+            $plugins[] = [];
         }
 
-        return $this->plugins[$name];
-    }
+        krsort($plugins);
+        $plugins = array_merge(...$plugins);
 
-    public function createClient($client, array $options = []): PluginClient
-    {
-        if (null === $this->client) {
-            $this->client = new PluginClient(
-                $client,
-                array_values($this->plugins),
-                $options
-            );
-        }
-
-        return $this->client;
+        return new PluginClient(
+            $client,
+            array_values($plugins),
+            $this->options
+        );
     }
 }
