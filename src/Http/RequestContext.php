@@ -11,7 +11,7 @@ use Psr\Http\Message\StreamFactoryInterface;
 use Behat\Behat\Context\Context;
 use Behat\Gherkin\Node\TableNode;
 
-use Http\Discovery\HttpClientDiscovery;
+use Http\Discovery\Psr18ClientDiscovery;
 
 use function trim;
 use function is_array;
@@ -43,7 +43,7 @@ class RequestContext implements Context
         $this->streamFactory = $streamFactory;
         $this->requestFactory = $requestFactory;
 
-        $this->client = HttpClientDiscovery::find();
+        $this->client = Psr18ClientDiscovery::find();
     }
 
     /** @When /^I create a "(?P<method>GET|POST|PATCH|PUT|DELETE|OPTIONS|HEAD)" request to "(?P<url>.+?)"$/ */

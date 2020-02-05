@@ -19,18 +19,23 @@ final class PluginClientBuilder
     /** @var array Array of options to give to the plugin client */
     private $options = [];
 
+    /** @var ?PluginClient */
+    private $client = null;
+
     /** @param int $priority Priority of the plugin. The higher comes first. */
     public function addPlugin(Plugin $plugin, int $priority = 0): self
     {
         $this->plugins[$priority][] = $plugin;
+        $this->client = null;
 
         return $this;
     }
 
     /** @param mixed $value */
-    public function setOption(string $name, $value): self
+    public function addOption(string $name, $value): self
     {
         $this->options[$name] = $value;
+        $this->client = null;
 
         return $this;
     }
@@ -38,12 +43,20 @@ final class PluginClientBuilder
     public function removeOption(string $name): self
     {
         unset($this->options[$name]);
+        $this->client = null;
 
         return $this;
     }
 
-    public function createClient(ClientInterface $client): PluginClient
+    public function createClient(ClientInterface $httpClient): PluginClient
     {
+        static $client;
+
+        if ($client === $httpClient && $this->client !== null) {
+            return $this->client;
+        }
+
+        $client = $httpClient;
         $plugins = $this->plugins;
 
         if (0 === count($plugins)) {
@@ -53,8 +66,8 @@ final class PluginClientBuilder
         krsort($plugins);
         $plugins = array_merge(...$plugins);
 
-        return new PluginClient(
-            $client,
+        return $this->client = new PluginClient(
+            $httpClient,
             array_values($plugins),
             $this->options
         );
