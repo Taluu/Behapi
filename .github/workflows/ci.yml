@@ -17,5 +17,8 @@ jobs:
     - name: Install dependencies
       run: composer install --prefer-dist --no-progress --no-suggest
 
-    - name: PHPStan
-      run: vendor/bin/phpstan analyze
+    - name: Install Psalm
+      run: composer require --dev vimeo/psalm:dev-master@dev --no-suggest
+
+    - name: Psalm
+      run: vendor/bin/psalm --output-format=github --shepherd

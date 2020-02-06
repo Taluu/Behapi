@@ -13,6 +13,7 @@ use Symfony\Component\PropertyAccess\PropertyAccess;
 use Symfony\Component\PropertyAccess\PropertyAccessor;
 
 use Behapi\Assert\Assert;
+use Behapi\Assert\AssertionChain;
 use Behapi\HttpHistory\History as HttpHistory;
 
 use function sprintf;
@@ -32,12 +33,13 @@ class Context implements BehatContext
     /** @var HttpHistory */
     private $history;
 
-    /** @var string[] */
+    /** @var list<string> */
     private $contentTypes;
 
     /** @var PropertyAccessor */
     private $accessor;
 
+    /** @param list<string> $contentTypes */
     public function __construct(HttpHistory $history, array $contentTypes = ['application/json'])
     {
         $this->accessor = PropertyAccess::createPropertyAccessor();
@@ -63,6 +65,7 @@ class Context implements BehatContext
         $assert = Assert::that($this->accessor->isReadable($this->getValue(null), $path));
 
         if ($not !== null) {
+            assert($assert instanceof AssertionChain);
             $assert = $assert->not();
         }
 
@@ -70,6 +73,8 @@ class Context implements BehatContext
     }
 
     /**
+     * @param mixed $expected
+     *
      * @Then in the json, :path should be equal to :expected
      * @Then in the json, :path should :not be equal to :expected
      */
@@ -78,6 +83,7 @@ class Context implements BehatContext
         $assert = Assert::that($this->getValue($path));
 
         if ($not !== null) {
+            assert($assert instanceof AssertionChain);
             $assert = $assert->not();
         }
 
@@ -93,6 +99,7 @@ class Context implements BehatContext
         $assert = Assert::that($this->getValue($path));
 
         if ($not !== null) {
+            assert($assert instanceof AssertionChain);
             $assert = $assert->not();
         }
 
@@ -108,6 +115,7 @@ class Context implements BehatContext
         $assert = Assert::that($this->getValue($path));
 
         if ($not !== null) {
+            assert($assert instanceof AssertionChain);
             $assert = $assert->not();
         }
 
@@ -123,6 +131,7 @@ class Context implements BehatContext
         $assert = Assert::that($this->getValue($path));
 
         if ($not !== null) {
+            assert($assert instanceof AssertionChain);
             $assert = $assert->not();
         }
 
@@ -136,6 +145,7 @@ class Context implements BehatContext
     final public function the_json_path_should_be_empty(string $path, ?string $not = null): void
     {
         $assert = Assert::that($this->getValue($path));
+        assert($assert instanceof AssertionChain);
 
         if ($not !== null) {
             $assert = $assert->not();
@@ -145,6 +155,8 @@ class Context implements BehatContext
     }
 
     /**
+     * @param mixed $expected
+     *
      * @Then in the json, :path should contain :expected
      * @Then in the json, :path should :not contain :expected
      */
@@ -153,13 +165,18 @@ class Context implements BehatContext
         $assert = Assert::that($this->getValue($path));
 
         if ($not !== null) {
+            assert($assert instanceof AssertionChain);
             $assert = $assert->not();
         }
 
         $assert->contains($expected);
     }
 
-    /** @Then in the json, :path collection should contain an element with :value equal to :expected */
+    /**
+     * @param mixed $expected
+     *
+     * @Then in the json, :path collection should contain an element with :value equal to :expected
+     */
     final public function the_json_path_collection_contains(string $path, string $value, $expected): void
     {
         $collection = $this->getValue($path);
@@ -215,7 +232,7 @@ class Context implements BehatContext
      * overwrite it if you want to add supplementary checks or use something
      * else instead (such as Seldaek's JsonLint package).
      */
-    public function response_should_be_a_valid_json_response()
+    public function response_should_be_a_valid_json_response(): void
     {
         $this->getValue(null);
 
@@ -239,6 +256,7 @@ class Context implements BehatContext
         $assert = Assert::that($this->getValue($path));
 
         if ($not !== null) {
+            assert($assert instanceof AssertionChain);
             $assert = $assert->not();
         }
 

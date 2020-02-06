@@ -24,14 +24,16 @@ final class Behapi implements Extension
 {
     const DEBUG_INTROSPECTION_TAG = 'behapi.debug.introspection';
 
-    /** {@inheritDoc} */
-    public function getConfigKey()
+    public function getConfigKey(): string
     {
         return 'behapi';
     }
 
-    /** {@inheritDoc} */
-    public function configure(ArrayNodeDefinition $builder)
+    /**
+     * @psalm-suppress PossiblyUndefinedMethod
+     * @psalm-suppress PossiblyNullReference
+     */
+    public function configure(ArrayNodeDefinition $builder): void
     {
         $builder
             ->children()
@@ -89,13 +91,11 @@ final class Behapi implements Extension
 
     }
 
-    /** {@inheritDoc} */
-    public function initialize(ExtensionManager $extensionManager)
+    public function initialize(ExtensionManager $extensionManager): void
     {
     }
 
-    /** {@inheritDoc} */
-    public function load(ContainerBuilder $container, array $config)
+    public function load(ContainerBuilder $container, array $config): void
     {
         $container->register(HttpHistory\History::class, HttpHistory\History::class)
             ->setPublic(false)
@@ -112,8 +112,7 @@ final class Behapi implements Extension
         $this->loadContainer($container, $config);
     }
 
-    /** {@inheritDoc} */
-    public function process(ContainerBuilder $container)
+    public function process(ContainerBuilder $container): void
     {
         $dumpers = [];
 

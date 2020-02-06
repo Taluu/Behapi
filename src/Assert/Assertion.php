@@ -15,8 +15,12 @@ use Assert as Beberlei;
  */
 abstract class Assertion extends Beberlei\Assertion
 {
-    /** @return bool */
-    public static function empty($value, $message = null, ?string $propertyPath = null): bool
+    /**
+     * @param mixed $value
+     * @param string|null $message
+     * @return bool
+     */
+    public static function empty($value, ?string $message = null, ?string $propertyPath = null): bool
     {
         return parent::noContent($value, $message, $propertyPath);
     }

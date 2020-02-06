@@ -22,8 +22,7 @@ final class Listener implements EventSubscriberInterface
         $this->history = $history;
     }
 
-    /** {@inheritDoc} */
-    public static function getSubscribedEvents()
+    public static function getSubscribedEvents(): array
     {
         return [
             ExampleTested::AFTER => ['clear', -99],

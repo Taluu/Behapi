@@ -72,12 +72,13 @@ final class Container implements ContainerInterface
         $uriFactory = Psr17FactoryDiscovery::findUrlFactory();
 
         $baseUri = $uriFactory->createUri($this->baseUrl);
+        $httpHistory = $this->services[HttpHistory::class];
 
-        assert($this->services[HttpHistory::class] instanceof HttpHistory);
+        assert($httpHistory instanceof HttpHistory);
 
         $builder = $builder->addPlugin(new ContentLengthPlugin);
         $builder = $builder->addPlugin(new BaseUriPlugin($baseUri));
-        $builder = $builder->addPlugin(new HistoryPlugin($this->services[HttpHistory::class]));
+        $builder = $builder->addPlugin(new HistoryPlugin($httpHistory));
 
         return $builder;
     }

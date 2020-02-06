@@ -11,7 +11,7 @@ final class Status
     /** @var bool */
     private $enabled = false;
 
-    public function setEnabled(bool $enabled)
+    public function setEnabled(bool $enabled): void
     {
         $this->enabled = $enabled;
     }

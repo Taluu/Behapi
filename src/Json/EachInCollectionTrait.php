@@ -4,6 +4,7 @@ namespace Behapi\Json;
 use Symfony\Component\PropertyAccess\PropertyAccessor;
 
 use Behapi\Assert\Assert;
+use Behapi\Assert\AssertionChain;
 
 trait EachInCollectionTrait
 {
@@ -21,6 +22,7 @@ trait EachInCollectionTrait
         $assert = Assert::that($this->getValue(empty($path) ? null : $path));
 
         if ($not !== null) {
+            assert($assert instanceof AssertionChain);
             $assert = $assert->not();
         }
 
@@ -42,13 +44,23 @@ trait EachInCollectionTrait
             ->isTraversable()
         ;
 
-        $values = array_map(function ($value) use ($property) { return $this->accessor->getValue($value, $property); }, $values);
+        $values = array_map(
+            /**
+             * @param mixed $value
+             * @return mixed
+             */
+            function ($value) use ($property) {
+                return $this->accessor->getValue($value, $property);
+            },
+            $values
+        );
 
         $assert = Assert::that($values)
             ->all()
         ;
 
         if ($not !== null) {
+            assert($assert instanceof AssertionChain);
             $assert = $assert->not();
         }
 
@@ -67,7 +79,16 @@ trait EachInCollectionTrait
             ->isTraversable()
         ;
 
-        $values = array_map(function ($value) use ($property) { return $this->accessor->getValue($value, $property); }, $values);
+        $values = array_map(
+            /**
+             * @param mixed $value
+             * @return mixed
+             */
+            function ($value) use ($property) {
+                return $this->accessor->getValue($value, $property);
+            },
+            $values
+        );
 
         $assert = Assert::that($values)
             ->all()
@@ -75,6 +96,7 @@ trait EachInCollectionTrait
         ;
 
         if ($not !== null) {
+            assert($assert instanceof AssertionChain);
             $assert = $assert->not();
         }
 
@@ -93,7 +115,16 @@ trait EachInCollectionTrait
             ->isTraversable()
         ;
 
-        $values = array_map(function ($value) use ($property) { return $this->accessor->getValue($value, $property); }, $values);
+        $values = array_map(
+            /**
+             * @param mixed $value
+             * @return mixed
+             */
+            function ($value) use ($property) {
+                return $this->accessor->getValue($value, $property);
+            },
+            $values
+        );
 
         $assert = Assert::that($values)
             ->all()
@@ -101,6 +132,7 @@ trait EachInCollectionTrait
         ;
 
         if ($not !== null) {
+            assert($assert instanceof AssertionChain);
             $assert = $assert->not();
         }
 
@@ -119,13 +151,23 @@ trait EachInCollectionTrait
             ->isTraversable()
         ;
 
-        $values = array_map(function ($value) use ($property) { return $this->accessor->getValue($value, $property); }, $values);
+        $values = array_map(
+            /**
+             * @param mixed $value
+             * @return mixed
+             */
+            function ($value) use ($property) {
+                return $this->accessor->getValue($value, $property);
+            },
+            $values
+        );
 
         $assert = Assert::that($values)
             ->all()
         ;
 
         if ($not !== null) {
+            assert($assert instanceof AssertionChain);
             $assert = $assert->not();
         }
 
