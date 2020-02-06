@@ -95,4 +95,4 @@ this extension, and also pushed me to open-source it.
 
 Badges
 ------
-![Psalm Shepherd](https://shepherd.dev/github/Taluu/Behapi/coverage.svg)
+[![Type Coverage](https://shepherd.dev/github/Taluu/Behapi/coverage.svg)](https://shepherd.dev/github/Taluu/Behapi)
