@@ -35,7 +35,9 @@
         "psr/http-factory-implementation": "^1.0",
 
         "php-http/discovery": "^1.0",
-        "php-http/client-common": "^2.0"
+        "php-http/client-common": "^2.0",
+
+        "container-interop/container-interop": "^1.0"
     },
 
     "suggest": {
