@@ -2,7 +2,7 @@ Behapi
 ======
 Behat extension to help write describe features related to HTTP APIs.
 
-PHP 7.1, Behat 3.5 and a discoverable php-http client are required to make
+PHP 7.3, Behat 3.5 and a discoverable php-http client are required to make
 this extension work.
 
 Installing this extension requires you to require `taluu/behapi` and an
@@ -10,6 +10,11 @@ implementation of a http client (providing
 `psr/http-client-implementation ^1.0`,
 `psr/http-factory-implementation ^1.0` and
 `psr/http-message-implementation ^1.0`).
+
+This still requires the interop container, while Behat doesn't have 1st class
+support for the psr-11.
+
+You can find some examples on the `examples/` directory.
 
 Howto
 -----
