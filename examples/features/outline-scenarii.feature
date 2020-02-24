@@ -1,5 +1,5 @@
 @http @rest @api
-Feature: Do some more tests
+Feature: Do some more tests on outline scenarii
 
 Background: Test with background
   When I send a "GET" request to "/204"
