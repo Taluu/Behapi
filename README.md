@@ -69,9 +69,8 @@ Some services are provided to be injected in contexts, which are the following:
 compatible with behat's auto-wiring feature.
 
 In order to enable the Json assertions, you need to use the
-`Behapi\Context\Json` context. If you want to add some other json assertions,
-extend the `Behapi\Json\Context` class. Note that if you use the json context,
-you should have used the client provided by the client builder used in the
+`Behapi\Context\Json` context. Note that if you use the json context, you
+should have used the client provided by the client builder used in the
 `Behapi\Http\RequestContext` context.
 
 If you need to play with the request being built, or the response created when
