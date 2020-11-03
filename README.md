@@ -30,14 +30,14 @@ default:
       autowire: true
 
       contexts:
-        - List
-        - your
-        - contexts
-        - here
+        #- List
+        #- your
+        #- contexts
+        #- here
 
         # examples :
-        - Behapi\Http\Context: ~
-        - Behapi\Json\Context: ~
+        - Behapi\Http\RequestContext: ~
+        - Behapi\Http\ResponseContext: ~
 
   extensions:
     Behapi\Behapi:
