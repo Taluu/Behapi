@@ -17,10 +17,11 @@ jobs:
     - uses: shivammathur/setup-php@v2
       with:
           php-version: '7.3'
+          coverage: none
           tools: composer:v2, psalm
 
     - name: Install dependencies
-      run: composer install --prefer-dist --no-progress --no-suggest
+      run: composer install --prefer-dist --no-progress --ansi
 
     - name: Psalm
       run: psalm --output-format=github --shepherd
