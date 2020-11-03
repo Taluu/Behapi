@@ -21,7 +21,7 @@ jobs:
           tools: composer:v2, psalm
 
     - name: Install dependencies
-      run: composer install --prefer-dist --no-progress --ansi
+      run: composer update --prefer-dist --no-progress --ansi
 
     - name: Psalm
       run: psalm --output-format=github --shepherd
