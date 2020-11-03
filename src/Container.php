@@ -69,7 +69,7 @@ final class Container implements ContainerInterface
     private function getPluginClientBuilder(): PluginClientBuilder
     {
         $builder = new PluginClientBuilder;
-        $uriFactory = Psr17FactoryDiscovery::findUrlFactory();
+        $uriFactory = Psr17FactoryDiscovery::findUriFactory();
 
         $baseUri = $uriFactory->createUri($this->baseUrl);
         $httpHistory = $this->services[HttpHistory::class];
