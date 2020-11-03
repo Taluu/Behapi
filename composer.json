@@ -34,10 +34,10 @@
         "psr/http-factory": "^1.0",
         "psr/http-factory-implementation": "^1.0",
 
-        "php-http/discovery": "^1.0",
+        "php-http/discovery": "^1.11",
         "php-http/client-common": "^2.0",
 
-        "container-interop/container-interop": "^1.0"
+        "psr/container": "^1.0"
     },
 
     "suggest": {
@@ -45,7 +45,8 @@
     },
 
     "conflict": {
-        "behat/behat": "< 3.5",
+        "php-http/discovery": "< 1.11",
+        "behat/behat": "< 3.7",
         "symfony/dependency-injection": "< 2.8"
     },
 
