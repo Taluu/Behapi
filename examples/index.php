@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-header('Content-Type: application/json+ld');
+header('Content-Type: application/json');
 
 $code = 200;
 $message = 'OK';

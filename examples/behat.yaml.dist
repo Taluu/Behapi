@@ -1,0 +1,15 @@
+default:
+    suites:
+        main:
+            paths: ['%paths.base%/features']
+            services: '@Behapi\Container'
+            autowire: true
+
+            contexts:
+                - Behapi\Http\RequestContext
+                - Behapi\Http\ResponseContext
+                - Behapi\Json\Context
+
+    extensions:
+        Behapi\Behapi:
+            base_url: http://localhost:8001
