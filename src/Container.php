@@ -1,8 +1,6 @@
 <?php declare(strict_types=1);
 namespace Behapi;
 
-use Psr\Container\ContainerInterface;
-
 use Behat\Behat\HelperContainer\Exception\ServiceNotFoundException;
 
 use Http\Client\Common\Plugin\BaseUriPlugin;
@@ -13,6 +11,8 @@ use Behapi\Http\PluginClientBuilder;
 use Behapi\HttpHistory\History as HttpHistory;
 
 use Http\Discovery\Psr17FactoryDiscovery;
+
+use Psr\Container\ContainerInterface;
 
 use Psr\Http\Message\RequestFactoryInterface;
 use Psr\Http\Message\StreamFactoryInterface;
