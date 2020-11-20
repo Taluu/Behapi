@@ -23,7 +23,7 @@
 
         "beberlei/assert": "^3.2",
 
-        "symfony/property-access": "^3.1 || ^4.0 || ^5.0",
+        "symfony/property-access": "^3.4 || ^4.4 || ^5.1",
 
         "psr/http-client": "^1.0",
         "psr/http-client-implementation": "^1.0",
@@ -35,9 +35,7 @@
         "psr/http-factory-implementation": "^1.0",
 
         "php-http/discovery": "^1.11",
-        "php-http/client-common": "^2.0",
-
-        "psr/container": "^1.0"
+        "php-http/client-common": "^2.0"
     },
 
     "suggest": {
@@ -46,8 +44,7 @@
 
     "conflict": {
         "php-http/discovery": "< 1.11",
-        "behat/behat": "< 3.7",
-        "symfony/dependency-injection": "< 2.8"
+        "behat/behat": "< 3.7"
     },
 
     "prefer-stable": true,
@@ -60,9 +57,7 @@
 
         "php-http/message": "^1.0",
 
-        "symfony/http-client": "^4.3 || ^5.0",
-        "symfony/var-dumper": "^2.8 || ^3.3 || ^4.0",
-
-        "vimeo/psalm": "^3.8"
+        "symfony/http-client": "^4.4 || ^5.1",
+        "symfony/var-dumper": "^3.4 || ^4.4 || ^5.1"
     }
 }

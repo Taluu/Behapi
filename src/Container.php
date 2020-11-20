@@ -1,21 +1,20 @@
 <?php declare(strict_types=1);
 namespace Behapi;
 
+use Behat\Behat\HelperContainer\ContainerInterface;
 use Behat\Behat\HelperContainer\Exception\ServiceNotFoundException;
 
 use Http\Client\Common\Plugin\BaseUriPlugin;
 use Http\Client\Common\Plugin\HistoryPlugin;
 use Http\Client\Common\Plugin\ContentLengthPlugin;
 
-use Behapi\Http\PluginClientBuilder;
-use Behapi\HttpHistory\History as HttpHistory;
-
 use Http\Discovery\Psr17FactoryDiscovery;
-
-use Psr\Container\ContainerInterface;
 
 use Psr\Http\Message\RequestFactoryInterface;
 use Psr\Http\Message\StreamFactoryInterface;
+
+use Behapi\Http\PluginClientBuilder;
+use Behapi\HttpHistory\History as HttpHistory;
 
 use function in_array;
 use function array_key_exists;
@@ -41,12 +40,14 @@ final class Container implements ContainerInterface
         $this->services[HttpHistory::class] = $history;
     }
 
-    public function has($id)
+    /** @param string $id */
+    public function has($id): bool
     {
         return in_array($id, self::SERVICES, true);
     }
 
-    public function get($id)
+    /** @param string $id */
+    public function get($id): object
     {
         if (array_key_exists($id, $this->services)) {
             return $this->services[$id];
