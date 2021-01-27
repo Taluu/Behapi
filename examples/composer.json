@@ -11,9 +11,9 @@
     "require": {
         "taluu/behapi": "dev-master",
         "behat/behat": "^3.4",
-        "symfony/http-client": "^5.0",
+        "symfony/http-client": "^4.4 || ^5.2",
         "nyholm/psr7": "^1.0",
-        "symfony/var-dumper": "^4.0",
+        "symfony/var-dumper": "^3.4 || ^4.4 || ^5.2",
         "php-http/message": "^1.6",
         "beberlei/assert": "^3.1"
     },
