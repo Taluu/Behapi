@@ -55,7 +55,7 @@ container capable of using behapi's container.
 
 Some services are provided to be injected in contexts, which are the following:
 
-- `@Behapi\Http\PluginClientBuilder`, which will build a
+- `@Http\Client\Common\PluginClientBuilder`, which will build a
   `Http\Client\Common\PluginClient` when needed
 - `@Behapi\HttpHistory\History`, which is a sort of a container with the last
   requests done and last responses received

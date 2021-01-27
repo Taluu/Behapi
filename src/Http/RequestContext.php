@@ -12,6 +12,7 @@ use Behat\Behat\Context\Context;
 use Behat\Gherkin\Node\TableNode;
 
 use Http\Discovery\Psr18ClientDiscovery;
+use Http\Client\Common\PluginClientBuilder;
 
 use function trim;
 use function is_array;
