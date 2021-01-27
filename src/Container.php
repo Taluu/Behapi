@@ -4,6 +4,7 @@ namespace Behapi;
 use Behat\Behat\HelperContainer\ContainerInterface;
 use Behat\Behat\HelperContainer\Exception\ServiceNotFoundException;
 
+use Http\Client\Common\PluginClientBuilder;
 use Http\Client\Common\Plugin\BaseUriPlugin;
 use Http\Client\Common\Plugin\HistoryPlugin;
 use Http\Client\Common\Plugin\ContentLengthPlugin;
@@ -13,7 +14,6 @@ use Http\Discovery\Psr17FactoryDiscovery;
 use Psr\Http\Message\RequestFactoryInterface;
 use Psr\Http\Message\StreamFactoryInterface;
 
-use Behapi\Http\PluginClientBuilder;
 use Behapi\HttpHistory\History as HttpHistory;
 
 use function in_array;
