@@ -23,7 +23,7 @@
 
         "beberlei/assert": "^3.2",
 
-        "symfony/property-access": "^3.4 || ^4.4 || ^5.2",
+        "symfony/property-access": "^3.4 || ^4.4 || ^5.2 || ^6.0",
 
         "psr/http-client": "^1.0",
         "psr/http-client-implementation": "^1.0",
