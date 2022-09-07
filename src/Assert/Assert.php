@@ -12,6 +12,7 @@ use Assert as Beberlei;
  */
 abstract class Assert extends Beberlei\Assert
 {
+    /** @var string */
     protected static $assertionClass = Assertion::class;
 
     public static function that($value, $defaultMessage = null, ?string $defaultPropertyPath = null): Beberlei\AssertionChain

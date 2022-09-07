@@ -6,6 +6,11 @@ use Symfony\Component\PropertyAccess\PropertyAccessor;
 use Behapi\Assert\Assert;
 use Behapi\Assert\AssertionChain;
 
+/**
+ * @psalm-suppress ReservedWord
+ * @psalm-suppress MixedAssignment
+ * @psalm-suppress MixedArgument
+ */
 trait EachInCollectionTrait
 {
     /** @var PropertyAccessor */
@@ -46,10 +51,11 @@ trait EachInCollectionTrait
 
         $values = array_map(
             /**
-             * @param mixed $value
+             * @param array<array-key, mixed>|object $value
              * @return mixed
              */
             function ($value) use ($property) {
+                /** @psalm-suppress ReservedWord */
                 return $this->accessor->getValue($value, $property);
             },
             $values
@@ -81,10 +87,11 @@ trait EachInCollectionTrait
 
         $values = array_map(
             /**
-             * @param mixed $value
+             * @param array<array-key, mixed>|object $value
              * @return mixed
              */
             function ($value) use ($property) {
+                /** @psalm-suppress ReservedWord */
                 return $this->accessor->getValue($value, $property);
             },
             $values
@@ -117,10 +124,11 @@ trait EachInCollectionTrait
 
         $values = array_map(
             /**
-             * @param mixed $value
+             * @param array<array-key, mixed>|object $value
              * @return mixed
              */
             function ($value) use ($property) {
+                /** @psalm-suppress ReservedWord */
                 return $this->accessor->getValue($value, $property);
             },
             $values
@@ -153,10 +161,11 @@ trait EachInCollectionTrait
 
         $values = array_map(
             /**
-             * @param mixed $value
+             * @param array<array-key, mixed>|object $value
              * @return mixed
              */
             function ($value) use ($property) {
+                /** @psalm-suppress ReservedWord */
                 return $this->accessor->getValue($value, $property);
             },
             $values

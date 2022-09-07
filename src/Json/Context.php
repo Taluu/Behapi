@@ -51,8 +51,10 @@ class Context implements BehatContext
     /** @return mixed */
     protected function getValue(?string $path)
     {
+        /** @var array<array-key, mixed> */
         $json = json_decode((string) $this->history->getLastResponse()->getBody());
 
+        /** @psalm-suppress ReservedWord */
         return $path === null ? $json : $this->accessor->getValue($json, $path);
     }
 
@@ -186,6 +188,7 @@ class Context implements BehatContext
         ;
 
         foreach ($collection as $element) {
+            /** @psalm-suppress ReservedWord */
             if ($expected === $this->accessor->getValue($element, $value)) {
                 return;
             }
