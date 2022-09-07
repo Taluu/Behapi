@@ -22,7 +22,7 @@ use Behapi\HttpHistory;
  */
 final class Behapi implements Extension
 {
-    const DEBUG_INTROSPECTION_TAG = 'behapi.debug.introspection';
+    private const DEBUG_INTROSPECTION_TAG = 'behapi.debug.introspection';
 
     public function getConfigKey(): string
     {
@@ -32,6 +32,8 @@ final class Behapi implements Extension
     /**
      * @psalm-suppress PossiblyUndefinedMethod
      * @psalm-suppress PossiblyNullReference
+     * @psalm-suppress ReservedWord
+     * @psalm-suppress MixedMethodCall
      */
     public function configure(ArrayNodeDefinition $builder): void
     {
@@ -144,6 +146,9 @@ final class Behapi implements Extension
         $definition->addTag(HelperContainerExtension::HELPER_CONTAINER_TAG);
     }
 
+    /**
+     * @psalm-suppress MixedArrayAccess
+     */
     private function loadDebugServices(ContainerBuilder $container, array $config): void
     {
         if (!$config['enabled']) {
