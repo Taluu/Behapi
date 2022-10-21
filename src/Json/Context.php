@@ -80,7 +80,7 @@ class Context implements BehatContext
      * @Then in the json, :path should be equal to :expected
      * @Then in the json, :path should :not be equal to :expected
      */
-    final public function the_json_path_should_be_equal_to(string $path, ?string $not = null, $expected): void
+    final public function the_json_path_should_be_equal_to(string $path, $expected, ?string $not = null): void
     {
         $assert = Assert::that($this->getValue($path));
 
@@ -112,7 +112,7 @@ class Context implements BehatContext
      * @Then /^in the json, "(?P<path>(?:[^"]|\\")*)" should be (?P<expected>true|false)$/
      * @Then /^in the json, "(?P<path>(?:[^"]|\\")*)" should :not be (?P<expected>true|false)$/
      */
-    final public function the_json_path_should_be(string $path, ?string $not = null, string $expected): void
+    final public function the_json_path_should_be(string $path, string $expected, ?string $not = null): void
     {
         $assert = Assert::that($this->getValue($path));
 
@@ -162,7 +162,7 @@ class Context implements BehatContext
      * @Then in the json, :path should contain :expected
      * @Then in the json, :path should :not contain :expected
      */
-    final public function the_json_path_contains(string $path, ?string $not = null, $expected): void
+    final public function the_json_path_contains(string $path, $expected, ?string $not = null): void
     {
         $assert = Assert::that($this->getValue($path));
 
@@ -254,7 +254,7 @@ class Context implements BehatContext
      *  @Then in the json, :path should match :pattern
      *  @Then in the json, :path should :not match :pattern
      */
-    final public function the_json_path_should_match(string $path, ?string $not = null, string $pattern): void
+    final public function the_json_path_should_match(string $path, string $pattern, ?string $not = null): void
     {
         $assert = Assert::that($this->getValue($path));
 
