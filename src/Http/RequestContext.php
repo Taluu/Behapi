@@ -38,11 +38,15 @@ class RequestContext implements Context
     /** @var RequestFactoryInterface */
     private $requestFactory;
 
-    public function __construct(PluginClientBuilder $builder, StreamFactoryInterface $streamFactory, RequestFactoryInterface $requestFactory)
+    /** @var string */
+    private $graphqlEndpoint;
+
+    public function __construct(PluginClientBuilder $builder, StreamFactoryInterface $streamFactory, RequestFactoryInterface $requestFactory, string $graphqlEndpoint = '')
     {
         $this->builder = $builder;
         $this->streamFactory = $streamFactory;
         $this->requestFactory = $requestFactory;
+        $this->graphqlEndpoint = $graphqlEndpoint;
 
         $this->client = Psr18ClientDiscovery::find();
     }
@@ -116,6 +120,24 @@ class RequestContext implements Context
         $stream = $this->streamFactory->createStream($body);
 
         $request = $this->getRequest();
+        $this->request = $request->withBody($stream);
+    }
+
+    /** @When I create the following graphql request: */
+    final public function set_the_graphql_body(string $body): void
+    {
+        if (empty($this->graphqlEndpoint)) {
+            throw new RuntimeException('No graphql endpoint specified');
+        }
+
+        $this->query = [];
+        $request = $this->requestFactory->createRequest('POST', $this->graphqlEndpoint);
+
+        // let's set a default content-type
+        $this->set_the_content_type($this->getDefaultContentType());
+
+        $stream = $this->streamFactory->createStream(json_encode(['query' => $body]));
+
         $this->request = $request->withBody($stream);
     }
 
